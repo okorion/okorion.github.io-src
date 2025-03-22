@@ -18,6 +18,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Check if token exists
+        run: echo "TOKEN_EXISTS=${{ secrets.DEPLOY_TOKEN != '' }}"
+
       - name: Deploy to okorion.github.io repo
         uses: peaceiris/actions-gh-pages@v3
         with:
