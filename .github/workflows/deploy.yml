@@ -22,6 +22,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.GH_PAGES_DEPLOY_TOKEN }}
-          external_repository: your-username/your-username.github.io # B 레포
+          external_repository: okorion/okorion.github.io
           publish_dir: ./dist
           publish_branch: main
