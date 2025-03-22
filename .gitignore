@@ -1,0 +1,134 @@
+# -------------------------------------
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# -------------------------------------
+# Dependency directories
+node_modules/
+.pnp
+.pnp.js
+
+# -------------------------------------
+# Build outputs
+build/
+dist/
+dist-ssr/
+out/
+storybook-static/
+.cache/
+.next/
+coverage/
+
+# -------------------------------------
+# Local env files
+.env
+.env.*  # e.g., .env.local, .env.production
+
+# -------------------------------------
+# System files
+.DS_Store
+*.local
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# -------------------------------------
+# Editor settings
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# -------------------------------------
+# Optional: OS or temp files
+Thumbs.db
+ehthumbs.db
+*.bak
+*.tmp
+*.orig
+
+# -------------------------------------
+# Mac .Trash folder
+.Trashes
+
+# -------------------------------------
+# Windows thumbnail cache
+Thumbs.db
+
+# -------------------------------------
+# GitHub Actions (do not ignore .yml!)
+# DO NOT ignore .github/workflows/*.yml
+# -------------------------------------
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# -------------------------------------
+# Dependency directories
+node_modules/
+.pnp
+.pnp.js
+
+# -------------------------------------
+# Build outputs
+build/
+dist/
+dist-ssr/
+out/
+storybook-static/
+.cache/
+.next/
+coverage/
+
+# -------------------------------------
+# Local env files
+.env
+.env.*  # e.g., .env.local, .env.production
+
+# -------------------------------------
+# System files
+.DS_Store
+*.local
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# -------------------------------------
+# Editor settings
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# -------------------------------------
+# Optional: OS or temp files
+Thumbs.db
+ehthumbs.db
+*.bak
+*.tmp
+*.orig
+
+# -------------------------------------
+# Mac .Trash folder
+.Trashes
+
+# -------------------------------------
+# Windows thumbnail cache
+Thumbs.db
+
+# -------------------------------------
+# GitHub Actions (do not ignore .yml!)
+# DO NOT ignore .github/workflows/*.yml
