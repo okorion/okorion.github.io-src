@@ -1,0 +1,27 @@
+name: Deploy to okorion.github.io repo GitHub Pages
+
+on:
+  push:
+    branches: [main] # 또는 master 등 빌드 트리거로 사용할 브랜치
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repo (okorion/okorion.github.io-src)
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to okorion.github.io repo
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GH_PAGES_DEPLOY_TOKEN }}
+          external_repository: your-username/your-username.github.io # B 레포
+          publish_dir: ./dist
+          publish_branch: main
