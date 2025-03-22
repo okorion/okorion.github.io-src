@@ -132,3 +132,7 @@ Thumbs.db
 # -------------------------------------
 # GitHub Actions (do not ignore .yml!)
 # DO NOT ignore .github/workflows/*.yml
+
+# ✅ Husky Git hooks
+!.husky/
+!.husky/*
