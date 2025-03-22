@@ -1,11 +1,19 @@
 import "./App.css";
+import { useErrorBoundary } from "use-error-boundary";
+import MainScene from "./scenes/MainScene";
+import Panel from "./components/ui/Panel";
 
 const App = () => {
-  return (
-    <div>
-      <h1 className="text-blue-500 text-3xl font-bold underline">
-        Hello Vite + React + TS + Tailwind CSS!
-      </h1>
+  const { ErrorBoundary, didCatch, error } = useErrorBoundary();
+
+  return didCatch ? (
+    <div className="w-screen h-screen">{error.message}</div>
+  ) : (
+    <div className="w-screen h-screen">
+      <ErrorBoundary>
+        <MainScene />
+      </ErrorBoundary>
+      <Panel />
     </div>
   );
 };
