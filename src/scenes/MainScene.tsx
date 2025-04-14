@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { CameraController } from "../components/3d/CameraController";
+import { CameraController } from "../components/3d/Camera/CameraController";
 import { Floor } from "../components/3d/Floor";
 import { LightController } from "../components/3d/LightController";
 import { useState } from "react";
