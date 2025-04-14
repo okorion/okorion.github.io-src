@@ -1,6 +1,6 @@
 import { PointMaterial } from "@react-three/drei";
-import * as THREE from "three";
 import { useMemo } from "react";
+import * as THREE from "three";
 
 interface Props {
   radius?: number;

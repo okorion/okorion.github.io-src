@@ -1,7 +1,7 @@
 import "./App.css";
 import { useErrorBoundary } from "use-error-boundary";
-import MainScene from "./scenes/MainScene";
 import Panel from "./components/ui/Panel";
+import MainScene from "./scenes/MainScene";
 
 const App = () => {
   const { ErrorBoundary, didCatch, error } = useErrorBoundary();

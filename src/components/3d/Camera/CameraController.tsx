@@ -1,9 +1,9 @@
 import { OrbitControls } from "@react-three/drei";
-import { useRef, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
-import { useScrollCameraControl } from "./useScrollCameraControl";
-import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
+import { useEffect, useRef } from "react";
 import { Vector3 } from "three";
+import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
+import { useScrollCameraControl } from "./useScrollCameraControl";
 
 export const CameraController = () => {
   const controlsRef = useRef<ThreeOrbitControls | null>(null);
@@ -31,7 +31,7 @@ export const CameraController = () => {
 
       if (controlsRef.current) {
         controlsRef.current.target.copy(
-          startTarget.clone().lerp(endTarget, easedT)
+          startTarget.clone().lerp(endTarget, easedT),
         );
         controlsRef.current.update();
       }

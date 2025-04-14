@@ -1,7 +1,7 @@
+import { PointMaterial } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { PointMaterial } from "@react-three/drei";
 
 type Props = {
   path: string;
@@ -61,7 +61,7 @@ export default function ModelLoader({
           const geo = new THREE.BufferGeometry();
           geo.setAttribute(
             "position",
-            new THREE.Float32BufferAttribute(interpolatedPoints, 3)
+            new THREE.Float32BufferAttribute(interpolatedPoints, 3),
           );
           return geo;
         })()

@@ -1,12 +1,12 @@
-import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
+import { useEffect } from "react";
 import { OrbitControls } from "three-stdlib";
 
 export const useScrollCameraControl = (
   controlsRef: React.RefObject<OrbitControls | null>,
   step = 0.5,
   minY = -10,
-  maxY = 10
+  maxY = 10,
 ) => {
   const { camera } = useThree();
 

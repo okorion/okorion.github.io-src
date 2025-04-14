@@ -3,7 +3,7 @@ import { Group, Object3DEventMap } from "three";
 
 export const useScrollRotateScene = (
   sceneRef: React.RefObject<Group<Object3DEventMap> | null>,
-  step: number = 0.05
+  step: number = 0.05,
 ) => {
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {

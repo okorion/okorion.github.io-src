@@ -1,13 +1,13 @@
 import { Canvas } from "@react-three/fiber";
+import { useRef, useState } from "react";
+import { Group, Object3DEventMap } from "three";
+import { ArcaneWillow } from "../components/3d/ArcaneWillow";
 import { CameraController } from "../components/3d/Camera/CameraController";
+import { ChromeFigure } from "../components/3d/ChromeFigure";
 import { Floor } from "../components/3d/Floor";
 import { LightController } from "../components/3d/LightController";
-import { useRef, useState } from "react";
-import { ArcaneWillow } from "../components/3d/ArcaneWillow";
-import { ChromeFigure } from "../components/3d/ChromeFigure";
 import { OverlayMenu3D } from "../components/3d/OverlayMenu3D";
 import { useScrollRotateScene } from "./useScrollRotateScene";
-import { Group, Object3DEventMap } from "three";
 
 const MainScene = () => {
   const [isHovered, setHovered] = useState(false);
