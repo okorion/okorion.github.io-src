@@ -1,19 +1,17 @@
-import { useEffect } from "react";
-import { useThree } from "@react-three/fiber";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from "@react-three/drei";
 
 const CameraController = () => {
-  const { camera, gl } = useThree();
-  useEffect(() => {
-    const controls = new OrbitControls(camera, gl.domElement);
+  // const fixedPolarAngle = Math.PI / 2;
+  // const epsilon = 0.0001;
 
-    controls.minDistance = 3;
-    controls.maxDistance = 5;
-    return () => {
-      controls.dispose();
-    };
-  }, [camera, gl]);
-  return null;
+  return (
+    <OrbitControls
+      // enablePan={false}
+      enableDamping={true}
+      // minPolarAngle={fixedPolarAngle - epsilon}
+      // maxPolarAngle={fixedPolarAngle + epsilon}
+    />
+  );
 };
 
 export default CameraController;
