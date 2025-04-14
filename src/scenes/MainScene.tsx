@@ -10,18 +10,18 @@ const MainScene = () => {
       <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
 
       <ModelLoader
-        path="/src/models/ChromeFigure.glb"
+        path="/models/ChromeFigure.glb"
         position={[0, 0, 0]}
         scale={3}
       />
       <ModelLoader
-        path="/src/models/ArcaneWillow.glb"
+        path="/models/ArcaneWillow.glb"
         scale={1}
         interpolate
         usePoints
       />
       <ModelLoader
-        path="/src/models/ArcaneWillow.glb"
+        path="/models/ArcaneWillow.glb"
         scale={0.99}
         opacity={0.12}
       />
