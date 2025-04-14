@@ -25,25 +25,29 @@ interface OverlayMenu3DProps {
 }
 
 export const OverlayMenu3D = ({ setHovered }: OverlayMenu3DProps) => {
+  const OverlayMenuX = 0;
+  const OverlayMenuY = 0.6;
+  const OverlayMenuZ = 2.1;
+
   return (
     <>
       <InteractiveLabel
-        position={[0, 0.6, 2]}
+        position={[OverlayMenuX, OverlayMenuY, OverlayMenuZ]}
         label="okorion"
         onHoverChange={setHovered}
       />
       <InteractiveLabel
-        position={[-0.5, 0.3, 2]}
+        position={[OverlayMenuX - 0.5, OverlayMenuY - 0.2, OverlayMenuZ]}
         label="GitHub"
         onHoverChange={setHovered}
       />
       <InteractiveLabel
-        position={[0.5, 0.3, 2]}
+        position={[OverlayMenuX, OverlayMenuY - 0.2, OverlayMenuZ]}
         label="Velog"
         onHoverChange={setHovered}
       />
       <InteractiveLabel
-        position={[0, 0.3, 2]}
+        position={[OverlayMenuX + 0.5, OverlayMenuY - 0.2, OverlayMenuZ]}
         label="Portfolio"
         onHoverChange={setHovered}
       />
