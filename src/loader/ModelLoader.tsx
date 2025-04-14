@@ -1,6 +1,7 @@
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { PointMaterial } from "@react-three/drei";
 
 type Props = {
   path: string;
@@ -70,11 +71,12 @@ export default function ModelLoader({
         position={Array.isArray(position) ? position : [0, 0, 0]}
         scale={Array.isArray(scale) ? scale : [scale, scale, scale]}
       >
-        <pointsMaterial
-          color="hotpink"
-          size={0.05}
+        <PointMaterial
+          transparent
+          color={"black"}
+          size={0.03}
           sizeAttenuation
-          transparent={opacity < 1}
+          depthWrite={false}
           opacity={opacity}
         />
       </points>
