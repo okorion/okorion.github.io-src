@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 
-const CameraController = () => {
+export const CameraController = () => {
   // const fixedPolarAngle = Math.PI / 2;
   // const epsilon = 0.0001;
 
@@ -13,5 +13,3 @@ const CameraController = () => {
     />
   );
 };
-
-export default CameraController;

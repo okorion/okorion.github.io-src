@@ -8,11 +8,11 @@ interface Props {
   segmentsPerRing?: number;
 }
 
-export function FilledCirclePoints({
+export const FilledCirclePoints = ({
   radius = 10,
   rings = 100,
   segmentsPerRing = 100,
-}: Props) {
+}: Props) => {
   const geometry = useMemo(() => {
     const points: number[] = [];
 
@@ -49,4 +49,4 @@ export function FilledCirclePoints({
       />
     </points>
   );
-}
+};
