@@ -1,7 +1,7 @@
 {
   "name": "okorion-io-src",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,9 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json}": ["biome check --apply"]
   },
   "dependencies": {
     "@react-three/drei": "^10.0.6",
