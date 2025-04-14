@@ -6,6 +6,7 @@ import { PointMaterial } from "@react-three/drei";
 type Props = {
   path: string;
   position?: [number, number, number];
+  rotation?: [number, number, number];
   scale?: number | [number, number, number];
   usePoints?: boolean;
   opacity?: number;
@@ -15,6 +16,7 @@ type Props = {
 export default function ModelLoader({
   path,
   position,
+  rotation,
   scale = 1,
   usePoints = false,
   opacity = 1,
@@ -69,6 +71,7 @@ export default function ModelLoader({
       <points
         geometry={finalGeometry}
         position={Array.isArray(position) ? position : [0, 0, 0]}
+        rotation={Array.isArray(rotation) ? rotation : [0, 0, 0]}
         scale={Array.isArray(scale) ? scale : [scale, scale, scale]}
       >
         <PointMaterial
@@ -102,6 +105,7 @@ export default function ModelLoader({
     <primitive
       object={gltf.scene}
       position={Array.isArray(position) ? position : [0, 0, 0]}
+      rotation={Array.isArray(rotation) ? rotation : [0, 0, 0]}
       scale={Array.isArray(scale) ? scale : [scale, scale, scale]}
     />
   );
