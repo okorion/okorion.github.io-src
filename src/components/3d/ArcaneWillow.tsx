@@ -1,14 +1,14 @@
-import ModelLoader from "../../loader/ModelLoader";
 import ModelPointsLoader from "../../loader/ModelPointsLoader";
 
 export const ArcaneWillow = () => {
   return (
     <>
-      <ModelPointsLoader path="/models/ArcaneWillow.glb" scale={1} />
-      <ModelLoader
+      <ModelPointsLoader
         path="/models/ArcaneWillow.glb"
-        scale={0.998}
-        opacity={0.2}
+        scale={1}
+        position={[0, -10, 0]}
+        pointCount={150000}
+        isAnimating
       />
     </>
   );
