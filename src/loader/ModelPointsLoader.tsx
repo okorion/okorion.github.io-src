@@ -35,7 +35,7 @@ export default function ModelPointsLoader({
   const startPositions = useRef<Float32Array | null>(null);
   const movementDirections = useRef<THREE.Vector3[] | null>(null);
   const animationProgress = useRef(0);
-  const ANIMATION_DURATION = 3.0;
+  const ANIMATION_DURATION = 6.0;
   const boundingBoxRef = useRef<THREE.Box3 | null>(null);
 
   const sampledGeometry = useMemo(() => {

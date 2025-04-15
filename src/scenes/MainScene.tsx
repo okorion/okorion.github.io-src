@@ -4,7 +4,8 @@ import { Group, Object3DEventMap } from "three";
 import { ArcaneWillow } from "../components/3d/ArcaneWillow";
 import { CameraController } from "../components/3d/Camera/CameraController";
 import { ChromeFigure } from "../components/3d/ChromeFigure";
-import { Floor } from "../components/3d/Floor";
+import { FallingParticle } from "../components/3d/FallingParticle";
+import { FloorPoints } from "../components/3d/FloorPoints";
 import { LightController } from "../components/3d/LightController";
 import { OverlayMenu3D } from "../components/3d/OverlayMenu3D";
 import { useScrollRotateScene } from "./useScrollRotateScene";
@@ -15,13 +16,21 @@ const MainScene = () => {
   useScrollRotateScene(sceneRef, 0.05);
 
   return (
-    <Canvas style={{ background: "#000000" }} shadows>
+    <Canvas style={{ background: "#000000" }}>
       <group ref={sceneRef}>
         <OverlayMenu3D />
 
         <ChromeFigure />
         <ArcaneWillow />
-        <Floor />
+        <FloorPoints />
+        <FallingParticle />
+        <FallingParticle
+          radius={8}
+          pointCount={100000}
+          pointSize={0.01}
+          startY={0}
+          endY={-2}
+        />
       </group>
 
       <CameraController />
