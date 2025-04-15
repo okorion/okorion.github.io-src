@@ -36,7 +36,7 @@ const InteractiveLabel = ({ position, label, url, icon }: Props) => {
           border border-white/30
           ${
             isHovered
-              ? "opacity-100 bg-white/70 backdrop-brightness-125"
+              ? "opacity-100 bg-white/90 backdrop-brightness-125"
               : "opacity-90 bg-white/50"
           }
         `}
@@ -59,7 +59,7 @@ const InteractiveLabel = ({ position, label, url, icon }: Props) => {
 };
 
 export const OverlayMenu3D = () => {
-  const OverlayMenuX = 0;
+  const OverlayMenuX = 0.3;
   const OverlayMenuY = 0.6;
   const OverlayMenuZ = 2.1;
 
