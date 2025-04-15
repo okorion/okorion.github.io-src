@@ -1,33 +1,51 @@
 import { Html } from "@react-three/drei";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 interface Props {
   position?: [number, number, number];
   label: string;
   url?: string;
   icon?: ReactNode;
-  onHoverChange: (isHovered: boolean) => void;
 }
 
-const InteractiveLabel = ({
-  position,
-  label,
-  url,
-  icon,
-  onHoverChange,
-}: Props) => {
+const InteractiveLabel = ({ position, label, url, icon }: Props) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const iconSize = 40;
   const handleClick = () => {
     if (url) window.open(url, "_blank");
   };
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   return (
     <Html position={position} scale={0.05} transform>
       <div
-        className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity duration-200 text-white text-3xl font-bold select-none pointer-events-auto cursor-pointer"
-        onMouseEnter={() => onHoverChange(true)}
-        onMouseLeave={() => onHoverChange(false)}
+        className={`
+          pointer-events-auto cursor-pointer select-none
+          px-6 py-4 rounded-lg
+          flex items-center gap-3
+          transition-all duration-200
+          text-black text-3xl font-bold 
+          border border-white/30
+          ${
+            isHovered
+              ? "opacity-100 bg-white/70 backdrop-brightness-125"
+              : "opacity-90 bg-white/50"
+          }
+        `}
         onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          boxShadow: isHovered ? "0 0 20px rgba(255, 255, 255, 0.3)" : "none",
+        }}
       >
         {icon && typeof icon === "string" ? (
           <img src={icon} alt={label} width={iconSize} height={iconSize} />
@@ -40,11 +58,7 @@ const InteractiveLabel = ({
   );
 };
 
-interface OverlayMenu3DProps {
-  setHovered: (isHovered: boolean) => void;
-}
-
-export const OverlayMenu3D = ({ setHovered }: OverlayMenu3DProps) => {
+export const OverlayMenu3D = () => {
   const OverlayMenuX = 0;
   const OverlayMenuY = 0.6;
   const OverlayMenuZ = 2.1;
@@ -56,28 +70,24 @@ export const OverlayMenu3D = ({ setHovered }: OverlayMenu3DProps) => {
         label="okorion"
         url="https://github.com/okorion"
         icon="/icons/home.svg"
-        onHoverChange={setHovered}
       />
       <InteractiveLabel
         position={[OverlayMenuX - 0.5, OverlayMenuY - 0.2, OverlayMenuZ]}
         label="GitHub"
         url="https://github.com/okorion"
         icon="/icons/github.svg"
-        onHoverChange={setHovered}
       />
       <InteractiveLabel
         position={[OverlayMenuX, OverlayMenuY - 0.2, OverlayMenuZ]}
         label="Velog"
         url="https://velog.io/@okorion"
         icon="/icons/velog.svg"
-        onHoverChange={setHovered}
       />
       <InteractiveLabel
         position={[OverlayMenuX + 0.5, OverlayMenuY - 0.2, OverlayMenuZ]}
         label="Portfolio(Notion)"
         url="https://okorion.notion.site/Portfolio-1d50242aaedf80988f93f5af21fe0304"
         icon="/icons/notion.svg"
-        onHoverChange={setHovered}
       />
     </>
   );

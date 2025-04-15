@@ -47,7 +47,7 @@ export const CameraController = () => {
   const fixedPolarAngle = Math.PI / 2;
   const epsilon = 0.0001;
 
-  useScrollCameraControl(controlsRef, 0.2, -2, 20, 0.05, manualTargetY);
+  useScrollCameraControl(controlsRef, 0.2, -2, 15, 0.05, manualTargetY);
 
   return (
     <OrbitControls

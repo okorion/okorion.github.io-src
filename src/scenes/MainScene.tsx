@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Group, Object3DEventMap } from "three";
 import { ArcaneWillow } from "../components/3d/ArcaneWillow";
 import { CameraController } from "../components/3d/Camera/CameraController";
@@ -10,7 +10,6 @@ import { OverlayMenu3D } from "../components/3d/OverlayMenu3D";
 import { useScrollRotateScene } from "./useScrollRotateScene";
 
 const MainScene = () => {
-  const [isHovered, setHovered] = useState(false);
   const sceneRef = useRef<Group<Object3DEventMap> | null>(null);
 
   useScrollRotateScene(sceneRef, 0.05);
@@ -18,7 +17,7 @@ const MainScene = () => {
   return (
     <Canvas style={{ background: "#000000" }} shadows>
       <group ref={sceneRef}>
-        <OverlayMenu3D setHovered={setHovered} />
+        <OverlayMenu3D />
 
         <ChromeFigure />
         <ArcaneWillow />
@@ -26,7 +25,7 @@ const MainScene = () => {
       </group>
 
       <CameraController />
-      <LightController isHovered={isHovered} />
+      <LightController />
     </Canvas>
   );
 };
