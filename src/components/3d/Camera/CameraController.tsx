@@ -1,13 +1,15 @@
 import { OrbitControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
 import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
 import { useScrollCameraControl } from "./useScrollCameraControl";
 
 export const CameraController = () => {
   const controlsRef = useRef<ThreeOrbitControls | null>(null);
+
   const { camera } = useThree();
+  const [manualTargetY, setManualTargetY] = useState<number | null>(null);
 
   useEffect(() => {
     const startPos = new Vector3(0, 2, 6);
@@ -35,7 +37,7 @@ export const CameraController = () => {
         );
         controlsRef.current.update();
       }
-
+      setManualTargetY(startTarget.y + (endTarget.y - startTarget.y));
       if (t < 1) requestAnimationFrame(animate);
     };
 
@@ -45,7 +47,7 @@ export const CameraController = () => {
   const fixedPolarAngle = Math.PI / 2;
   const epsilon = 0.0001;
 
-  useScrollCameraControl(controlsRef, 0.2, -2, 20);
+  useScrollCameraControl(controlsRef, 0.2, -2, 20, 0.05, manualTargetY);
 
   return (
     <OrbitControls

@@ -9,6 +9,7 @@ export const useScrollCameraControl = (
   minY = -10,
   maxY = 10,
   smoothness = 0.05,
+  externalTargetY?: number | null,
 ) => {
   const { camera } = useThree();
   const targetY = useRef(camera.position.y);
@@ -33,6 +34,7 @@ export const useScrollCameraControl = (
         );
         controlsRef.current.update();
       }
+
       requestAnimationFrame(animate);
     };
 
@@ -43,4 +45,10 @@ export const useScrollCameraControl = (
       window.removeEventListener("wheel", handleWheel);
     };
   }, [camera, controlsRef, step, minY, maxY, smoothness]);
+
+  useEffect(() => {
+    if (externalTargetY !== undefined && externalTargetY !== null) {
+      targetY.current = externalTargetY;
+    }
+  }, [externalTargetY]);
 };
