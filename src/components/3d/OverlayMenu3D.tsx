@@ -72,7 +72,7 @@ export const OverlayMenu3D = () => {
         icon="/icons/home.svg"
       />
       <InteractiveLabel
-        position={[OverlayMenuX - 0.5, OverlayMenuY - 0.2, OverlayMenuZ]}
+        position={[OverlayMenuX - 0.43, OverlayMenuY - 0.2, OverlayMenuZ]}
         label="GitHub"
         url="https://github.com/okorion"
         icon="/icons/github.svg"
