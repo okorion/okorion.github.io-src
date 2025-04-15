@@ -16,7 +16,7 @@ const MainScene = () => {
   useScrollRotateScene(sceneRef, 0.05);
 
   return (
-    <Canvas style={{ background: "#949494" }} shadows>
+    <Canvas style={{ background: "#000000" }} shadows>
       <group ref={sceneRef}>
         <OverlayMenu3D setHovered={setHovered} />
 
