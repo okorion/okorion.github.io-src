@@ -29,9 +29,9 @@ const createCircleTexture = () => {
 };
 
 export const GuidePoint = ({
-  lifetime = 1.0,
+  lifetime = 3.0,
   pointSize = 0.07,
-  maxParticles = 10000,
+  maxParticles = 120,
   color = 0xffff00,
 }: Props) => {
   const { camera, scene } = useThree();
@@ -59,20 +59,48 @@ export const GuidePoint = ({
     geometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 25);
 
     const circleTexture = createCircleTexture();
-    const material = new THREE.PointsMaterial({
-      size: pointSize,
-      sizeAttenuation: true,
-      transparent: false,
-      opacity: 1,
-      blending: THREE.AdditiveBlending,
-      color: new THREE.Color(color),
-      map: circleTexture,
+    // const material = new THREE.PointsMaterial({
+    //   size: pointSize,
+    //   sizeAttenuation: true,
+    //   transparent: false,
+    //   opacity: 1,
+    //   blending: THREE.AdditiveBlending,
+    //   color: new THREE.Color(color),
+    //   map: circleTexture,
+    //   vertexColors: true,
+    // });
+
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        pointTexture: { value: circleTexture },
+      },
+      vertexShader: `
+        attribute float size;
+        varying vec3 vColor;
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * (300.0 / -mvPosition.z); // distance attenuation
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D pointTexture;
+        varying vec3 vColor;
+        void main() {
+          gl_FragColor = vec4(vColor, 1.0) * texture2D(pointTexture, gl_PointCoord);
+        }
+      `,
       vertexColors: true,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
 
     const points = new THREE.Points(geometry, material);
     particlesRef.current = points;
     geometryRef.current = geometry;
+
     scene.add(points);
 
     return () => {
@@ -111,9 +139,9 @@ export const GuidePoint = ({
           .clone()
           .add(
             new THREE.Vector3(
-              (Math.random() - 0.5) * 0.1,
-              (Math.random() - 0.5) * 0.1,
-              (Math.random() - 0.5) * 0.1,
+              (Math.random() - 0.5) * 1,
+              (Math.random() - 0.5) * 1,
+              (Math.random() - 0.5) * 1,
             ),
           ),
         startTime: currentTime,
@@ -132,17 +160,20 @@ export const GuidePoint = ({
       positions[ix + 1] = particle.position.y;
       positions[ix + 2] = 0;
 
+      // 입자 크기 조정
       const sizeRatio = 1 - elapsed / lifetime;
-      const size = particle.initialSize * sizeRatio * sizeRatio;
+      const size =
+        particle.initialSize * sizeRatio * sizeRatio * sizeRatio * sizeRatio;
       sizes[index] = size < pointSize * 0.05 ? 0 : size;
 
       // 붉은색으로 색상 변화
       const t = elapsed / lifetime;
-      const init = particle.initialColor;
+      const easedT = 1 - Math.pow(1 - t, 16);
 
-      colors[ix] = THREE.MathUtils.lerp(init.r, 1, t);
-      colors[ix + 1] = THREE.MathUtils.lerp(init.g, 0, t);
-      colors[ix + 2] = THREE.MathUtils.lerp(init.b, 0, t);
+      const init = particle.initialColor;
+      colors[ix] = THREE.MathUtils.lerp(init.r, 1, easedT);
+      colors[ix + 1] = THREE.MathUtils.lerp(init.g, 0, easedT);
+      colors[ix + 2] = THREE.MathUtils.lerp(init.b, 0, easedT);
 
       particle.velocity.multiplyScalar(0.98);
       return true;
