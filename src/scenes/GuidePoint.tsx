@@ -30,7 +30,7 @@ const createCircleTexture = () => {
 
 export const GuidePoint = ({
   lifetime = 3.0,
-  pointSize = 0.07,
+  pointSize = 0.09,
   maxParticles = 120,
   color = 0xffff00,
 }: Props) => {
