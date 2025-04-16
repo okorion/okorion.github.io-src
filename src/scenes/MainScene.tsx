@@ -8,6 +8,8 @@ import { FallingParticle } from "../components/3d/FallingParticle";
 import { FloorPoints } from "../components/3d/FloorPoints";
 import { LightController } from "../components/3d/LightController";
 import { OverlayMenu3D } from "../components/3d/OverlayMenu3D";
+import { GuidePoint } from "./GuidePoint";
+import { InteractivePoint } from "./InteractivePoint";
 import { useScrollRotateScene } from "./useScrollRotateScene";
 
 const MainScene = () => {
@@ -19,10 +21,11 @@ const MainScene = () => {
     <Canvas style={{ background: "#000000" }}>
       <group ref={sceneRef}>
         <OverlayMenu3D />
-
         <ChromeFigure />
         <ArcaneWillow />
         <FloorPoints />
+        <GuidePoint />
+        <InteractivePoint radius={1.0} speed={1.0} lifetime={2.0} />
         <FallingParticle
           radius={6}
           pointCount={30000}
