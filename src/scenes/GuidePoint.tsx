@@ -4,7 +4,6 @@ import * as THREE from "three";
 
 type Props = {
   radius?: number;
-  speed?: number;
   lifetime?: number;
   pointSize?: number;
   maxParticles?: number;
@@ -30,7 +29,6 @@ const createCircleTexture = () => {
 };
 
 export const GuidePoint = ({
-  speed = 0.5,
   lifetime = 1.0,
   pointSize = 0.05,
   maxParticles = 1500,
@@ -62,7 +60,7 @@ export const GuidePoint = ({
       size: pointSize,
       sizeAttenuation: true,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.5,
       blending: THREE.AdditiveBlending,
       color: new THREE.Color(color),
       map: circleTexture,
@@ -109,7 +107,6 @@ export const GuidePoint = ({
         position: origin.clone(),
         velocity: direction
           .clone()
-          .multiplyScalar(speed)
           .add(
             new THREE.Vector3(
               (Math.random() - 0.5) * 0.1,
