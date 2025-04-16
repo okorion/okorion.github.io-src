@@ -8,6 +8,7 @@ export const ArcaneWillow = () => {
         scale={1}
         position={[0, -10, 0]}
         pointCount={150000}
+        pointSize={0.02}
         isAnimating
         vertexColors
       />

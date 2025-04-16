@@ -23,7 +23,13 @@ const MainScene = () => {
         <ChromeFigure />
         <ArcaneWillow />
         <FloorPoints />
-        <FallingParticle />
+        <FallingParticle
+          radius={6}
+          pointCount={30000}
+          pointSize={0.02}
+          startY={12}
+          endY={-10}
+        />
         <FallingParticle
           radius={8}
           pointCount={100000}

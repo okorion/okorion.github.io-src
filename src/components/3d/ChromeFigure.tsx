@@ -9,7 +9,7 @@ export const ChromeFigure = () => {
       position={[-0.65, -0.02, 1.8]}
       rotation={[0, 0, 0]}
       pointCount={5000}
-      pointSize={0.0001}
+      pointSize={0.005}
       isAnimating
     />
   );
