@@ -105,24 +105,24 @@ export const FallingParticle = ({
           uGlobalAlpha: { value: 1.0 },
         }}
         vertexShader={`
-    uniform float uSize;
-    attribute float alpha;
-    varying float vAlpha;
-    void main() {
-      vAlpha = alpha;
-      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-      gl_PointSize = uSize * (300.0 / length(mvPosition.xyz));
-      gl_Position = projectionMatrix * mvPosition;
-    }
-  `}
+          uniform float uSize;
+          attribute float alpha;
+          varying float vAlpha;
+          void main() {
+            vAlpha = alpha;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = uSize * (300.0 / length(mvPosition.xyz));
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `}
         fragmentShader={`
-    uniform vec3 uColor;
-    uniform float uGlobalAlpha;
-    varying float vAlpha;
-    void main() {
-      gl_FragColor = vec4(uColor, vAlpha * uGlobalAlpha);
-    }
-  `}
+          uniform vec3 uColor;
+          uniform float uGlobalAlpha;
+          varying float vAlpha;
+          void main() {
+            gl_FragColor = vec4(uColor, vAlpha * uGlobalAlpha);
+          }
+        `}
       />
     </points>
   );
