@@ -17,7 +17,7 @@ type Props = {
   color?: THREE.ColorRepresentation;
 };
 
-export default function ModelPointsLoader({
+export function ModelPointsLoader({
   path,
   position,
   rotation,

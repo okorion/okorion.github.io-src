@@ -1,4 +1,4 @@
-import ModelPointsLoader from "../../loader/ModelPointsLoader";
+import { ModelPointsLoader } from "../../loader/ModelPointsLoader";
 
 export const ArcaneWillow = () => {
   return (
