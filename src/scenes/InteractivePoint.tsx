@@ -11,6 +11,13 @@ type Props = {
   color?: THREE.ColorRepresentation;
 };
 
+type ParticleData = {
+  position: THREE.Vector3;
+  velocity: THREE.Vector3;
+  startTime: number;
+  initialSize: number;
+};
+
 // 원형 텍스처 생성 함수
 const createCircleTexture = () => {
   const size = 64;
@@ -29,6 +36,82 @@ const createCircleTexture = () => {
   return texture;
 };
 
+const initParticles = (
+  scene: THREE.Scene,
+  maxParticles: number,
+  pointSize: number,
+  color: THREE.ColorRepresentation,
+) => {
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(maxParticles * 3);
+  const sizes = new Float32Array(maxParticles);
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+  geometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 25);
+
+  const circleTexture = createCircleTexture();
+  const material = new THREE.PointsMaterial({
+    size: pointSize,
+    sizeAttenuation: true,
+    transparent: false,
+    opacity: 1,
+    blending: THREE.AdditiveBlending,
+    color: new THREE.Color(color),
+    map: circleTexture,
+    vertexColors: false,
+  });
+
+  const points = new THREE.Points(geometry, material);
+  scene.add(points);
+
+  return { points, geometry, material, circleTexture };
+};
+
+const updateParticles = (
+  particlesData: ParticleData[],
+  positions: Float32Array,
+  sizes: Float32Array,
+  pointSize: number,
+  lifetime: number,
+  delta: number,
+  currentTime: number,
+) => {
+  return particlesData.filter((particle, index) => {
+    const elapsed = currentTime - particle.startTime;
+    if (elapsed > lifetime) return false;
+
+    particle.position.addScaledVector(particle.velocity, delta);
+    const ix = index * 3;
+    positions[ix] = particle.position.x;
+    positions[ix + 1] = particle.position.y;
+    positions[ix + 2] = particle.position.z;
+
+    const sizeRatio = 1 - elapsed / lifetime;
+    const size = particle.initialSize * sizeRatio * sizeRatio;
+    sizes[index] = size < pointSize * 0.05 ? 0 : size;
+
+    particle.velocity.multiplyScalar(0.98);
+    return true;
+  });
+};
+
+const useMousePosition = (glDomElement: HTMLElement) => {
+  const mouse = useRef(new THREE.Vector2());
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = glDomElement.getBoundingClientRect();
+      mouse.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    };
+
+    glDomElement.addEventListener("mousemove", handleMouseMove);
+    return () => glDomElement.removeEventListener("mousemove", handleMouseMove);
+  }, [glDomElement]);
+
+  return mouse;
+};
+
 export const InteractivePoint = ({
   speed = 0.5,
   lifetime = 1.0,
@@ -38,7 +121,7 @@ export const InteractivePoint = ({
 }: Props) => {
   const { camera, gl, scene } = useThree();
   const raycaster = useRef(new THREE.Raycaster());
-  const mouse = useRef(new THREE.Vector2());
+  const mouse = useMousePosition(gl.domElement);
   const particlesRef = useRef<THREE.Points | null>(null);
   const particlesData = useRef<
     Array<{
@@ -52,29 +135,14 @@ export const InteractivePoint = ({
 
   // 입자 시스템 초기화
   useEffect(() => {
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(maxParticles * 3);
-    const sizes = new Float32Array(maxParticles);
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
-    geometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 25);
-
-    const circleTexture = createCircleTexture();
-    const material = new THREE.PointsMaterial({
-      size: pointSize,
-      sizeAttenuation: true,
-      transparent: false,
-      opacity: 1,
-      blending: THREE.AdditiveBlending,
-      color: new THREE.Color(color),
-      map: circleTexture,
-      vertexColors: false,
-    });
-
-    const points = new THREE.Points(geometry, material);
+    const { points, geometry, material, circleTexture } = initParticles(
+      scene,
+      maxParticles,
+      pointSize,
+      color,
+    );
     particlesRef.current = points;
     geometryRef.current = geometry;
-    scene.add(points);
 
     return () => {
       scene.remove(points);
@@ -82,20 +150,7 @@ export const InteractivePoint = ({
       material.dispose();
       circleTexture.dispose();
     };
-  }, [scene, pointSize, maxParticles, color]);
-
-  // 마우스 이동 처리
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      const rect = gl.domElement.getBoundingClientRect();
-      mouse.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    };
-
-    gl.domElement.addEventListener("mousemove", handleMouseMove);
-    return () =>
-      gl.domElement.removeEventListener("mousemove", handleMouseMove);
-  }, [gl.domElement]);
+  }, [scene, maxParticles, pointSize, color]);
 
   useFrame(({ clock }, delta) => {
     const currentTime = clock.getElapsedTime();
@@ -133,23 +188,15 @@ export const InteractivePoint = ({
       });
     }
 
-    particlesData.current = particlesData.current.filter((particle, index) => {
-      const elapsed = currentTime - particle.startTime;
-      if (elapsed > lifetime) return false;
-
-      particle.position.addScaledVector(particle.velocity, delta);
-      const ix = index * 3;
-      positions[ix] = particle.position.x;
-      positions[ix + 1] = particle.position.y;
-      positions[ix + 2] = particle.position.z;
-
-      const sizeRatio = 1 - elapsed / lifetime;
-      const size = particle.initialSize * sizeRatio * sizeRatio;
-      sizes[index] = size < pointSize * 0.05 ? 0 : size;
-
-      particle.velocity.multiplyScalar(0.98);
-      return true;
-    });
+    particlesData.current = updateParticles(
+      particlesData.current,
+      positions,
+      sizes,
+      pointSize,
+      lifetime,
+      delta,
+      currentTime,
+    );
 
     geometryRef.current.attributes.position.needsUpdate = true;
     geometryRef.current.attributes.size.needsUpdate = true;
