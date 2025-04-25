@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
 import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
-import { useScrollCameraControl } from "../../../hooks/useScrollCameraControl";
+import { useScrollCameraControl } from "../../../hooks/camera/useScrollCameraControl";
 
 export const CameraController = () => {
   const controlsRef = useRef<ThreeOrbitControls | null>(null);

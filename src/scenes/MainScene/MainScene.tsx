@@ -8,7 +8,7 @@ import { ChromeFigure } from "../../components/three/objects/ChromeFigure";
 import { FallingParticle } from "../../components/three/objects/FallingParticle";
 import { FloorPoints } from "../../components/three/objects/FloorPoints";
 import { OverlayMenu3D } from "../../components/three/overlays/OverlayMenu3D";
-import { useScrollRotateScene } from "../../hooks/useScrollRotateScene";
+import { useScrollRotateScene } from "../../hooks/scene/useScrollRotateScene";
 import { GuidePoint } from "../Shared/GuidePoint";
 import { InteractivePoint } from "../Shared/InteractivePoint";
 
