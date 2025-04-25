@@ -1,16 +1,16 @@
 import { Canvas } from "@react-three/fiber";
 import { useRef } from "react";
 import { Group, Object3DEventMap } from "three";
-import { ArcaneWillow } from "../components/3d/ArcaneWillow";
-import { CameraController } from "../components/3d/Camera/CameraController";
-import { ChromeFigure } from "../components/3d/ChromeFigure";
-import { FallingParticle } from "../components/3d/FallingParticle";
-import { FloorPoints } from "../components/3d/FloorPoints";
-import { LightController } from "../components/3d/LightController";
-import { OverlayMenu3D } from "../components/3d/OverlayMenu3D";
-import { GuidePoint } from "./GuidePoint";
-import { InteractivePoint } from "./InteractivePoint";
-import { useScrollRotateScene } from "./useScrollRotateScene";
+import { CameraController } from "../../components/three/controllers/CameraController";
+import { LightController } from "../../components/three/controllers/LightController";
+import { ArcaneWillow } from "../../components/three/objects/ArcaneWillow";
+import { ChromeFigure } from "../../components/three/objects/ChromeFigure";
+import { FallingParticle } from "../../components/three/objects/FallingParticle";
+import { FloorPoints } from "../../components/three/objects/FloorPoints";
+import { OverlayMenu3D } from "../../components/three/overlays/OverlayMenu3D";
+import { useScrollRotateScene } from "../../hooks/useScrollRotateScene";
+import { GuidePoint } from "../Shared/GuidePoint";
+import { InteractivePoint } from "../Shared/InteractivePoint";
 
 const MainScene = () => {
   const sceneRef = useRef<Group<Object3DEventMap> | null>(null);
