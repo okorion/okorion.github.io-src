@@ -9,7 +9,7 @@ import { SceneOverlays } from "./SceneOverlays";
 const MainScene = () => {
   const sceneRef = useRef<Group<Object3DEventMap>>(null);
 
-  useScrollRotateScene(sceneRef, 0.05);
+  useScrollRotateScene(sceneRef, 0.005, 0.07);
 
   return (
     <Canvas style={{ background: "#000000" }}>
