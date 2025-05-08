@@ -31,7 +31,7 @@ const createCircleTexture = () => {
 export const GuidePoint = ({
   lifetime = 3.0,
   pointSize = 0.09,
-  maxParticles = 120,
+  maxParticles = 300,
   color = 0xffff00,
 }: Props) => {
   const { camera, scene } = useThree();
@@ -139,9 +139,9 @@ export const GuidePoint = ({
           .clone()
           .add(
             new THREE.Vector3(
-              (Math.random() - 0.5) * 1,
-              (Math.random() - 0.5) * 1,
-              (Math.random() - 0.5) * 1,
+              (Math.random() - 0.5) * 0.01,
+              (Math.random() - 0.5) * 0.01,
+              (Math.random() - 0.5) * 0.01,
             ),
           ),
         startTime: currentTime,

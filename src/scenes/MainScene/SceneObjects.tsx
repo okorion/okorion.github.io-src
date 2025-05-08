@@ -2,8 +2,8 @@ import { ArcaneWillow } from "../../components/three/objects/ArcaneWillow";
 import { ChromeFigure } from "../../components/three/objects/ChromeFigure";
 import { FallingParticle } from "../../components/three/objects/FallingParticle";
 import { FloorPoints } from "../../components/three/objects/FloorPoints";
-import { GuidePoint } from "../Shared/GuidePoint";
-import { InteractivePoint } from "../Shared/InteractivePoint";
+import { GuidePoint } from "../shared/GuidePoint";
+import { InteractivePoint } from "../shared/InteractivePoint";
 
 export const SceneObjects = () => (
   <>
