@@ -1,4 +1,4 @@
-import { ModelPointsLoader } from "../../../loaders/ModelPointsLoader";
+import { ModelPointsLoader } from "../../../loaders/modelPointsLoader/index";
 
 export const ChromeFigure = () => {
   return (
