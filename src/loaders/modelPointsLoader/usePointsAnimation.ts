@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import * as THREE from "three";
 
 export function usePointsAnimation({
@@ -14,10 +14,10 @@ export function usePointsAnimation({
   color,
 }: {
   pointsRef: React.RefObject<THREE.Points>;
-  originalPositions: React.MutableRefObject<Float32Array | null>;
-  startPositions: React.MutableRefObject<Float32Array | null>;
-  movementDirections: React.MutableRefObject<THREE.Vector3[] | null>;
-  boundingBoxRef: React.MutableRefObject<THREE.Box3 | null>;
+  originalPositions: React.RefObject<Float32Array | null>;
+  startPositions: React.RefObject<Float32Array | null>;
+  movementDirections: React.RefObject<THREE.Vector3[] | null>;
+  boundingBoxRef: React.RefObject<THREE.Box3 | null>;
   isAnimating: boolean;
   pointCount: number;
   vertexColors: boolean;
