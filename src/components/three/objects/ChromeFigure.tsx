@@ -30,6 +30,7 @@ export const ChromeFigure = () => {
     pointCount,
     vertexColors: false,
     color,
+    animationDuration: 0.5,
   });
 
   if (!geometry) return null;

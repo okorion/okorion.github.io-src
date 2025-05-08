@@ -31,6 +31,7 @@ export const ArcaneWillow = () => {
     pointCount,
     vertexColors: true,
     color,
+    animationDuration: 0.5,
   });
 
   if (!geometry) return null;

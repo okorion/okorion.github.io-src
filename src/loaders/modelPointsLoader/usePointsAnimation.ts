@@ -12,6 +12,7 @@ export function usePointsAnimation({
   pointCount,
   vertexColors,
   color,
+  animationDuration = 0.5,
 }: {
   pointsRef: React.RefObject<THREE.Points>;
   originalPositions: React.RefObject<Float32Array | null>;
@@ -22,9 +23,9 @@ export function usePointsAnimation({
   pointCount: number;
   vertexColors: boolean;
   color?: THREE.ColorRepresentation;
+  animationDuration: number;
 }) {
   const animationProgress = useRef(0);
-  const ANIMATION_DURATION = 6.0;
 
   useFrame(({ clock }, delta) => {
     if (
@@ -44,7 +45,7 @@ export function usePointsAnimation({
     const time = clock.getElapsedTime();
 
     animationProgress.current = Math.min(
-      animationProgress.current + delta / ANIMATION_DURATION,
+      animationProgress.current + delta / animationDuration,
       1,
     );
     const easeOut = 1 - Math.pow(1 - animationProgress.current, 3);
