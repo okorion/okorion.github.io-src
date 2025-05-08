@@ -59,16 +59,6 @@ export const GuidePoint = ({
     geometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 25);
 
     const circleTexture = createCircleTexture();
-    // const material = new THREE.PointsMaterial({
-    //   size: pointSize,
-    //   sizeAttenuation: true,
-    //   transparent: false,
-    //   opacity: 1,
-    //   blending: THREE.AdditiveBlending,
-    //   color: new THREE.Color(color),
-    //   map: circleTexture,
-    //   vertexColors: true,
-    // });
 
     const material = new THREE.ShaderMaterial({
       uniforms: {
