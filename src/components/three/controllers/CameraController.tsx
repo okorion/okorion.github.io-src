@@ -1,12 +1,11 @@
-import { OrbitControls } from "@react-three/drei";
+import { CameraControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
-import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
 import { useScrollCameraControl } from "../../../hooks/camera/useScrollCameraControl";
 
 export const CameraController = () => {
-  const controlsRef = useRef<ThreeOrbitControls | null>(null);
+  const controlsRef = useRef<CameraControls | null>(null);
 
   const { camera } = useThree();
   const [manualTargetY, setManualTargetY] = useState<number | null>(null);
@@ -21,23 +20,28 @@ export const CameraController = () => {
     const duration = 2000;
     const startTime = performance.now();
 
-    // ✅ easeOutCubic: 초반 빠름 → 후반 느림
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
     const animate = (now: number) => {
       const elapsed = now - startTime;
       const t = Math.min(elapsed / duration, 1);
-      const easedT = easeOutCubic(t); // <-- 핵심!
+      const easedT = easeOutCubic(t);
 
-      camera.position.copy(startPos.clone().lerp(endPos, easedT));
+      const pos = startPos.clone().lerp(endPos, easedT);
+      const target = startTarget.clone().lerp(endTarget, easedT);
 
-      if (controlsRef.current) {
-        controlsRef.current.target.copy(
-          startTarget.clone().lerp(endTarget, easedT),
-        );
-        controlsRef.current.update();
-      }
-      setManualTargetY(startTarget.y + (endTarget.y - startTarget.y));
+      controlsRef.current?.setLookAt(
+        pos.x,
+        pos.y,
+        pos.z,
+        target.x,
+        target.y,
+        target.z,
+        false,
+      );
+
+      setManualTargetY(target.y);
+
       if (t < 1) requestAnimationFrame(animate);
     };
 
@@ -50,13 +54,12 @@ export const CameraController = () => {
   useScrollCameraControl(controlsRef, 0.2, -2, 15, 0.05, manualTargetY);
 
   return (
-    <OrbitControls
+    <CameraControls
       ref={controlsRef}
-      enablePan={false}
-      enableDamping={true}
-      enableZoom={false}
       minPolarAngle={fixedPolarAngle - epsilon}
       maxPolarAngle={fixedPolarAngle + epsilon}
+      dollySpeed={0}
+      truckSpeed={0}
     />
   );
 };
