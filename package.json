@@ -14,7 +14,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx,json}": ["biome check --apply"]
+    "*.{js,ts,jsx,tsx,json}": ["biome check --write"]
   },
   "dependencies": {
     "@react-three/drei": "^10.0.8",
