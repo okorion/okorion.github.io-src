@@ -1,27 +1,45 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
-  "files": { "ignoreUnknown": false, "ignore": [] },
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "ignore": []
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "organizeImports": { "enabled": true },
+  "organizeImports": {
+    "enabled": true
+  },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": false,
-      "a11y": { "noBlankTarget": "error" },
-      "complexity": { "noUselessTypeConstraint": "error" },
+      "a11y": {
+        "noBlankTarget": "error"
+      },
+      "complexity": {
+        "noUselessTypeConstraint": "error"
+      },
       "correctness": {
         "noChildrenProp": "error",
         "noUnusedVariables": "error",
         "useArrayLiterals": "off",
         "useJsxKeyInIterable": "error"
       },
-      "security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
-      "style": { "noNamespace": "error", "useAsConstAssertion": "error" },
+      "security": {
+        "noDangerouslySetInnerHtmlWithChildren": "error"
+      },
+      "style": {
+        "noNamespace": "error",
+        "useAsConstAssertion": "error"
+      },
       "suspicious": {
         "noCommentText": "error",
         "noDuplicateJsxProps": "error",
@@ -33,11 +51,18 @@
       }
     }
   },
-  "javascript": { "formatter": { "quoteStyle": "double" }, "globals": [] },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    },
+    "globals": []
+  },
   "overrides": [
-    { "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
     {
-      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"]
+    },
+    {
+      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"],
       "javascript": {
         "globals": [
           "onscrollend",
@@ -168,7 +193,7 @@
       }
     },
     {
-      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"],
       "linter": {
         "rules": {
           "complexity": {
@@ -230,12 +255,16 @@
         }
       }
     },
-    { "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
     {
-      "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"]
+    },
+    {
+      "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts", "**/*.json"],
       "linter": {
         "rules": {
-          "complexity": { "noWith": "off" },
+          "complexity": {
+            "noWith": "off"
+          },
           "correctness": {
             "noConstAssign": "off",
             "noGlobalObjectCalls": "off",
