@@ -6,14 +6,20 @@ import MainScene from "./scenes/mainScene/MainScene";
 const App = () => {
   const { ErrorBoundary, didCatch, error } = useErrorBoundary();
 
-  return didCatch ? (
-    <div className="w-screen h-screen">{error.message}</div>
-  ) : (
+  return (
     <div className="w-screen h-screen">
       <ErrorBoundary>
-        <MainScene />
+        {didCatch ? (
+          <div className="flex items-center justify-center h-full text-red-500 text-xl">
+            {error.message}
+          </div>
+        ) : (
+          <>
+            <MainScene />
+            <Panel />
+          </>
+        )}
       </ErrorBoundary>
-      <Panel />
     </div>
   );
 };
