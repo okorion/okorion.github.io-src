@@ -17,7 +17,7 @@
     "*.{js,ts,jsx,tsx,json}": ["biome check --write"]
   },
   "dependencies": {
-    "@react-three/drei": "^10.0.8",
+    "@react-three/drei": "^10.1.2",
     "@react-three/fiber": "^9.1.0",
     "@tailwindcss/vite": "^4.1.7",
     "react": "^19.0.0",
