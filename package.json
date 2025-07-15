@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "vite": "npm:rolldown-vite@latest",
-    "@react-three/drei": "^10.4.4",
+    "@react-three/drei": "^10.5.0",
     "@react-three/fiber": "^9.2.0",
     "@tailwindcss/vite": "^4.1.11",
     "react": "^19.0.0",
