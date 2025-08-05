@@ -24,7 +24,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.1.11",
-    "three": "^0.178.0",
+    "three": "^0.179.1",
     "use-error-boundary": "^2.0.6"
   },
   "devDependencies": {
