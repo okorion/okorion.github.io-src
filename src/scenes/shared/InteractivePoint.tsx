@@ -76,23 +76,36 @@ const updateParticles = (
   delta: number,
   currentTime: number,
 ) => {
-  return particlesData.filter((particle, index) => {
+  // Optimize: Use index-based filtering to avoid array creation
+  let writeIndex = 0;
+  for (let readIndex = 0; readIndex < particlesData.length; readIndex++) {
+    const particle = particlesData[readIndex];
     const elapsed = currentTime - particle.startTime;
-    if (elapsed > lifetime) return false;
+    
+    if (elapsed <= lifetime) {
+      particle.position.addScaledVector(particle.velocity, delta);
+      const ix = writeIndex * 3;
+      positions[ix] = particle.position.x;
+      positions[ix + 1] = particle.position.y;
+      positions[ix + 2] = particle.position.z;
 
-    particle.position.addScaledVector(particle.velocity, delta);
-    const ix = index * 3;
-    positions[ix] = particle.position.x;
-    positions[ix + 1] = particle.position.y;
-    positions[ix + 2] = particle.position.z;
+      const sizeRatio = 1 - elapsed / lifetime;
+      const size = particle.initialSize * sizeRatio * sizeRatio;
+      sizes[writeIndex] = size < pointSize * 0.05 ? 0 : size;
 
-    const sizeRatio = 1 - elapsed / lifetime;
-    const size = particle.initialSize * sizeRatio * sizeRatio;
-    sizes[index] = size < pointSize * 0.05 ? 0 : size;
-
-    particle.velocity.multiplyScalar(0.98);
-    return true;
-  });
+      particle.velocity.multiplyScalar(0.98);
+      
+      // Move particle to write position if different from read position
+      if (writeIndex !== readIndex) {
+        particlesData[writeIndex] = particle;
+      }
+      writeIndex++;
+    }
+  }
+  
+  // Trim array to new length
+  particlesData.length = writeIndex;
+  return particlesData;
 };
 
 const useMousePosition = (glDomElement: HTMLElement) => {
@@ -132,6 +145,14 @@ export const InteractivePoint = ({
     }>
   >([]);
   const geometryRef = useRef<THREE.BufferGeometry | null>(null);
+  
+  // Object pooling for Vector3 instances to reduce GC pressure
+  const vectorPool = useRef<THREE.Vector3[]>([]);
+  const frameCount = useRef(0);
+
+  const getVector3 = () => {
+    return vectorPool.current.pop() || new THREE.Vector3();
+  };
 
   // 입자 시스템 초기화
   useEffect(() => {
@@ -160,29 +181,34 @@ export const InteractivePoint = ({
     const activationDelay = 2.0;
     if (currentTime < activationDelay) return;
 
+    frameCount.current++;
+    
+    // Optimize: Only add particles every few frames to reduce pressure
+    const shouldAddParticle = frameCount.current % 2 === 0;
+
     const positions = geometryRef.current.attributes.position
       .array as Float32Array;
     const sizes = geometryRef.current.attributes.size.array as Float32Array;
 
-    raycaster.current.setFromCamera(mouse.current, camera);
-    const direction = raycaster.current.ray.direction.clone().normalize();
-    const origin = camera.position
-      .clone()
-      .add(direction.clone().multiplyScalar(2));
+    if (shouldAddParticle && particlesData.current.length < maxParticles) {
+      raycaster.current.setFromCamera(mouse.current, camera);
+      const direction = raycaster.current.ray.direction.clone().normalize();
+      const origin = camera.position
+        .clone()
+        .add(direction.clone().multiplyScalar(2));
 
-    if (particlesData.current.length < maxParticles) {
+      // Use pooled vectors for better performance
+      const velocity = getVector3();
+      velocity.copy(direction).multiplyScalar(speed);
+      velocity.add(getVector3().set(
+        (Math.random() - 0.5) * 0.1,
+        (Math.random() - 0.5) * 0.1,
+        (Math.random() - 0.5) * 0.1,
+      ));
+
       particlesData.current.push({
         position: origin.clone(),
-        velocity: direction
-          .clone()
-          .multiplyScalar(speed)
-          .add(
-            new THREE.Vector3(
-              (Math.random() - 0.5) * 0.1,
-              (Math.random() - 0.5) * 0.1,
-              (Math.random() - 0.5) * 0.1,
-            ),
-          ),
+        velocity,
         startTime: currentTime,
         initialSize: pointSize,
       });

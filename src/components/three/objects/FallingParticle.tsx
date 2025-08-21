@@ -26,16 +26,35 @@ export const FallingParticle = ({
 
   const pointsRef = useRef<THREE.Points>(null!);
   const velocities = useRef<Float32Array>(new Float32Array(pointCount));
+  const frameCount = useRef(0);
+  
+  // Cache expensive calculations
+  const cachedValues = useRef({
+    height: 0,
+    invHeight: 0,
+    radiusCache: new Float32Array(1000), // Pre-computed radius values
+    angleCache: new Float32Array(1000), // Pre-computed angle values
+    cacheIndex: 0
+  });
 
   const geometry = useMemo(() => {
     const positions = new Float32Array(pointCount * 3);
     const alphas = new Float32Array(pointCount);
 
     const height = startY - endY;
+    cachedValues.current.height = height;
+    cachedValues.current.invHeight = 1 / height;
+    
+    // Pre-compute random values for better performance
+    for (let i = 0; i < 1000; i++) {
+      cachedValues.current.radiusCache[i] = radius * Math.sqrt(Math.random());
+      cachedValues.current.angleCache[i] = Math.random() * 2 * Math.PI;
+    }
 
     for (let i = 0; i < pointCount; i++) {
-      const angle = Math.random() * 2 * Math.PI;
-      const r = radius * Math.sqrt(Math.random());
+      const cacheIdx = i % 1000;
+      const angle = cachedValues.current.angleCache[cacheIdx];
+      const r = cachedValues.current.radiusCache[cacheIdx];
       const x = r * Math.cos(angle);
       const z = r * Math.sin(angle);
       const y = Math.random() * height + endY;
@@ -53,13 +72,19 @@ export const FallingParticle = ({
   }, [radius, pointCount, startY, endY, fallSpeed]);
 
   useFrame(() => {
+    frameCount.current++;
+    
+    // Optimize: Only update every other frame for better performance
+    if (frameCount.current % 2 !== 0) return;
+
     const geom = pointsRef.current.geometry;
     const posAttr = geom.attributes.position as THREE.BufferAttribute;
     const alphaAttr = geom.attributes.alpha as THREE.BufferAttribute;
     const positions = posAttr.array as Float32Array;
     const alphas = alphaAttr.array as Float32Array;
 
-    const height = startY - endY;
+    const { height, invHeight } = cachedValues.current;
+    let needsUpdate = false;
 
     for (let i = 0; i < pointCount; i++) {
       const i3 = i * 3;
@@ -67,22 +92,27 @@ export const FallingParticle = ({
       positions[yIndex] -= velocities.current[i];
 
       if (positions[yIndex] < endY) {
-        // 다시 범위 내에서 무작위 위치로 재생성
-        const angle = Math.random() * 2 * Math.PI;
-        const r = radius * Math.sqrt(Math.random());
+        // Reuse cached values for better performance
+        const cacheIdx = (cachedValues.current.cacheIndex++) % 1000;
+        const angle = cachedValues.current.angleCache[cacheIdx];
+        const r = cachedValues.current.radiusCache[cacheIdx];
         const x = r * Math.cos(angle);
         const z = r * Math.sin(angle);
         const y = Math.random() * height + endY;
 
         positions.set([x, y, z], i3);
         alphas[i] = 1.0;
+        needsUpdate = true;
       } else {
-        alphas[i] = Math.max(0, (positions[yIndex] - endY) / height);
+        // Optimized alpha calculation using cached inverse
+        alphas[i] = Math.max(0, (positions[yIndex] - endY) * invHeight);
       }
     }
 
-    posAttr.needsUpdate = true;
-    alphaAttr.needsUpdate = true;
+    if (needsUpdate) {
+      posAttr.needsUpdate = true;
+      alphaAttr.needsUpdate = true;
+    }
 
     const targetAlpha = camera.position.y <= startY ? 1 : 0;
     globalAlpha.current += (targetAlpha - globalAlpha.current) * 0.05;

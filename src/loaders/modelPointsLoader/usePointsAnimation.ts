@@ -26,6 +26,13 @@ export function usePointsAnimation({
   animationDuration: number;
 }) {
   const animationProgress = useRef(0);
+  const frameCount = useRef(0);
+  const cachedBoundingData = useRef<{
+    size: THREE.Vector3;
+    min: THREE.Vector3;
+    invSize: THREE.Vector3;
+    lastUpdate: number;
+  } | null>(null);
 
   useFrame(({ clock }, delta) => {
     if (
@@ -37,12 +44,29 @@ export function usePointsAnimation({
     )
       return;
 
+    frameCount.current++;
+    
+    // Optimize: Skip some frames for less critical updates
+    if (!isAnimating && frameCount.current % 2 !== 0) return;
+
     const positions = pointsRef.current.geometry.attributes.position
       .array as Float32Array;
     const boundingBox = boundingBoxRef.current;
-    const size = boundingBox.getSize(new THREE.Vector3());
-    const min = boundingBox.min;
     const time = clock.getElapsedTime();
+
+    // Cache bounding box calculations
+    if (!cachedBoundingData.current || time - cachedBoundingData.current.lastUpdate > 1.0) {
+      const size = boundingBox.getSize(new THREE.Vector3());
+      const min = boundingBox.min.clone();
+      cachedBoundingData.current = {
+        size,
+        min,
+        invSize: new THREE.Vector3(1 / size.x, 1 / size.y, 1 / size.z),
+        lastUpdate: time
+      };
+    }
+
+    const { min, invSize } = cachedBoundingData.current;
 
     animationProgress.current = Math.min(
       animationProgress.current + delta / animationDuration,
@@ -50,6 +74,12 @@ export function usePointsAnimation({
     );
     const easeOut = 1 - Math.pow(1 - animationProgress.current, 3);
     const colors = color ? null : new Float32Array(pointCount * 3);
+
+    // Pre-calculate common values
+    const frequency = 2.0;
+    const amplitude = 0.05;
+    const timeFreq = time * frequency;
+    const useAnimation = isAnimating || animationProgress.current >= 0.95;
 
     for (let i = 0; i < positions.length; i += 3) {
       const idx = i / 3;
@@ -66,14 +96,12 @@ export function usePointsAnimation({
       let y = sy + (ty - sy) * easeOut;
       let z = sz + (tz - sz) * easeOut;
 
-      if (isAnimating || animationProgress.current >= 0.95) {
+      if (useAnimation) {
         const dir = movementDirections.current[idx];
-        const frequency = 2.0;
-        const amplitude = 0.05;
-        const offset = Math.sin(time * frequency + idx) * amplitude;
-        x += dir.x * 0.01 * offset;
-        y += dir.y * 0.01 * offset;
-        z += dir.z * 0.01 * offset;
+        const offset = Math.sin(timeFreq + idx) * amplitude * 0.01;
+        x += dir.x * offset;
+        y += dir.y * offset;
+        z += dir.z * offset;
       }
 
       positions[i] = x;
@@ -81,9 +109,10 @@ export function usePointsAnimation({
       positions[i + 2] = z;
 
       if (!color && vertexColors && colors) {
-        const nx = (x - min.x) / size.x;
-        const ny = (y - min.y) / size.y;
-        const nz = (z - min.z) / size.z;
+        // Optimized color calculation using cached inverse size
+        const nx = (x - min.x) * invSize.x;
+        const ny = (y - min.y) * invSize.y;
+        const nz = (z - min.z) * invSize.z;
         const hue = (nx + ny + nz) / 3;
         const col = new THREE.Color().setHSL((hue * 4) % 1, 0.8, 0.5);
         colors.set([col.r, col.g, col.b], i);
