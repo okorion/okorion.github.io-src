@@ -20,7 +20,7 @@
     "vite": "npm:rolldown-vite@latest",
     "@react-three/drei": "^10.7.4",
     "@react-three/fiber": "^9.3.0",
-    "@tailwindcss/vite": "^4.1.12",
+    "@tailwindcss/vite": "^4.1.13",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tailwindcss": "^4.1.12",
