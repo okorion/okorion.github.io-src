@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import { ANIMATION_CONSTANTS } from "../../../utils/three";
 
 type Props = {
   radius?: number;
@@ -23,9 +24,9 @@ export const FloorPoints = ({
     const positions = new Float32Array(pointCount * 3);
 
     for (let i = 0; i < pointCount; i++) {
-      // 폴라 좌표로 입자 위치 생성 (중심에 밀집)
+      // Generate particle positions using polar coordinates (concentrated at center)
       const angle = Math.random() * 2 * Math.PI;
-      const r = radius * Math.random(); // sqrt를 사용하면 중심 밀도 증가
+      const r = radius * Math.random(); // Using sqrt would increase center density
 
       const x = r * Math.cos(angle);
       const z = r * Math.sin(angle);
@@ -40,14 +41,15 @@ export const FloorPoints = ({
 
   useFrame(() => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += 0.0005;
+      pointsRef.current.rotation.y += ANIMATION_CONSTANTS.FLOOR_ROTATION_SPEED;
 
-      // y position이 위아래로 아주 조금씩 랜덤하게 이동
+      // Subtle random Y-axis movement for organic feel
       const positions = pointsRef.current.geometry.attributes.position
         .array as Float32Array;
       for (let i = 0; i < positions.length; i += 3) {
         const y = positions[i + 1];
-        const randomY = y + (Math.random() - 0.5) * 0.0002; // 아주 조금씩 랜덤하게 이동
+        const randomY =
+          y + (Math.random() - 0.5) * ANIMATION_CONSTANTS.FLOOR_Y_RANDOMNESS;
         positions[i + 1] = randomY;
       }
       pointsRef.current.geometry.attributes.position.needsUpdate = true;

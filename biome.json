@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,38 +7,35 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": []
+    "includes": ["**"]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": false,
-      "a11y": {
-        "noBlankTarget": "error"
-      },
+      "a11y": {},
       "complexity": {
         "noUselessTypeConstraint": "error"
       },
       "correctness": {
         "noChildrenProp": "error",
         "noUnusedVariables": "error",
-        "useArrayLiterals": "off",
         "useJsxKeyInIterable": "error"
       },
       "security": {
-        "noDangerouslySetInnerHtmlWithChildren": "error"
+        "noDangerouslySetInnerHtmlWithChildren": "error",
+        "noBlankTarget": "error"
       },
       "style": {
         "noNamespace": "error",
-        "useAsConstAssertion": "error"
+        "useAsConstAssertion": "error",
+        "useArrayLiterals": "off"
       },
       "suspicious": {
         "noCommentText": "error",
@@ -59,10 +56,10 @@
   },
   "overrides": [
     {
-      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"]
+      "includes": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"]
     },
     {
-      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"],
+      "includes": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"],
       "javascript": {
         "globals": [
           "onscrollend",
@@ -193,14 +190,13 @@
       }
     },
     {
-      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"],
+      "includes": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"],
       "linter": {
         "rules": {
           "complexity": {
             "noExtraBooleanCast": "error",
-            "noMultipleSpacesInRegularExpressionLiterals": "error",
             "noUselessCatch": "error",
-            "noWith": "error"
+            "noAdjacentSpacesInRegex": "error"
           },
           "correctness": {
             "noConstAssign": "error",
@@ -225,7 +221,8 @@
             "noUnusedVariables": "error",
             "useIsNan": "error",
             "useValidForDirection": "error",
-            "useYield": "error"
+            "useYield": "error",
+            "useValidTypeof": "error"
           },
           "suspicious": {
             "noAsyncPromiseExecutor": "error",
@@ -250,35 +247,32 @@
             "noSparseArray": "error",
             "noUnsafeNegation": "error",
             "useGetterReturn": "error",
-            "useValidTypeof": "error"
+            "noWith": "error"
           }
         }
       }
     },
     {
-      "include": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"]
+      "includes": ["**/*.{js,mjs,cjs,ts,jsx,tsx,json}"]
     },
     {
-      "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts", "**/*.json"],
+      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts", "**/*.json"],
       "linter": {
         "rules": {
           "complexity": {
-            "noWith": "off"
+            "noArguments": "error"
           },
           "correctness": {
             "noConstAssign": "off",
             "noGlobalObjectCalls": "off",
             "noInvalidBuiltinInstantiation": "off",
             "noInvalidConstructorSuper": "off",
-            "noNewSymbol": "off",
             "noSetterReturn": "off",
             "noUndeclaredVariables": "off",
             "noUnreachable": "off",
             "noUnreachableSuper": "off"
           },
           "style": {
-            "noArguments": "error",
-            "noVar": "error",
             "useConst": "error"
           },
           "suspicious": {
@@ -290,7 +284,9 @@
             "noImportAssign": "off",
             "noRedeclare": "off",
             "noUnsafeNegation": "off",
-            "useGetterReturn": "off"
+            "useGetterReturn": "off",
+            "noWith": "off",
+            "noVar": "error"
           }
         }
       }
