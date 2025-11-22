@@ -18,6 +18,17 @@ export const FloorPoints = ({
   opacity = 0.7,
 }: Props) => {
   const pointsRef = useRef<THREE.Points>(null!);
+  const frameCount = useRef(0);
+  const rotationSpeed = useRef(0.0005);
+  
+  // Pre-compute random offsets for better performance
+  const randomOffsets = useMemo(() => {
+    const offsets = new Float32Array(pointCount);
+    for (let i = 0; i < pointCount; i++) {
+      offsets[i] = (Math.random() - 0.5) * 0.0002;
+    }
+    return offsets;
+  }, [pointCount]);
 
   const geometry = useMemo(() => {
     const positions = new Float32Array(pointCount * 3);
@@ -39,16 +50,23 @@ export const FloorPoints = ({
   }, [radius, pointCount]);
 
   useFrame(() => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += 0.0005;
+    if (!pointsRef.current) return;
+    
+    frameCount.current++;
+    
+    // Optimize rotation - only update every frame
+    pointsRef.current.rotation.y += rotationSpeed.current;
 
-      // y position이 위아래로 아주 조금씩 랜덤하게 이동
+    // Optimize: Reduce frequency of position updates for better performance
+    if (frameCount.current % 3 === 0) {
       const positions = pointsRef.current.geometry.attributes.position
         .array as Float32Array;
-      for (let i = 0; i < positions.length; i += 3) {
-        const y = positions[i + 1];
-        const randomY = y + (Math.random() - 0.5) * 0.0002; // 아주 조금씩 랜덤하게 이동
-        positions[i + 1] = randomY;
+      
+      // Use pre-computed offsets in a cycling pattern for better performance
+      const offsetCycle = frameCount.current / 3;
+      for (let i = 1; i < positions.length; i += 3) {
+        const offsetIndex = ((i / 3) + offsetCycle) % pointCount;
+        positions[i] = randomOffsets[offsetIndex];
       }
       pointsRef.current.geometry.attributes.position.needsUpdate = true;
     }
