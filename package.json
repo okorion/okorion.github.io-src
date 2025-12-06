@@ -14,7 +14,9 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx,json}": ["biome check --write"]
+    "*.{js,ts,jsx,tsx,json}": [
+      "biome check --write"
+    ]
   },
   "dependencies": {
     "vite": "npm:rolldown-vite@latest",
