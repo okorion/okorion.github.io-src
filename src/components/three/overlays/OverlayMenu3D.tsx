@@ -25,7 +25,7 @@ const InteractiveLabel = ({ position, label, url, icon }: Props) => {
   };
 
   return (
-    <Html position={position} scale={0.05} transform>
+    <Html position={position} scale={0.06} transform>
       <div
         className={`
           pointer-events-auto cursor-pointer select-none
@@ -34,11 +34,7 @@ const InteractiveLabel = ({ position, label, url, icon }: Props) => {
           transition-all duration-200
           text-black text-3xl font-bold 
           border border-white/30
-          ${
-            isHovered
-              ? "opacity-100 bg-white/90 backdrop-brightness-125"
-              : "opacity-90 bg-white/50"
-          }
+          ${isHovered ? " bg-white/90 backdrop-brightness-125" : "bg-white/70"}
         `}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
@@ -59,41 +55,57 @@ const InteractiveLabel = ({ position, label, url, icon }: Props) => {
 };
 
 export const OverlayMenu3D = () => {
-  const OverlayMenuX = 0.3;
-  const OverlayMenuY = 0.6;
-  const OverlayMenuZ = 2.1;
+  const OverlayMenuX = 0.4;
+  const OverlayMenuY = 0.7;
+  const OverlayMenuZ = 2.0;
 
   return (
     <>
-      <InteractiveLabel
-        position={[OverlayMenuX, OverlayMenuY, OverlayMenuZ]}
+      {/* <InteractiveLabel
+        position={[OverlayMenuX - 0.3, OverlayMenuY, OverlayMenuZ]}
         label="okorion"
         url="https://github.com/okorion"
         icon="/icons/home.svg"
-      />
+      /> */}
       <InteractiveLabel
-        position={[OverlayMenuX - 0.43, OverlayMenuY - 0.2, OverlayMenuZ]}
-        label="GitHub"
+        position={[
+          OverlayMenuX - 0.52,
+          OverlayMenuY - 0.08,
+          OverlayMenuZ - 0.7,
+        ]}
+        label="okorion"
         url="https://github.com/okorion"
         icon="/icons/github.svg"
       />
       <InteractiveLabel
-        position={[OverlayMenuX, OverlayMenuY - 0.2, OverlayMenuZ]}
-        label="Velog"
+        position={[
+          OverlayMenuX - 0.43,
+          OverlayMenuY - 0.25,
+          OverlayMenuZ - 0.7,
+        ]}
+        label="(new) Tech Blog"
+        url="https://okorion.github.io/tech-blog/"
+        icon="/icons/jekyll.svg"
+      />
+      <InteractiveLabel
+        position={[
+          OverlayMenuX + 0.125,
+          OverlayMenuY - 0.25,
+          OverlayMenuZ - 0.67,
+        ]}
+        label="(old) Tech Blog"
         url="https://velog.io/@okorion"
         icon="/icons/velog.svg"
       />
       <InteractiveLabel
-        position={[OverlayMenuX + 0.5, OverlayMenuY - 0.2, OverlayMenuZ]}
-        label="Portfolio(Notion)"
+        position={[
+          OverlayMenuX + 0.58,
+          OverlayMenuY - 0.25,
+          OverlayMenuZ - 0.64,
+        ]}
+        label="Portfolio"
         url="https://okorion.notion.site/Portfolio-1d50242aaedf80988f93f5af21fe0304"
         icon="/icons/notion.svg"
-      />
-      <InteractiveLabel
-        position={[OverlayMenuX + 0.5, OverlayMenuY, OverlayMenuZ]}
-        label="Jekyll Tech Blog"
-        url="https://okorion.github.io"
-        icon="/icons/jekyll.svg"
       />
     </>
   );
