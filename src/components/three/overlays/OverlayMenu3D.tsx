@@ -89,6 +89,12 @@ export const OverlayMenu3D = () => {
         url="https://okorion.notion.site/Portfolio-1d50242aaedf80988f93f5af21fe0304"
         icon="/icons/notion.svg"
       />
+      <InteractiveLabel
+        position={[OverlayMenuX + 0.5, OverlayMenuY, OverlayMenuZ]}
+        label="Jekyll Tech Blog"
+        url="https://okorion.github.io"
+        icon="/icons/jekyll.svg"
+      />
     </>
   );
 };
