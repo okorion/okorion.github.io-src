@@ -24,14 +24,14 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.1",
-    "three": "^0.182.0",
+    "three": "^0.183.1",
     "use-error-boundary": "^2.0.6"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@biomejs/biome": "2.4.0",
     "@types/react-dom": "^19.2.3",
-    "@types/three": "^0.182.0",
+    "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^5.1.4",
     "gh-pages": "^6.3.0",
     "husky": "^9.1.7",
