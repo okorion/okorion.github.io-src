@@ -18,40 +18,57 @@ export const FloorPoints = ({
   opacity = 0.7,
 }: Props) => {
   const pointsRef = useRef<THREE.Points>(null!);
+  const jitterStateRef = useRef<{
+    amplitudes: Float32Array;
+    phases: Float32Array;
+  } | null>(null);
+  const frameSkipRef = useRef(0);
 
   const geometry = useMemo(() => {
     const positions = new Float32Array(pointCount * 3);
+    const amplitudes = new Float32Array(pointCount);
+    const phases = new Float32Array(pointCount);
 
     for (let i = 0; i < pointCount; i++) {
-      // 폴라 좌표로 입자 위치 생성 (중심에 밀집)
       const angle = Math.random() * 2 * Math.PI;
-      const r = radius * Math.random(); // sqrt를 사용하면 중심 밀도 증가
-
+      const r = radius * Math.random();
       const x = r * Math.cos(angle);
       const z = r * Math.sin(angle);
+      const i3 = i * 3;
 
-      positions.set([x, 0, z], i * 3);
+      positions[i3] = x;
+      positions[i3 + 1] = 0;
+      positions[i3 + 2] = z;
+      amplitudes[i] = 0.00005 + Math.random() * 0.00015;
+      phases[i] = Math.random() * Math.PI * 2;
     }
+
+    jitterStateRef.current = { amplitudes, phases };
 
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     return geo;
   }, [radius, pointCount]);
 
-  useFrame(() => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += 0.0005;
+  useFrame(({ clock }) => {
+    if (!pointsRef.current) return;
 
-      // y position이 위아래로 아주 조금씩 랜덤하게 이동
-      const positions = pointsRef.current.geometry.attributes.position
-        .array as Float32Array;
-      for (let i = 0; i < positions.length; i += 3) {
-        const y = positions[i + 1];
-        const randomY = y + (Math.random() - 0.5) * 0.0002; // 아주 조금씩 랜덤하게 이동
-        positions[i + 1] = randomY;
-      }
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    pointsRef.current.rotation.y += 0.0005;
+    frameSkipRef.current = (frameSkipRef.current + 1) % 3;
+    if (frameSkipRef.current !== 0 || !jitterStateRef.current) {
+      return;
     }
+
+    const positions = pointsRef.current.geometry.attributes.position
+      .array as Float32Array;
+    const { amplitudes, phases } = jitterStateRef.current;
+    const time = clock.getElapsedTime() * 0.9;
+
+    for (let i = 0; i < pointCount; i++) {
+      positions[i * 3 + 1] = Math.sin(time + phases[i]) * amplitudes[i];
+    }
+
+    pointsRef.current.geometry.attributes.position.needsUpdate = true;
   });
 
   return (

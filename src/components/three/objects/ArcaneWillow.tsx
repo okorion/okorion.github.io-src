@@ -28,7 +28,6 @@ export const ArcaneWillow = () => {
     movementDirections,
     boundingBoxRef,
     isAnimating: true,
-    pointCount,
     vertexColors: true,
     color,
     animationDuration: 0.5,

@@ -27,7 +27,6 @@ export const ChromeFigure = () => {
     movementDirections,
     boundingBoxRef,
     isAnimating: true,
-    pointCount,
     vertexColors: false,
     color,
     animationDuration: 0.5,

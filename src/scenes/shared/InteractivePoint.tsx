@@ -18,7 +18,6 @@ type ParticleData = {
   initialSize: number;
 };
 
-// 원형 텍스처 생성 함수
 const createCircleTexture = () => {
   const size = 64;
   const canvas = document.createElement("canvas");
@@ -67,34 +66,6 @@ const initParticles = (
   return { points, geometry, material, circleTexture };
 };
 
-const updateParticles = (
-  particlesData: ParticleData[],
-  positions: Float32Array,
-  sizes: Float32Array,
-  pointSize: number,
-  lifetime: number,
-  delta: number,
-  currentTime: number,
-) => {
-  return particlesData.filter((particle, index) => {
-    const elapsed = currentTime - particle.startTime;
-    if (elapsed > lifetime) return false;
-
-    particle.position.addScaledVector(particle.velocity, delta);
-    const ix = index * 3;
-    positions[ix] = particle.position.x;
-    positions[ix + 1] = particle.position.y;
-    positions[ix + 2] = particle.position.z;
-
-    const sizeRatio = 1 - elapsed / lifetime;
-    const size = particle.initialSize * sizeRatio * sizeRatio;
-    sizes[index] = size < pointSize * 0.05 ? 0 : size;
-
-    particle.velocity.multiplyScalar(0.98);
-    return true;
-  });
-};
-
 const useMousePosition = (glDomElement: HTMLElement) => {
   const mouse = useRef(new THREE.Vector2());
 
@@ -122,18 +93,12 @@ export const InteractivePoint = ({
   const { camera, gl, scene } = useThree();
   const raycaster = useRef(new THREE.Raycaster());
   const mouse = useMousePosition(gl.domElement);
-  const particlesRef = useRef<THREE.Points | null>(null);
-  const particlesData = useRef<
-    Array<{
-      position: THREE.Vector3;
-      velocity: THREE.Vector3;
-      startTime: number;
-      initialSize: number;
-    }>
-  >([]);
+  const particlesData = useRef<ParticleData[]>([]);
   const geometryRef = useRef<THREE.BufferGeometry | null>(null);
+  const directionRef = useRef(new THREE.Vector3());
+  const originRef = useRef(new THREE.Vector3());
+  const jitterRef = useRef(new THREE.Vector3());
 
-  // 입자 시스템 초기화
   useEffect(() => {
     const { points, geometry, material, circleTexture } = initParticles(
       scene,
@@ -141,7 +106,6 @@ export const InteractivePoint = ({
       pointSize,
       color,
     );
-    particlesRef.current = points;
     geometryRef.current = geometry;
 
     return () => {
@@ -154,50 +118,70 @@ export const InteractivePoint = ({
 
   useFrame(({ clock }, delta) => {
     const currentTime = clock.getElapsedTime();
-    if (!particlesRef.current || !geometryRef.current) return;
-
-    // 카메라 초기 애니메이션 시간 이후에만 입자 작동
-    const activationDelay = 2.0;
-    if (currentTime < activationDelay) return;
+    if (!geometryRef.current) return;
+    if (currentTime < 2.0) return;
 
     const positions = geometryRef.current.attributes.position
       .array as Float32Array;
     const sizes = geometryRef.current.attributes.size.array as Float32Array;
+    const particles = particlesData.current;
 
     raycaster.current.setFromCamera(mouse.current, camera);
-    const direction = raycaster.current.ray.direction.clone().normalize();
-    const origin = camera.position
-      .clone()
-      .add(direction.clone().multiplyScalar(2));
+    const direction = directionRef.current.copy(
+      raycaster.current.ray.direction,
+    );
+    direction.normalize();
+    const origin = originRef.current
+      .copy(camera.position)
+      .addScaledVector(direction, 2);
 
-    if (particlesData.current.length < maxParticles) {
-      particlesData.current.push({
-        position: origin.clone(),
-        velocity: direction
-          .clone()
-          .multiplyScalar(speed)
-          .add(
-            new THREE.Vector3(
-              (Math.random() - 0.5) * 0.1,
-              (Math.random() - 0.5) * 0.1,
-              (Math.random() - 0.5) * 0.1,
-            ),
+    if (particles.length < maxParticles) {
+      const velocity = new THREE.Vector3()
+        .copy(direction)
+        .multiplyScalar(speed)
+        .add(
+          jitterRef.current.set(
+            (Math.random() - 0.5) * 0.1,
+            (Math.random() - 0.5) * 0.1,
+            (Math.random() - 0.5) * 0.1,
           ),
+        );
+
+      particles.push({
+        position: new THREE.Vector3().copy(origin),
+        velocity,
         startTime: currentTime,
         initialSize: pointSize,
       });
     }
 
-    particlesData.current = updateParticles(
-      particlesData.current,
-      positions,
-      sizes,
-      pointSize,
-      lifetime,
-      delta,
-      currentTime,
-    );
+    let activeCount = 0;
 
+    for (let i = 0; i < particles.length; i++) {
+      const particle = particles[i];
+      const elapsed = currentTime - particle.startTime;
+      if (elapsed > lifetime) continue;
+
+      particle.position.addScaledVector(particle.velocity, delta);
+      const ix = activeCount * 3;
+      positions[ix] = particle.position.x;
+      positions[ix + 1] = particle.position.y;
+      positions[ix + 2] = particle.position.z;
+
+      const sizeRatio = 1 - elapsed / lifetime;
+      const size = particle.initialSize * sizeRatio * sizeRatio;
+      sizes[activeCount] = size < pointSize * 0.05 ? 0 : size;
+
+      particle.velocity.multiplyScalar(0.98);
+      particles[activeCount] = particle;
+      activeCount += 1;
+    }
+
+    for (let i = activeCount; i < particles.length; i++) {
+      sizes[i] = 0;
+    }
+
+    particles.length = activeCount;
     geometryRef.current.attributes.position.needsUpdate = true;
     geometryRef.current.attributes.size.needsUpdate = true;
   });

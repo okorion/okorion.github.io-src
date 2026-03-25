@@ -39,8 +39,11 @@ export const FallingParticle = ({
       const x = r * Math.cos(angle);
       const z = r * Math.sin(angle);
       const y = Math.random() * height + endY;
+      const i3 = i * 3;
 
-      positions.set([x, y, z], i * 3);
+      positions[i3] = x;
+      positions[i3 + 1] = y;
+      positions[i3 + 2] = z;
       alphas[i] = 1.0;
 
       velocities.current[i] = fallSpeed + Math.random() * 0.003;
@@ -74,7 +77,9 @@ export const FallingParticle = ({
         const z = r * Math.sin(angle);
         const y = Math.random() * height + endY;
 
-        positions.set([x, y, z], i3);
+        positions[i3] = x;
+        positions[yIndex] = y;
+        positions[i3 + 2] = z;
         alphas[i] = 1.0;
       } else {
         alphas[i] = Math.max(0, (positions[yIndex] - endY) / height);
