@@ -6,17 +6,23 @@ import { SceneControllers } from "./SceneControllers";
 import { SceneObjects } from "./SceneObjects";
 import { SceneOverlays } from "./SceneOverlays";
 
-const MainScene = () => {
+const SceneContent = () => {
   const sceneRef = useRef<Group<Object3DEventMap>>(null);
 
   useScrollRotateScene(sceneRef, 0.005, 0.07);
 
   return (
-    <Canvas style={{ background: "#000000" }}>
-      <group ref={sceneRef}>
-        <SceneOverlays />
-        <SceneObjects />
-      </group>
+    <group ref={sceneRef}>
+      <SceneOverlays />
+      <SceneObjects />
+    </group>
+  );
+};
+
+const MainScene = () => {
+  return (
+    <Canvas dpr={[1, 1.5]} style={{ background: "#000000" }}>
+      <SceneContent />
       <SceneControllers />
     </Canvas>
   );
