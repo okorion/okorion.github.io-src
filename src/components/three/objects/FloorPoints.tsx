@@ -10,6 +10,23 @@ type Props = {
   opacity?: number;
 };
 
+interface JitterSample {
+  amplitude: number;
+  phase: number;
+}
+
+const setPositionYWithinBounds = (
+  attribute: THREE.BufferAttribute,
+  vertexIndex: number,
+  value: number,
+) => {
+  if (vertexIndex < 0 || vertexIndex >= attribute.count) {
+    return;
+  }
+
+  attribute.setY(vertexIndex, value);
+};
+
 export const FloorPoints = ({
   radius = 15,
   pointCount = 30000,
@@ -18,10 +35,7 @@ export const FloorPoints = ({
   opacity = 0.7,
 }: Props) => {
   const pointsRef = useRef<THREE.Points>(null!);
-  const jitterStateRef = useRef<{
-    amplitudes: number[];
-    phases: number[];
-  } | null>(null);
+  const jitterStateRef = useRef<JitterSample[] | null>(null);
   const frameSkipRef = useRef(0);
 
   const geometry = useMemo(() => {
@@ -29,8 +43,7 @@ export const FloorPoints = ({
       new Float32Array(pointCount * 3),
       3,
     );
-    const amplitudes: number[] = [];
-    const phases: number[] = [];
+    const jitterSamples: JitterSample[] = [];
 
     for (let i = 0; i < pointCount; i++) {
       const angle = Math.random() * 2 * Math.PI;
@@ -39,11 +52,13 @@ export const FloorPoints = ({
       const z = r * Math.sin(angle);
 
       positionAttr.setXYZ(i, x, 0, z);
-      amplitudes.push(0.00005 + Math.random() * 0.00015);
-      phases.push(Math.random() * Math.PI * 2);
+      jitterSamples.push({
+        amplitude: 0.00005 + Math.random() * 0.00015,
+        phase: Math.random() * Math.PI * 2,
+      });
     }
 
-    jitterStateRef.current = { amplitudes, phases };
+    jitterStateRef.current = jitterSamples;
 
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", positionAttr);
@@ -61,13 +76,15 @@ export const FloorPoints = ({
 
     const positionAttr = pointsRef.current.geometry.attributes
       .position as THREE.BufferAttribute;
-    const { amplitudes, phases } = jitterStateRef.current;
     const time = clock.getElapsedTime() * 0.9;
-    const pointTotal = amplitudes.length;
 
-    for (let i = 0; i < pointTotal; i++) {
-      positionAttr.setY(i, Math.sin(time + phases[i]) * amplitudes[i]);
-    }
+    jitterStateRef.current.forEach((sample, index) => {
+      setPositionYWithinBounds(
+        positionAttr,
+        index,
+        Math.sin(time + sample.phase) * sample.amplitude,
+      );
+    });
 
     positionAttr.needsUpdate = true;
   });

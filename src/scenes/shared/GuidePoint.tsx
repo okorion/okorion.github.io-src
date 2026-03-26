@@ -10,13 +10,13 @@ type Props = {
   color?: THREE.ColorRepresentation;
 };
 
-type ParticleData = {
+interface ParticleData {
   position: THREE.Vector3;
   velocity: THREE.Vector3;
   startTime: number;
   initialSize: number;
   initialColor: THREE.Color;
-};
+}
 
 const createCircleTexture = () => {
   const size = 64;
