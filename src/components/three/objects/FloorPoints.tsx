@@ -19,34 +19,34 @@ export const FloorPoints = ({
 }: Props) => {
   const pointsRef = useRef<THREE.Points>(null!);
   const jitterStateRef = useRef<{
-    amplitudes: Float32Array;
-    phases: Float32Array;
+    amplitudes: number[];
+    phases: number[];
   } | null>(null);
   const frameSkipRef = useRef(0);
 
   const geometry = useMemo(() => {
-    const positions = new Float32Array(pointCount * 3);
-    const amplitudes = new Float32Array(pointCount);
-    const phases = new Float32Array(pointCount);
+    const positionAttr = new THREE.BufferAttribute(
+      new Float32Array(pointCount * 3),
+      3,
+    );
+    const amplitudes: number[] = [];
+    const phases: number[] = [];
 
     for (let i = 0; i < pointCount; i++) {
       const angle = Math.random() * 2 * Math.PI;
       const r = radius * Math.random();
       const x = r * Math.cos(angle);
       const z = r * Math.sin(angle);
-      const i3 = i * 3;
 
-      positions[i3] = x;
-      positions[i3 + 1] = 0;
-      positions[i3 + 2] = z;
-      amplitudes[i] = 0.00005 + Math.random() * 0.00015;
-      phases[i] = Math.random() * Math.PI * 2;
+      positionAttr.setXYZ(i, x, 0, z);
+      amplitudes.push(0.00005 + Math.random() * 0.00015);
+      phases.push(Math.random() * Math.PI * 2);
     }
 
     jitterStateRef.current = { amplitudes, phases };
 
     const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("position", positionAttr);
     return geo;
   }, [radius, pointCount]);
 
@@ -59,16 +59,17 @@ export const FloorPoints = ({
       return;
     }
 
-    const positions = pointsRef.current.geometry.attributes.position
-      .array as Float32Array;
+    const positionAttr = pointsRef.current.geometry.attributes
+      .position as THREE.BufferAttribute;
     const { amplitudes, phases } = jitterStateRef.current;
     const time = clock.getElapsedTime() * 0.9;
+    const pointTotal = amplitudes.length;
 
-    for (let i = 0; i < pointCount; i++) {
-      positions[i * 3 + 1] = Math.sin(time + phases[i]) * amplitudes[i];
+    for (let i = 0; i < pointTotal; i++) {
+      positionAttr.setY(i, Math.sin(time + phases[i]) * amplitudes[i]);
     }
 
-    pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    positionAttr.needsUpdate = true;
   });
 
   return (

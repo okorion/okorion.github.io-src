@@ -94,6 +94,7 @@ export const InteractivePoint = ({
   const raycaster = useRef(new THREE.Raycaster());
   const mouse = useMousePosition(gl.domElement);
   const particlesData = useRef<ParticleData[]>([]);
+  const recycledParticles = useRef<ParticleData[]>([]);
   const geometryRef = useRef<THREE.BufferGeometry | null>(null);
   const directionRef = useRef(new THREE.Vector3());
   const originRef = useRef(new THREE.Vector3());
@@ -121,10 +122,14 @@ export const InteractivePoint = ({
     if (!geometryRef.current) return;
     if (currentTime < 2.0) return;
 
-    const positions = geometryRef.current.attributes.position
-      .array as Float32Array;
-    const sizes = geometryRef.current.attributes.size.array as Float32Array;
+    const positionAttr = geometryRef.current.attributes
+      .position as THREE.BufferAttribute;
+    const sizeAttr = geometryRef.current.attributes
+      .size as THREE.BufferAttribute;
     const particles = particlesData.current;
+    const nextParticles = recycledParticles.current;
+    const previousCount = particles.length;
+    nextParticles.length = 0;
 
     raycaster.current.setFromCamera(mouse.current, camera);
     const direction = directionRef.current.copy(
@@ -157,33 +162,37 @@ export const InteractivePoint = ({
 
     let activeCount = 0;
 
-    for (let i = 0; i < particles.length; i++) {
-      const particle = particles[i];
+    for (const particle of particles) {
       const elapsed = currentTime - particle.startTime;
-      if (elapsed > lifetime) continue;
+      if (elapsed > lifetime) {
+        continue;
+      }
 
       particle.position.addScaledVector(particle.velocity, delta);
-      const ix = activeCount * 3;
-      positions[ix] = particle.position.x;
-      positions[ix + 1] = particle.position.y;
-      positions[ix + 2] = particle.position.z;
+      positionAttr.setXYZ(
+        activeCount,
+        particle.position.x,
+        particle.position.y,
+        particle.position.z,
+      );
 
       const sizeRatio = 1 - elapsed / lifetime;
       const size = particle.initialSize * sizeRatio * sizeRatio;
-      sizes[activeCount] = size < pointSize * 0.05 ? 0 : size;
+      sizeAttr.setX(activeCount, size < pointSize * 0.05 ? 0 : size);
 
       particle.velocity.multiplyScalar(0.98);
-      particles[activeCount] = particle;
+      nextParticles.push(particle);
       activeCount += 1;
     }
 
-    for (let i = activeCount; i < particles.length; i++) {
-      sizes[i] = 0;
+    for (let i = activeCount; i < previousCount; i++) {
+      sizeAttr.setX(i, 0);
     }
 
-    particles.length = activeCount;
-    geometryRef.current.attributes.position.needsUpdate = true;
-    geometryRef.current.attributes.size.needsUpdate = true;
+    particlesData.current = nextParticles;
+    recycledParticles.current = particles;
+    positionAttr.needsUpdate = true;
+    sizeAttr.needsUpdate = true;
   });
 
   return null;

@@ -10,6 +10,14 @@ type Props = {
   color?: THREE.ColorRepresentation;
 };
 
+type ParticleData = {
+  position: THREE.Vector3;
+  velocity: THREE.Vector3;
+  startTime: number;
+  initialSize: number;
+  initialColor: THREE.Color;
+};
+
 const createCircleTexture = () => {
   const size = 64;
   const canvas = document.createElement("canvas");
@@ -35,15 +43,8 @@ export const GuidePoint = ({
 }: Props) => {
   const { camera, scene } = useThree();
   const particlesRef = useRef<THREE.Points | null>(null);
-  const particlesData = useRef<
-    Array<{
-      position: THREE.Vector3;
-      velocity: THREE.Vector3;
-      startTime: number;
-      initialSize: number;
-      initialColor: THREE.Color;
-    }>
-  >([]);
+  const particlesData = useRef<ParticleData[]>([]);
+  const recycledParticles = useRef<ParticleData[]>([]);
   const geometryRef = useRef<THREE.BufferGeometry | null>(null);
   const directionRef = useRef(new THREE.Vector3());
   const originRef = useRef(new THREE.Vector3());
@@ -108,11 +109,16 @@ export const GuidePoint = ({
 
     if (currentTime < 2.0) return;
 
-    const positions = geometryRef.current.attributes.position
-      .array as Float32Array;
-    const sizes = geometryRef.current.attributes.size.array as Float32Array;
-    const colors = geometryRef.current.attributes.color.array as Float32Array;
+    const positionAttr = geometryRef.current.attributes
+      .position as THREE.BufferAttribute;
+    const sizeAttr = geometryRef.current.attributes
+      .size as THREE.BufferAttribute;
+    const colorAttr = geometryRef.current.attributes
+      .color as THREE.BufferAttribute;
     const particles = particlesData.current;
+    const nextParticles = recycledParticles.current;
+    const previousCount = particles.length;
+    nextParticles.length = 0;
 
     const direction = directionRef.current;
     camera.getWorldDirection(direction);
@@ -144,44 +150,43 @@ export const GuidePoint = ({
 
     let activeCount = 0;
 
-    for (let i = 0; i < particles.length; i++) {
-      const particle = particles[i];
+    for (const particle of particles) {
       const elapsed = currentTime - particle.startTime;
-      if (elapsed > lifetime) continue;
+      if (elapsed > lifetime) {
+        continue;
+      }
 
       particle.position.addScaledVector(particle.velocity, delta);
-      const ix = activeCount * 3;
-      positions[ix] = 0;
-      positions[ix + 1] = particle.position.y;
-      positions[ix + 2] = 0;
+      positionAttr.setXYZ(activeCount, 0, particle.position.y, 0);
 
       const sizeRatio = 1 - elapsed / lifetime;
       const size =
         particle.initialSize * sizeRatio * sizeRatio * sizeRatio * sizeRatio;
-      sizes[activeCount] = size < pointSize * 0.05 ? 0 : size;
+      sizeAttr.setX(activeCount, size < pointSize * 0.05 ? 0 : size);
 
       const easedT = 1 - Math.pow(1 - elapsed / lifetime, 16);
-      colors[ix] = THREE.MathUtils.lerp(particle.initialColor.r, 1, easedT);
-      colors[ix + 1] = THREE.MathUtils.lerp(particle.initialColor.g, 0, easedT);
-      colors[ix + 2] = THREE.MathUtils.lerp(particle.initialColor.b, 0, easedT);
+      colorAttr.setXYZ(
+        activeCount,
+        THREE.MathUtils.lerp(particle.initialColor.r, 1, easedT),
+        THREE.MathUtils.lerp(particle.initialColor.g, 0, easedT),
+        THREE.MathUtils.lerp(particle.initialColor.b, 0, easedT),
+      );
 
       particle.velocity.multiplyScalar(0.98);
-      particles[activeCount] = particle;
+      nextParticles.push(particle);
       activeCount += 1;
     }
 
-    for (let i = activeCount; i < particles.length; i++) {
-      const ix = i * 3;
-      sizes[i] = 0;
-      colors[ix] = 0;
-      colors[ix + 1] = 0;
-      colors[ix + 2] = 0;
+    for (let i = activeCount; i < previousCount; i++) {
+      sizeAttr.setX(i, 0);
+      colorAttr.setXYZ(i, 0, 0, 0);
     }
 
-    particles.length = activeCount;
-    geometryRef.current.attributes.position.needsUpdate = true;
-    geometryRef.current.attributes.size.needsUpdate = true;
-    geometryRef.current.attributes.color.needsUpdate = true;
+    particlesData.current = nextParticles;
+    recycledParticles.current = particles;
+    positionAttr.needsUpdate = true;
+    sizeAttr.needsUpdate = true;
+    colorAttr.needsUpdate = true;
   });
 
   return null;

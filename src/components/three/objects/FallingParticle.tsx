@@ -18,75 +18,73 @@ export const FallingParticle = ({
   pointSize = 0.01,
   color = "#e6e6e6",
   fallSpeed = 0.0001,
-  startY = 12, // 기본값: 위쪽에서 시작
-  endY = -10, // 기본값: 바닥까지 떨어짐
+  startY = 12,
+  endY = -10,
 }: Props) => {
   const { camera } = useThree();
   const globalAlpha = useRef(1);
-
   const pointsRef = useRef<THREE.Points>(null!);
-  const velocities = useRef<Float32Array>(new Float32Array(pointCount));
+  const velocities = useRef<number[]>([]);
 
   const geometry = useMemo(() => {
-    const positions = new Float32Array(pointCount * 3);
-    const alphas = new Float32Array(pointCount);
-
+    const positionAttr = new THREE.BufferAttribute(
+      new Float32Array(pointCount * 3),
+      3,
+    );
+    const alphaAttr = new THREE.BufferAttribute(
+      new Float32Array(pointCount),
+      1,
+    );
+    const nextVelocities: number[] = [];
     const height = startY - endY;
 
     for (let i = 0; i < pointCount; i++) {
       const angle = Math.random() * 2 * Math.PI;
-      const r = radius * Math.sqrt(Math.random());
-      const x = r * Math.cos(angle);
-      const z = r * Math.sin(angle);
+      const distance = radius * Math.sqrt(Math.random());
+      const x = distance * Math.cos(angle);
+      const z = distance * Math.sin(angle);
       const y = Math.random() * height + endY;
-      const i3 = i * 3;
 
-      positions[i3] = x;
-      positions[i3 + 1] = y;
-      positions[i3 + 2] = z;
-      alphas[i] = 1.0;
-
-      velocities.current[i] = fallSpeed + Math.random() * 0.003;
+      positionAttr.setXYZ(i, x, y, z);
+      alphaAttr.setX(i, 1);
+      nextVelocities.push(fallSpeed + Math.random() * 0.003);
     }
 
+    velocities.current = nextVelocities;
+
     const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute("alpha", new THREE.BufferAttribute(alphas, 1));
+    geo.setAttribute("position", positionAttr);
+    geo.setAttribute("alpha", alphaAttr);
     return geo;
   }, [radius, pointCount, startY, endY, fallSpeed]);
 
   useFrame(() => {
     const geom = pointsRef.current.geometry;
-    const posAttr = geom.attributes.position as THREE.BufferAttribute;
+    const positionAttr = geom.attributes.position as THREE.BufferAttribute;
     const alphaAttr = geom.attributes.alpha as THREE.BufferAttribute;
-    const positions = posAttr.array as Float32Array;
-    const alphas = alphaAttr.array as Float32Array;
-
     const height = startY - endY;
+    const velocityList = velocities.current;
 
     for (let i = 0; i < pointCount; i++) {
-      const i3 = i * 3;
-      const yIndex = i3 + 1;
-      positions[yIndex] -= velocities.current[i];
+      const nextY = positionAttr.getY(i) - velocityList[i];
 
-      if (positions[yIndex] < endY) {
-        // 다시 범위 내에서 무작위 위치로 재생성
+      if (nextY < endY) {
         const angle = Math.random() * 2 * Math.PI;
-        const r = radius * Math.sqrt(Math.random());
-        const x = r * Math.cos(angle);
-        const z = r * Math.sin(angle);
+        const distance = radius * Math.sqrt(Math.random());
+        const x = distance * Math.cos(angle);
+        const z = distance * Math.sin(angle);
         const y = Math.random() * height + endY;
 
-        positions[i3] = x;
-        positions[yIndex] = y;
-        positions[i3 + 2] = z;
-        alphas[i] = 1.0;
-      } else {
-        alphas[i] = Math.max(0, (positions[yIndex] - endY) / height);
+        positionAttr.setXYZ(i, x, y, z);
+        alphaAttr.setX(i, 1);
+        continue;
       }
+
+      positionAttr.setY(i, nextY);
+      alphaAttr.setX(i, Math.max(0, (nextY - endY) / height));
     }
 
-    posAttr.needsUpdate = true;
+    positionAttr.needsUpdate = true;
     alphaAttr.needsUpdate = true;
 
     const targetAlpha = camera.position.y <= startY ? 1 : 0;

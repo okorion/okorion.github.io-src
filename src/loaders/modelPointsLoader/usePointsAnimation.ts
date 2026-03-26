@@ -37,18 +37,16 @@ export function usePointsAnimation({
     )
       return;
 
-    const positions = pointsRef.current.geometry.attributes.position
-      .array as Float32Array;
     const boundingBox = boundingBoxRef.current;
     const size = boundingBox.getSize(boundingBoxSize.current);
     const min = boundingBox.min;
     const time = clock.getElapsedTime();
     const geometry = pointsRef.current.geometry;
+    const positionAttr = geometry.attributes.position as THREE.BufferAttribute;
     const colorAttr =
-      !color && vertexColors
-        ? (geometry.getAttribute("color") as THREE.BufferAttribute | undefined)
-        : undefined;
-    const colors = colorAttr?.array as Float32Array | undefined;
+      !color && vertexColors ? geometry.getAttribute("color") : undefined;
+    const resolvedColorAttr =
+      colorAttr instanceof THREE.BufferAttribute ? colorAttr : undefined;
 
     animationProgress.current = Math.min(
       animationProgress.current + delta / animationDuration,
@@ -56,8 +54,8 @@ export function usePointsAnimation({
     );
     const easeOut = 1 - Math.pow(1 - animationProgress.current, 3);
 
-    for (let i = 0; i < positions.length; i += 3) {
-      const idx = i / 3;
+    for (let idx = 0; idx < positionAttr.count; idx++) {
+      const i = idx * 3;
 
       const sx = startPositions.current[i];
       const sy = startPositions.current[i + 1];
@@ -81,25 +79,26 @@ export function usePointsAnimation({
         z += dir.z * 0.01 * offset;
       }
 
-      positions[i] = x;
-      positions[i + 1] = y;
-      positions[i + 2] = z;
+      positionAttr.setXYZ(idx, x, y, z);
 
-      if (colors) {
+      if (resolvedColorAttr) {
         const nx = (x - min.x) / size.x;
         const ny = (y - min.y) / size.y;
         const nz = (z - min.z) / size.z;
         const hue = (nx + ny + nz) / 3;
         tempColor.current.setHSL((hue * 4) % 1, 0.8, 0.5);
-        colors[i] = tempColor.current.r;
-        colors[i + 1] = tempColor.current.g;
-        colors[i + 2] = tempColor.current.b;
+        resolvedColorAttr.setXYZ(
+          idx,
+          tempColor.current.r,
+          tempColor.current.g,
+          tempColor.current.b,
+        );
       }
     }
 
-    geometry.attributes.position.needsUpdate = true;
-    if (colorAttr) {
-      colorAttr.needsUpdate = true;
+    positionAttr.needsUpdate = true;
+    if (resolvedColorAttr) {
+      resolvedColorAttr.needsUpdate = true;
     }
   });
 }
