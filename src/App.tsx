@@ -1,7 +1,10 @@
 import "./App.css";
+import { lazy, Suspense } from "react";
 import { useErrorBoundary } from "use-error-boundary";
 import Panel from "./components/ui/Panel";
-import MainScene from "./scenes/mainScene/MainScene";
+import { SceneLoadingState } from "./components/ui/SceneLoadingState";
+
+const MainScene = lazy(() => import("./scenes/mainScene/MainScene"));
 
 const App = () => {
   const { ErrorBoundary, didCatch, error } = useErrorBoundary();
@@ -17,7 +20,9 @@ const App = () => {
   ) : (
     <div className="app-shell">
       <ErrorBoundary>
-        <MainScene />
+        <Suspense fallback={<SceneLoadingState />}>
+          <MainScene />
+        </Suspense>
       </ErrorBoundary>
       <Panel />
     </div>
