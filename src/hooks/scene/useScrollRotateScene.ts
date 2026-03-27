@@ -10,6 +10,7 @@ export const useScrollRotateScene = (
   const targetRotation = useRef(0);
   const isDragging = useRef(false);
   const lastClientX = useRef(0);
+  const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -42,7 +43,7 @@ export const useScrollRotateScene = (
           smoothness,
         );
       }
-      requestAnimationFrame(animate);
+      animationFrameId.current = requestAnimationFrame(animate);
     };
 
     window.addEventListener("wheel", handleWheel);
@@ -50,13 +51,16 @@ export const useScrollRotateScene = (
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
 
-    animate();
+    animationFrameId.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
+      if (animationFrameId.current !== null) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
     };
   }, [sceneRef, step, smoothness]);
 };

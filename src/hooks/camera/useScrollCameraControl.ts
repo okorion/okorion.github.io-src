@@ -1,5 +1,5 @@
 import { useThree } from "@react-three/fiber";
-import CameraControls from "camera-controls"; // 내부적으로 사용됨
+import CameraControls from "camera-controls";
 import { useEffect, useRef } from "react";
 import { Vector3 } from "three";
 import { lerp } from "three/src/math/MathUtils.js";
@@ -16,6 +16,7 @@ export const useScrollCameraControl = (
   const targetY = useRef(camera.position.y);
   const positionRef = useRef(new Vector3());
   const targetRef = useRef(new Vector3());
+  const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
     if (!controlsRef.current) return;
@@ -52,14 +53,17 @@ export const useScrollCameraControl = (
         false,
       );
 
-      requestAnimationFrame(animate);
+      animationFrameId.current = requestAnimationFrame(animate);
     };
 
     window.addEventListener("wheel", handleWheel);
-    animate();
+    animationFrameId.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
+      if (animationFrameId.current !== null) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
     };
   }, [controlsRef, step, minY, maxY, smoothness]);
 

@@ -9,7 +9,6 @@ export function usePointsAnimation({
   movementDirections,
   boundingBoxRef,
   isAnimating,
-  pointCount,
   vertexColors,
   color,
   animationDuration = 0.5,
@@ -20,12 +19,13 @@ export function usePointsAnimation({
   movementDirections: React.RefObject<THREE.Vector3[] | null>;
   boundingBoxRef: React.RefObject<THREE.Box3 | null>;
   isAnimating: boolean;
-  pointCount: number;
   vertexColors: boolean;
   color?: THREE.ColorRepresentation;
   animationDuration: number;
 }) {
   const animationProgress = useRef(0);
+  const sizeRef = useRef(new THREE.Vector3());
+  const colorRef = useRef(new THREE.Color());
 
   useFrame(({ clock }, delta) => {
     if (
@@ -40,16 +40,22 @@ export function usePointsAnimation({
     const positions = pointsRef.current.geometry.attributes.position
       .array as Float32Array;
     const boundingBox = boundingBoxRef.current;
-    const size = boundingBox.getSize(new THREE.Vector3());
+    const size = boundingBox.getSize(sizeRef.current);
     const min = boundingBox.min;
     const time = clock.getElapsedTime();
+    const colorAttribute =
+      !color && vertexColors
+        ? (pointsRef.current.geometry.attributes.color as
+            | THREE.BufferAttribute
+            | undefined)
+        : undefined;
+    const colors = colorAttribute?.array as Float32Array | undefined;
 
     animationProgress.current = Math.min(
       animationProgress.current + delta / animationDuration,
       1,
     );
     const easeOut = 1 - Math.pow(1 - animationProgress.current, 3);
-    const colors = color ? null : new Float32Array(pointCount * 3);
 
     for (let i = 0; i < positions.length; i += 3) {
       const idx = i / 3;
@@ -85,18 +91,16 @@ export function usePointsAnimation({
         const ny = (y - min.y) / size.y;
         const nz = (z - min.z) / size.z;
         const hue = (nx + ny + nz) / 3;
-        const col = new THREE.Color().setHSL((hue * 4) % 1, 0.8, 0.5);
-        colors.set([col.r, col.g, col.b], i);
+        colorRef.current.setHSL((hue * 4) % 1, 0.8, 0.5);
+        colors[i] = colorRef.current.r;
+        colors[i + 1] = colorRef.current.g;
+        colors[i + 2] = colorRef.current.b;
       }
     }
 
     pointsRef.current.geometry.attributes.position.needsUpdate = true;
-    if (!color && vertexColors && colors) {
-      pointsRef.current.geometry.setAttribute(
-        "color",
-        new THREE.BufferAttribute(colors, 3),
-      );
-      pointsRef.current.geometry.attributes.color.needsUpdate = true;
+    if (!color && vertexColors && colorAttribute) {
+      colorAttribute.needsUpdate = true;
     }
   });
 }

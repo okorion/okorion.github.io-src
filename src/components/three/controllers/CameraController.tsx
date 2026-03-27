@@ -6,6 +6,7 @@ import { useScrollCameraControl } from "../../../hooks/camera/useScrollCameraCon
 
 export const CameraController = () => {
   const controlsRef = useRef<CameraControls | null>(null);
+  const introFrameId = useRef<number | null>(null);
 
   const { camera } = useThree();
   const [manualTargetY, setManualTargetY] = useState<number | null>(null);
@@ -42,10 +43,18 @@ export const CameraController = () => {
 
       setManualTargetY(target.y);
 
-      if (t < 1) requestAnimationFrame(animate);
+      if (t < 1) {
+        introFrameId.current = requestAnimationFrame(animate);
+      }
     };
 
-    requestAnimationFrame(animate);
+    introFrameId.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (introFrameId.current !== null) {
+        cancelAnimationFrame(introFrameId.current);
+      }
+    };
   }, [camera]);
 
   const fixedPolarAngle = Math.PI / 2;

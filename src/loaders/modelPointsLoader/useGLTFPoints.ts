@@ -1,9 +1,15 @@
 import { useLoader } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler.js";
 import { sampleSurfacePoints } from "./utils/sampleSurfacePoints";
+
+const disposeBufferGeometry = (geometry: THREE.BufferGeometry | null) => {
+  if (geometry) {
+    geometry.dispose();
+  }
+};
 
 export function useGLTFPoints(
   path: string,
@@ -55,6 +61,16 @@ export function useGLTFPoints(
 
     return geo;
   }, [gltf, pointCount, color]);
+
+  useEffect(() => {
+    return () => {
+      disposeBufferGeometry(geometry);
+      originalPositions.current = null;
+      startPositions.current = null;
+      movementDirections.current = null;
+      boundingBoxRef.current = null;
+    };
+  }, [geometry]);
 
   return {
     geometry,

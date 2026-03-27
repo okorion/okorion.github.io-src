@@ -5,8 +5,8 @@ import { useGLTFPoints } from "../../../loaders/modelPointsLoader/useGLTFPoints"
 import { usePointsAnimation } from "../../../loaders/modelPointsLoader/usePointsAnimation";
 
 export const ArcaneWillow = () => {
-  const pointCount = 150000;
-  const pointSize = 0.02;
+  const pointCount = 60000;
+  const pointSize = 0.015;
   const path = "/models/ArcaneWillow.glb";
   const pointsRef = useRef<THREE.Points>(null!);
   const color = undefined; // vertexColors를 사용하므로 color는 undefined
@@ -28,7 +28,6 @@ export const ArcaneWillow = () => {
     movementDirections,
     boundingBoxRef,
     isAnimating: true,
-    pointCount,
     vertexColors: true,
     color,
     animationDuration: 0.5,
@@ -39,8 +38,7 @@ export const ArcaneWillow = () => {
   return (
     <group position={[0, -10, 0]} scale={1}>
       <ModelPointsLoader
-        path={path}
-        pointCount={pointCount}
+        geometry={geometry}
         pointSize={pointSize}
         color={color}
         pointsRef={pointsRef}

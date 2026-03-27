@@ -7,6 +7,7 @@ type Props = {
   pointCount?: number;
   pointSize?: number;
   color?: THREE.ColorRepresentation;
+  opacity?: number;
   fallSpeed?: number;
   startY?: number;
   endY?: number;
@@ -17,20 +18,19 @@ export const FallingParticle = ({
   pointCount = 30000,
   pointSize = 0.01,
   color = "#e6e6e6",
+  opacity = 0.12,
   fallSpeed = 0.0001,
-  startY = 12, // 기본값: 위쪽에서 시작
-  endY = -10, // 기본값: 바닥까지 떨어짐
+  startY = 12,
+  endY = -10,
 }: Props) => {
   const { camera } = useThree();
   const globalAlpha = useRef(1);
-
   const pointsRef = useRef<THREE.Points>(null!);
   const velocities = useRef<Float32Array>(new Float32Array(pointCount));
 
   const geometry = useMemo(() => {
     const positions = new Float32Array(pointCount * 3);
     const alphas = new Float32Array(pointCount);
-
     const height = startY - endY;
 
     for (let i = 0; i < pointCount; i++) {
@@ -42,7 +42,6 @@ export const FallingParticle = ({
 
       positions.set([x, y, z], i * 3);
       alphas[i] = 1.0;
-
       velocities.current[i] = fallSpeed + Math.random() * 0.003;
     }
 
@@ -58,7 +57,6 @@ export const FallingParticle = ({
     const alphaAttr = geom.attributes.alpha as THREE.BufferAttribute;
     const positions = posAttr.array as Float32Array;
     const alphas = alphaAttr.array as Float32Array;
-
     const height = startY - endY;
 
     for (let i = 0; i < pointCount; i++) {
@@ -67,7 +65,6 @@ export const FallingParticle = ({
       positions[yIndex] -= velocities.current[i];
 
       if (positions[yIndex] < endY) {
-        // 다시 범위 내에서 무작위 위치로 재생성
         const angle = Math.random() * 2 * Math.PI;
         const r = radius * Math.sqrt(Math.random());
         const x = r * Math.cos(angle);
@@ -102,25 +99,44 @@ export const FallingParticle = ({
         uniforms={{
           uColor: { value: new THREE.Color(color) },
           uSize: { value: pointSize },
+          uOpacity: { value: opacity },
           uGlobalAlpha: { value: 1.0 },
         }}
         vertexShader={`
           uniform float uSize;
           attribute float alpha;
           varying float vAlpha;
+
           void main() {
             vAlpha = alpha;
             vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = uSize * (300.0 / length(mvPosition.xyz));
+            float safeDistance = max(length(mvPosition.xyz), 0.75);
+            gl_PointSize = clamp(uSize * (300.0 / safeDistance), 0.0, 12.0);
             gl_Position = projectionMatrix * mvPosition;
           }
         `}
         fragmentShader={`
           uniform vec3 uColor;
+          uniform float uOpacity;
           uniform float uGlobalAlpha;
           varying float vAlpha;
+
           void main() {
-            gl_FragColor = vec4(uColor, vAlpha * uGlobalAlpha);
+            vec2 centeredCoord = gl_PointCoord - vec2(0.5);
+            float distanceFromCenter = length(centeredCoord);
+
+            if (distanceFromCenter > 0.5) {
+              discard;
+            }
+
+            float edgeFade = 1.0 - smoothstep(0.18, 0.5, distanceFromCenter);
+            float finalAlpha = vAlpha * uGlobalAlpha * uOpacity * edgeFade;
+
+            if (finalAlpha <= 0.0) {
+              discard;
+            }
+
+            gl_FragColor = vec4(uColor, finalAlpha);
           }
         `}
       />
