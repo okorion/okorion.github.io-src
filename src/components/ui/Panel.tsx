@@ -6,7 +6,11 @@ const links = [
     href: "https://github.com/okorion",
   },
   {
-    label: "Tech Blog",
+    label: "Velog",
+    href: "https://velog.io/@okorion",
+  },
+  {
+    label: "Jekyll Blog",
     href: "https://okorion.github.io/tech-blog/",
   },
   {
@@ -19,6 +23,10 @@ const Panel = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const panelId = useId();
   const panelRef = useRef<HTMLElement | null>(null);
+
+  const stopPanelEvent = (event: { stopPropagation: () => void }) => {
+    event.stopPropagation();
+  };
 
   useEffect(() => {
     if (!isExpanded) return;
@@ -52,7 +60,13 @@ const Panel = () => {
       ref={panelRef}
       className="brand-panel"
       data-expanded={isExpanded ? "true" : "false"}
-      aria-label="Site introduction and links"
+      data-scene-orbit-blocker="true"
+      aria-label="사이트 소개와 링크"
+      onMouseDown={stopPanelEvent}
+      onMouseMove={stopPanelEvent}
+      onMouseUp={stopPanelEvent}
+      onWheel={stopPanelEvent}
+      onDragStart={(event) => event.preventDefault()}
     >
       {isExpanded ? (
         <div id={panelId} className="brand-panel__surface">
@@ -62,7 +76,7 @@ const Panel = () => {
               type="button"
               className="brand-panel__close"
               onClick={() => setIsExpanded(false)}
-              aria-label="Collapse site panel"
+              aria-label="패널 닫기"
             >
               <svg
                 aria-hidden="true"
@@ -80,11 +94,16 @@ const Panel = () => {
             </button>
           </div>
           <h1 className="brand-title">
-            3D hub for selected projects and notes.
+            <span className="brand-title__line">생각과 작업을 담아둔</span>
+            <span className="brand-title__line">나만의 디지털 공간.</span>
           </h1>
           <p className="brand-copy">
-            The scene stays visible first. This layer only adds context, quick
-            navigation, and a stable reading surface.
+            <span className="brand-copy__line">
+              자주 쓰는 링크를 한 곳에 모았어요.
+            </span>
+            <span className="brand-copy__line">
+              scene은 그대로, 원하는 곳으로 바로 이동하세요.
+            </span>
           </p>
 
           <div className="brand-actions">
@@ -102,8 +121,8 @@ const Panel = () => {
           </div>
 
           <div className="brand-meta">
-            <span>Drag or scroll to orbit</span>
-            <span>Dark canvas, light touch</span>
+            <span>드래그로 회전</span>
+            <span>스크롤로 시점 높이 조절</span>
           </div>
         </div>
       ) : (
@@ -113,7 +132,7 @@ const Panel = () => {
           onClick={() => setIsExpanded(true)}
           aria-controls={panelId}
           aria-expanded="false"
-          aria-label="Expand site panel"
+          aria-label="패널 열기"
         >
           <span className="brand-panel__toggle-mark" aria-hidden="true">
             <svg
@@ -135,7 +154,7 @@ const Panel = () => {
           </span>
           <span className="brand-panel__toggle-copy">
             <span className="brand-panel__toggle-eyebrow">okorion</span>
-            <span className="brand-panel__toggle-label">Open hub</span>
+            <span className="brand-panel__toggle-label">바로가기</span>
           </span>
           <span className="brand-panel__toggle-arrow" aria-hidden="true">
             <svg

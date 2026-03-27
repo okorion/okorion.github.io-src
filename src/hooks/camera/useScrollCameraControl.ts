@@ -4,6 +4,10 @@ import { useEffect, useRef } from "react";
 import { Vector3 } from "three";
 import { lerp } from "three/src/math/MathUtils.js";
 
+const isOrbitBlockedTarget = (target: EventTarget | null) =>
+  target instanceof Element &&
+  target.closest("[data-scene-orbit-blocker='true']") !== null;
+
 export const useScrollCameraControl = (
   controlsRef: React.RefObject<CameraControls | null>,
   step = 0.5,
@@ -53,6 +57,10 @@ export const useScrollCameraControl = (
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      if (isOrbitBlockedTarget(e.target)) {
+        return;
+      }
+
       const deltaY = e.deltaY > 0 ? -step : step;
       targetY.current = Math.max(
         minY,
