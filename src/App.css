@@ -1,1 +1,322 @@
 @import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(
+      circle at 12% 12%,
+      rgba(255, 214, 102, 0.1),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 82% 18%,
+      rgba(98, 211, 255, 0.08),
+      transparent 26%
+    ),
+    #000;
+  color: #f5f7fa;
+  overflow: hidden;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.app-shell {
+  position: relative;
+  height: 100vh;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.app-shell--error {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.error-card,
+.brand-panel__surface,
+.brand-panel__toggle {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    180deg,
+    rgba(13, 13, 16, 0.76),
+    rgba(9, 9, 11, 0.54)
+  );
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.error-card {
+  width: min(100%, 28rem);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.brand-panel {
+  position: absolute;
+  inset: 1rem auto auto 1rem;
+  z-index: 20;
+  width: min(100vw - 2rem, 21.75rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.brand-panel__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.82rem;
+  min-height: 3.35rem;
+  padding: 0.72rem 0.92rem 0.72rem 0.8rem;
+  border-radius: 999px;
+  color: #f5f7fa;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.brand-panel__toggle:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    180deg,
+    rgba(17, 17, 20, 0.84),
+    rgba(11, 11, 14, 0.62)
+  );
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.brand-panel__toggle:focus-visible,
+.brand-panel__close:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.84);
+  outline-offset: 2px;
+}
+
+.brand-panel__toggle-mark,
+.brand-panel__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  color: rgba(245, 247, 250, 0.88);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand-panel__toggle-copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+  text-align: left;
+}
+
+.brand-panel__toggle-eyebrow {
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brand-panel__toggle-label {
+  color: #f5f7fa;
+  font-size: 0.96rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.brand-panel__toggle-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(245, 247, 250, 0.68);
+}
+
+.brand-panel__surface {
+  width: min(100vw - 2rem, 21rem);
+  border-radius: 1.45rem;
+  padding: 1rem 1.15rem 0.95rem;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  transform-origin: top left;
+  animation: brand-panel-enter 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.brand-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.brand-panel__close {
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.brand-panel__close:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.brand-title,
+.error-title {
+  margin: 0;
+  font-size: clamp(1.42rem, 2.25vw, 1.94rem);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.brand-title__line,
+.brand-copy__line {
+  display: block;
+}
+
+.brand-copy,
+.error-copy {
+  margin: 0.75rem 0 0;
+  color: rgba(245, 247, 250, 0.76);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.brand-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-top: 1rem;
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f5f7fa;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.brand-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.brand-link:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.84);
+  outline-offset: 2px;
+}
+
+.brand-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.875rem;
+  margin-top: 0.95rem;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.78rem;
+}
+
+@keyframes brand-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+    filter: blur(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .brand-panel {
+    inset: auto 1rem 1rem auto;
+    width: min(100vw - 2rem, 20rem);
+    align-items: flex-end;
+  }
+
+  .brand-panel__toggle,
+  .brand-panel__surface {
+    max-width: 100%;
+  }
+
+  .brand-panel__surface {
+    padding: 1rem 1rem 0.9rem;
+  }
+
+  .brand-title,
+  .error-title {
+    font-size: clamp(1.25rem, 6vw, 1.65rem);
+  }
+
+  .brand-copy,
+  .error-copy {
+    font-size: 0.92rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-panel__toggle,
+  .brand-panel__close,
+  .brand-link {
+    transition: none;
+  }
+
+  .brand-panel__surface {
+    animation: none;
+  }
+}

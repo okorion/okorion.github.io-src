@@ -7,6 +7,7 @@ type Props = {
   pointCount?: number;
   pointSize?: number;
   color?: THREE.ColorRepresentation;
+  opacity?: number;
   fallSpeed?: number;
   startY?: number;
   endY?: number;
@@ -17,6 +18,7 @@ export const FallingParticle = ({
   pointCount = 30000,
   pointSize = 0.01,
   color = "#e6e6e6",
+  opacity = 0.12,
   fallSpeed = 0.0001,
   startY = 12,
   endY = -10,
@@ -105,25 +107,44 @@ export const FallingParticle = ({
         uniforms={{
           uColor: { value: new THREE.Color(color) },
           uSize: { value: pointSize },
+          uOpacity: { value: opacity },
           uGlobalAlpha: { value: 1.0 },
         }}
         vertexShader={`
           uniform float uSize;
           attribute float alpha;
           varying float vAlpha;
+
           void main() {
             vAlpha = alpha;
             vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = uSize * (300.0 / length(mvPosition.xyz));
+            float safeDistance = max(length(mvPosition.xyz), 0.75);
+            gl_PointSize = clamp(uSize * (300.0 / safeDistance), 0.0, 12.0);
             gl_Position = projectionMatrix * mvPosition;
           }
         `}
         fragmentShader={`
           uniform vec3 uColor;
+          uniform float uOpacity;
           uniform float uGlobalAlpha;
           varying float vAlpha;
+
           void main() {
-            gl_FragColor = vec4(uColor, vAlpha * uGlobalAlpha);
+            vec2 centeredCoord = gl_PointCoord - vec2(0.5);
+            float distanceFromCenter = length(centeredCoord);
+
+            if (distanceFromCenter > 0.5) {
+              discard;
+            }
+
+            float edgeFade = 1.0 - smoothstep(0.18, 0.5, distanceFromCenter);
+            float finalAlpha = vAlpha * uGlobalAlpha * uOpacity * edgeFade;
+
+            if (finalAlpha <= 0.0) {
+              discard;
+            }
+
+            gl_FragColor = vec4(uColor, finalAlpha);
           }
         `}
       />

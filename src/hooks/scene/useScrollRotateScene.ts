@@ -3,6 +3,10 @@ import { useEffect, useRef } from "react";
 import { Group, Object3DEventMap } from "three";
 import { lerp } from "three/src/math/MathUtils.js";
 
+const isOrbitBlockedTarget = (target: EventTarget | null) =>
+  target instanceof Element &&
+  target.closest("[data-scene-orbit-blocker='true']") !== null;
+
 export const useScrollRotateScene = (
   sceneRef: React.RefObject<Group<Object3DEventMap> | null>,
   step: number,
@@ -24,11 +28,19 @@ export const useScrollRotateScene = (
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      if (isOrbitBlockedTarget(e.target)) {
+        return;
+      }
+
       const delta = e.deltaY > 0 ? -step * 10 : step * 10;
       targetRotation.current += delta;
     };
 
     const handleMouseDown = (e: MouseEvent) => {
+      if (isOrbitBlockedTarget(e.target)) {
+        return;
+      }
+
       isDragging.current = true;
       lastClientX.current = e.clientX;
     };

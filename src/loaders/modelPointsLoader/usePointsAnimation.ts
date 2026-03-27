@@ -34,19 +34,29 @@ export function usePointsAnimation({
       !startPositions.current ||
       !movementDirections.current ||
       !boundingBoxRef.current
-    )
+    ) {
       return;
+    }
+
+    const geometry = pointsRef.current.geometry;
+    const positionAttribute = geometry.getAttribute("position");
+    if (!(positionAttribute instanceof THREE.BufferAttribute)) {
+      return;
+    }
 
     const boundingBox = boundingBoxRef.current;
     const size = boundingBox.getSize(boundingBoxSize.current);
     const min = boundingBox.min;
     const time = clock.getElapsedTime();
-    const geometry = pointsRef.current.geometry;
-    const positionAttr = geometry.attributes.position as THREE.BufferAttribute;
-    const colorAttr =
+    const safeSizeX = Math.max(size.x, Number.EPSILON);
+    const safeSizeY = Math.max(size.y, Number.EPSILON);
+    const safeSizeZ = Math.max(size.z, Number.EPSILON);
+    const colorAttribute =
       !color && vertexColors ? geometry.getAttribute("color") : undefined;
-    const resolvedColorAttr =
-      colorAttr instanceof THREE.BufferAttribute ? colorAttr : undefined;
+    const resolvedColorAttribute =
+      colorAttribute instanceof THREE.BufferAttribute
+        ? colorAttribute
+        : undefined;
 
     animationProgress.current = Math.min(
       animationProgress.current + delta / animationDuration,
@@ -54,9 +64,8 @@ export function usePointsAnimation({
     );
     const easeOut = 1 - Math.pow(1 - animationProgress.current, 3);
 
-    for (let idx = 0; idx < positionAttr.count; idx++) {
+    for (let idx = 0; idx < positionAttribute.count; idx++) {
       const i = idx * 3;
-
       const sx = startPositions.current[i];
       const sy = startPositions.current[i + 1];
       const sz = startPositions.current[i + 2];
@@ -79,15 +88,15 @@ export function usePointsAnimation({
         z += dir.z * 0.01 * offset;
       }
 
-      positionAttr.setXYZ(idx, x, y, z);
+      positionAttribute.setXYZ(idx, x, y, z);
 
-      if (resolvedColorAttr) {
-        const nx = (x - min.x) / size.x;
-        const ny = (y - min.y) / size.y;
-        const nz = (z - min.z) / size.z;
+      if (resolvedColorAttribute) {
+        const nx = (x - min.x) / safeSizeX;
+        const ny = (y - min.y) / safeSizeY;
+        const nz = (z - min.z) / safeSizeZ;
         const hue = (nx + ny + nz) / 3;
         tempColor.current.setHSL((hue * 4) % 1, 0.8, 0.5);
-        resolvedColorAttr.setXYZ(
+        resolvedColorAttribute.setXYZ(
           idx,
           tempColor.current.r,
           tempColor.current.g,
@@ -96,9 +105,9 @@ export function usePointsAnimation({
       }
     }
 
-    positionAttr.needsUpdate = true;
-    if (resolvedColorAttr) {
-      resolvedColorAttr.needsUpdate = true;
+    positionAttribute.needsUpdate = true;
+    if (resolvedColorAttribute) {
+      resolvedColorAttribute.needsUpdate = true;
     }
   });
 }
