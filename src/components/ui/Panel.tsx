@@ -1,9 +1,9 @@
 import { useEffect, useId, useRef, useState } from "react";
 
-type PanelLink = {
+interface PanelLink {
   label: string;
   href: string;
-};
+}
 
 const links: PanelLink[] = [
   {
@@ -35,10 +35,10 @@ const BrandLink = ({ label, href }: PanelLink) => (
   </a>
 );
 
-type BrandPanelSurfaceProps = {
+interface BrandPanelSurfaceProps {
   panelId: string;
   onClose: () => void;
-};
+}
 
 const BrandPanelSurface = ({ panelId, onClose }: BrandPanelSurfaceProps) => (
   <div id={panelId} className="brand-panel__surface">
@@ -91,10 +91,10 @@ const BrandPanelSurface = ({ panelId, onClose }: BrandPanelSurfaceProps) => (
   </div>
 );
 
-type BrandPanelToggleProps = {
+interface BrandPanelToggleProps {
   panelId: string;
   onOpen: () => void;
-};
+}
 
 const BrandPanelToggle = ({ panelId, onOpen }: BrandPanelToggleProps) => (
   <button
@@ -199,7 +199,9 @@ const Panel = () => {
       onMouseMove={stopPanelEvent}
       onMouseUp={stopPanelEvent}
       onWheel={stopPanelEvent}
-      onDragStart={(event) => event.preventDefault()}
+      onDragStart={(event) => {
+        event.preventDefault();
+      }}
     >
       {isExpanded ? (
         <BrandPanelSurface panelId={panelId} onClose={closePanel} />

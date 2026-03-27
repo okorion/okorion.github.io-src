@@ -20,7 +20,7 @@ export function useGLTFPoints(
   const movementDirections = useRef<THREE.Vector3[] | null>(null);
   const boundingBoxRef = useRef<THREE.Box3 | null>(null);
 
-  const geometry: THREE.BufferGeometry | null = useMemo(() => {
+  const geometry = useMemo(() => {
     let geo: THREE.BufferGeometry | null = null;
 
     gltf.scene.traverse((child) => {

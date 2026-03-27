@@ -1,16 +1,16 @@
 import { Html } from "@react-three/drei";
 import { ReactNode } from "react";
 
-type OverlayAction = {
+interface OverlayAction {
   title: string;
   subtitle: string;
   href: string;
   icon: string;
-};
+}
 
-type ActionTileProps = Omit<OverlayAction, "icon"> & {
+interface ActionTileProps extends Omit<OverlayAction, "icon"> {
   icon: ReactNode;
-};
+}
 
 const actions: OverlayAction[] = [
   {
