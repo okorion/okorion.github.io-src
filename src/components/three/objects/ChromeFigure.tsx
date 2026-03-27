@@ -38,8 +38,7 @@ export const ChromeFigure = () => {
   return (
     <group position={[-0.65, -0.02, 1.8]} rotation={[0, 0, 0]} scale={4}>
       <ModelPointsLoader
-        path={path}
-        pointCount={pointCount}
+        geometry={geometry}
         color={color}
         pointSize={0.005}
         pointsRef={pointsRef}

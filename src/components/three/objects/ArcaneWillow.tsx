@@ -39,8 +39,7 @@ export const ArcaneWillow = () => {
   return (
     <group position={[0, -10, 0]} scale={1}>
       <ModelPointsLoader
-        path={path}
-        pointCount={pointCount}
+        geometry={geometry}
         pointSize={pointSize}
         color={color}
         pointsRef={pointsRef}
