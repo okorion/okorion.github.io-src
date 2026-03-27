@@ -1,4 +1,4 @@
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import CameraControls from "camera-controls";
 import { useEffect, useRef } from "react";
 import { Vector3 } from "three";
@@ -10,13 +10,12 @@ export const useScrollCameraControl = (
   minY = -10,
   maxY = 10,
   smoothness = 0.05,
-  externalTargetY?: number | null,
+  externalTargetYRef?: React.RefObject<number | null>,
 ) => {
   const { camera } = useThree();
   const targetY = useRef(camera.position.y);
   const positionRef = useRef(new Vector3());
   const targetRef = useRef(new Vector3());
-  const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
     if (!controlsRef.current) return;
@@ -25,6 +24,32 @@ export const useScrollCameraControl = (
     controlsRef.current.getTarget(targetRef.current);
     targetY.current = positionRef.current.y;
   }, [controlsRef]);
+
+  useFrame(() => {
+    if (!controlsRef.current) return;
+
+    if (
+      externalTargetYRef?.current !== undefined &&
+      externalTargetYRef.current !== null
+    ) {
+      targetY.current = externalTargetYRef.current;
+    }
+
+    controlsRef.current.getPosition(positionRef.current);
+    controlsRef.current.getTarget(targetRef.current);
+
+    const newY = lerp(positionRef.current.y, targetY.current, smoothness);
+
+    controlsRef.current.setLookAt(
+      positionRef.current.x,
+      newY,
+      positionRef.current.z,
+      targetRef.current.x,
+      newY,
+      targetRef.current.z,
+      false,
+    );
+  });
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -35,41 +60,10 @@ export const useScrollCameraControl = (
       );
     };
 
-    const animate = () => {
-      if (!controlsRef.current) return;
-
-      controlsRef.current.getPosition(positionRef.current);
-      controlsRef.current.getTarget(targetRef.current);
-
-      const newY = lerp(positionRef.current.y, targetY.current, smoothness);
-
-      controlsRef.current.setLookAt(
-        positionRef.current.x,
-        newY,
-        positionRef.current.z,
-        targetRef.current.x,
-        newY,
-        targetRef.current.z,
-        false,
-      );
-
-      animationFrameId.current = requestAnimationFrame(animate);
-    };
-
     window.addEventListener("wheel", handleWheel);
-    animationFrameId.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
-      if (animationFrameId.current !== null) {
-        cancelAnimationFrame(animationFrameId.current);
-      }
     };
-  }, [controlsRef, step, minY, maxY, smoothness]);
-
-  useEffect(() => {
-    if (externalTargetY !== undefined && externalTargetY !== null) {
-      targetY.current = externalTargetY;
-    }
-  }, [externalTargetY]);
+  }, [maxY, minY, step]);
 };

@@ -1,66 +1,60 @@
 import { CameraControls } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
 import { Vector3 } from "three";
 import { useScrollCameraControl } from "../../../hooks/camera/useScrollCameraControl";
 
 export const CameraController = () => {
   const controlsRef = useRef<CameraControls | null>(null);
-  const introFrameId = useRef<number | null>(null);
+  const introElapsed = useRef(0);
+  const introTargetYRef = useRef<number | null>(null);
+  const introVectors = useMemo(
+    () => ({
+      startPos: new Vector3(0, 2, 6),
+      endPos: new Vector3(0, 0.37, 2.9),
+      startTarget: new Vector3(0, 2, 0),
+      endTarget: new Vector3(0, 0.37, 0),
+      pos: new Vector3(),
+      target: new Vector3(),
+    }),
+    [],
+  );
 
-  const { camera } = useThree();
-  const [manualTargetY, setManualTargetY] = useState<number | null>(null);
+  useFrame((_, delta) => {
+    if (!controlsRef.current) return;
 
-  useEffect(() => {
-    const startPos = new Vector3(0, 2, 6);
-    const endPos = new Vector3(0, 0.37, 2.9);
+    const duration = 2;
+    if (introElapsed.current >= duration) return;
 
-    const startTarget = new Vector3(0, 2, 0);
-    const endTarget = new Vector3(0, 0.37, 0);
+    introElapsed.current = Math.min(introElapsed.current + delta, duration);
 
-    const duration = 2000;
-    const startTime = performance.now();
+    const t = introElapsed.current / duration;
+    const easedT = 1 - Math.pow(1 - t, 3);
 
-    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    introVectors.pos
+      .copy(introVectors.startPos)
+      .lerp(introVectors.endPos, easedT);
+    introVectors.target
+      .copy(introVectors.startTarget)
+      .lerp(introVectors.endTarget, easedT);
 
-    const animate = (now: number) => {
-      const elapsed = now - startTime;
-      const t = Math.min(elapsed / duration, 1);
-      const easedT = easeOutCubic(t);
+    controlsRef.current.setLookAt(
+      introVectors.pos.x,
+      introVectors.pos.y,
+      introVectors.pos.z,
+      introVectors.target.x,
+      introVectors.target.y,
+      introVectors.target.z,
+      false,
+    );
 
-      const pos = startPos.clone().lerp(endPos, easedT);
-      const target = startTarget.clone().lerp(endTarget, easedT);
-
-      controlsRef.current?.setLookAt(
-        pos.x,
-        pos.y,
-        pos.z,
-        target.x,
-        target.y,
-        target.z,
-        false,
-      );
-
-      setManualTargetY(target.y);
-
-      if (t < 1) {
-        introFrameId.current = requestAnimationFrame(animate);
-      }
-    };
-
-    introFrameId.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (introFrameId.current !== null) {
-        cancelAnimationFrame(introFrameId.current);
-      }
-    };
-  }, [camera]);
+    introTargetYRef.current = t < 1 ? introVectors.target.y : null;
+  });
 
   const fixedPolarAngle = Math.PI / 2;
   const epsilon = 0.0001;
 
-  useScrollCameraControl(controlsRef, 0.2, -2, 15, 0.05, manualTargetY);
+  useScrollCameraControl(controlsRef, 0.2, -2, 15, 0.05, introTargetYRef);
 
   return (
     <CameraControls

@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import * as THREE from "three";
 
 type Props = {
@@ -14,11 +13,8 @@ export function ModelPointsLoader({
   pointSize = 0.01,
   pointsRef,
 }: Props) {
-  const internalRef = useRef<THREE.Points>(null!);
-  const actualRef = pointsRef ?? internalRef;
-
   return (
-    <points ref={actualRef} geometry={geometry}>
+    <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         attach="material"
         size={pointSize}

@@ -136,3 +136,8 @@ Thumbs.db
 # ✅ Husky Git hooks
 !.husky/
 !.husky/*
+
+# -------------------------------------
+# Codex local work artifacts
+.codex-temp/
+.playwright-cli/
