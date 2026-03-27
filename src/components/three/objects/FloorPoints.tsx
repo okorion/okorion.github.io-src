@@ -10,6 +10,23 @@ type Props = {
   opacity?: number;
 };
 
+interface JitterSample {
+  amplitude: number;
+  phase: number;
+}
+
+const setPositionYWithinBounds = (
+  attribute: THREE.BufferAttribute,
+  vertexIndex: number,
+  value: number,
+) => {
+  if (vertexIndex < 0 || vertexIndex >= attribute.count) {
+    return;
+  }
+
+  attribute.setY(vertexIndex, value);
+};
+
 export const FloorPoints = ({
   radius = 15,
   pointCount = 30000,
@@ -18,40 +35,58 @@ export const FloorPoints = ({
   opacity = 0.7,
 }: Props) => {
   const pointsRef = useRef<THREE.Points>(null!);
+  const jitterStateRef = useRef<JitterSample[] | null>(null);
+  const frameSkipRef = useRef(0);
 
   const geometry = useMemo(() => {
-    const positions = new Float32Array(pointCount * 3);
+    const positionAttr = new THREE.BufferAttribute(
+      new Float32Array(pointCount * 3),
+      3,
+    );
+    const jitterSamples: JitterSample[] = [];
 
     for (let i = 0; i < pointCount; i++) {
-      // 폴라 좌표로 입자 위치 생성 (중심에 밀집)
       const angle = Math.random() * 2 * Math.PI;
-      const r = radius * Math.random(); // sqrt를 사용하면 중심 밀도 증가
-
+      const r = radius * Math.random();
       const x = r * Math.cos(angle);
       const z = r * Math.sin(angle);
 
-      positions.set([x, 0, z], i * 3);
+      positionAttr.setXYZ(i, x, 0, z);
+      jitterSamples.push({
+        amplitude: 0.00005 + Math.random() * 0.00015,
+        phase: Math.random() * Math.PI * 2,
+      });
     }
 
+    jitterStateRef.current = jitterSamples;
+
     const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("position", positionAttr);
     return geo;
   }, [radius, pointCount]);
 
-  useFrame(() => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += 0.0005;
+  useFrame(({ clock }) => {
+    if (!pointsRef.current) return;
 
-      // y position이 위아래로 아주 조금씩 랜덤하게 이동
-      const positions = pointsRef.current.geometry.attributes.position
-        .array as Float32Array;
-      for (let i = 0; i < positions.length; i += 3) {
-        const y = positions[i + 1];
-        const randomY = y + (Math.random() - 0.5) * 0.0002; // 아주 조금씩 랜덤하게 이동
-        positions[i + 1] = randomY;
-      }
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    pointsRef.current.rotation.y += 0.0005;
+    frameSkipRef.current = (frameSkipRef.current + 1) % 3;
+    if (frameSkipRef.current !== 0 || !jitterStateRef.current) {
+      return;
     }
+
+    const positionAttr = pointsRef.current.geometry.attributes
+      .position as THREE.BufferAttribute;
+    const time = clock.getElapsedTime() * 0.9;
+
+    jitterStateRef.current.forEach((sample, index) => {
+      setPositionYWithinBounds(
+        positionAttr,
+        index,
+        Math.sin(time + sample.phase) * sample.amplitude,
+      );
+    });
+
+    positionAttr.needsUpdate = true;
   });
 
   return (
