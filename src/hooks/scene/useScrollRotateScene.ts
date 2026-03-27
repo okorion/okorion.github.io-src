@@ -1,15 +1,26 @@
+import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { Group, Object3DEventMap } from "three";
 import { lerp } from "three/src/math/MathUtils.js";
 
 export const useScrollRotateScene = (
   sceneRef: React.RefObject<Group<Object3DEventMap> | null>,
-  step: number, // 0.003 ~ 0.01  	드래그 민감도
-  smoothness: number, // 0.03 ~ 0.07   	따라가는 부드러움 정도
+  step: number,
+  smoothness: number,
 ) => {
   const targetRotation = useRef(0);
   const isDragging = useRef(false);
   const lastClientX = useRef(0);
+
+  useFrame(() => {
+    if (!sceneRef.current) return;
+
+    sceneRef.current.rotation.y = lerp(
+      sceneRef.current.rotation.y,
+      targetRotation.current,
+      smoothness,
+    );
+  });
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -24,9 +35,9 @@ export const useScrollRotateScene = (
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging.current) return;
+
       const deltaX = e.clientX - lastClientX.current;
-      const delta = deltaX * step;
-      targetRotation.current += delta;
+      targetRotation.current += deltaX * step;
       lastClientX.current = e.clientX;
     };
 
@@ -34,23 +45,10 @@ export const useScrollRotateScene = (
       isDragging.current = false;
     };
 
-    const animate = () => {
-      if (sceneRef.current) {
-        sceneRef.current.rotation.y = lerp(
-          sceneRef.current.rotation.y,
-          targetRotation.current,
-          smoothness,
-        );
-      }
-      requestAnimationFrame(animate);
-    };
-
     window.addEventListener("wheel", handleWheel);
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
-
-    animate();
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
@@ -58,5 +56,5 @@ export const useScrollRotateScene = (
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [sceneRef, step, smoothness]);
+  }, [step]);
 };
