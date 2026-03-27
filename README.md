@@ -35,3 +35,6 @@
 |3|4|
 |-|-|
 |![image](https://github.com/user-attachments/assets/383c4fc5-86c2-47c9-9550-40e3329c6122)|![image](https://github.com/user-attachments/assets/6e15fa2f-3e24-4fdc-8f03-f9e7dc24381b)|
+
+## Docs
+- [Codex performance testing docs](./docs/README.md)
