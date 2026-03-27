@@ -26,6 +26,7 @@ export function usePointsAnimation({
   const animationProgress = useRef(0);
   const sizeRef = useRef(new THREE.Vector3());
   const colorRef = useRef(new THREE.Color());
+  const colorTupleRef = useRef(new Float32Array(3));
 
   useFrame(({ clock }, delta) => {
     if (
@@ -37,19 +38,31 @@ export function usePointsAnimation({
     )
       return;
 
-    const positions = pointsRef.current.geometry.attributes.position
-      .array as Float32Array;
+    const geometry = pointsRef.current.geometry;
+    const positionAttribute = geometry.getAttribute("position");
+    if (
+      !(positionAttribute instanceof THREE.BufferAttribute) ||
+      !(positionAttribute.array instanceof Float32Array)
+    ) {
+      return;
+    }
+
+    const positions = positionAttribute.array;
     const boundingBox = boundingBoxRef.current;
     const size = boundingBox.getSize(sizeRef.current);
     const min = boundingBox.min;
     const time = clock.getElapsedTime();
+    const safeSizeX = Math.max(size.x, Number.EPSILON);
+    const safeSizeY = Math.max(size.y, Number.EPSILON);
+    const safeSizeZ = Math.max(size.z, Number.EPSILON);
+    const rawColorAttribute =
+      !color && vertexColors ? geometry.getAttribute("color") : null;
     const colorAttribute =
-      !color && vertexColors
-        ? (pointsRef.current.geometry.attributes.color as
-            | THREE.BufferAttribute
-            | undefined)
-        : undefined;
-    const colors = colorAttribute?.array as Float32Array | undefined;
+      rawColorAttribute instanceof THREE.BufferAttribute &&
+      rawColorAttribute.array instanceof Float32Array
+        ? rawColorAttribute
+        : null;
+    const colors = colorAttribute?.array;
 
     animationProgress.current = Math.min(
       animationProgress.current + delta / animationDuration,
@@ -87,18 +100,19 @@ export function usePointsAnimation({
       positions[i + 2] = z;
 
       if (!color && vertexColors && colors) {
-        const nx = (x - min.x) / size.x;
-        const ny = (y - min.y) / size.y;
-        const nz = (z - min.z) / size.z;
+        const nx = (x - min.x) / safeSizeX;
+        const ny = (y - min.y) / safeSizeY;
+        const nz = (z - min.z) / safeSizeZ;
         const hue = (nx + ny + nz) / 3;
         colorRef.current.setHSL((hue * 4) % 1, 0.8, 0.5);
-        colors[i] = colorRef.current.r;
-        colors[i + 1] = colorRef.current.g;
-        colors[i + 2] = colorRef.current.b;
+        colorTupleRef.current[0] = colorRef.current.r;
+        colorTupleRef.current[1] = colorRef.current.g;
+        colorTupleRef.current[2] = colorRef.current.b;
+        colors.set(colorTupleRef.current, i);
       }
     }
 
-    pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    positionAttribute.needsUpdate = true;
     if (!color && vertexColors && colorAttribute) {
       colorAttribute.needsUpdate = true;
     }
