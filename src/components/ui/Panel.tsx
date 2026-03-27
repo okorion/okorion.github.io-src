@@ -1,6 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 
-const links = [
+type PanelLink = {
+  label: string;
+  href: string;
+};
+
+const links: PanelLink[] = [
   {
     label: "GitHub",
     href: "https://github.com/okorion",
@@ -19,6 +24,126 @@ const links = [
   },
 ];
 
+const BrandLink = ({ label, href }: PanelLink) => (
+  <a
+    className="brand-link"
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {label}
+  </a>
+);
+
+type BrandPanelSurfaceProps = {
+  panelId: string;
+  onClose: () => void;
+};
+
+const BrandPanelSurface = ({ panelId, onClose }: BrandPanelSurfaceProps) => (
+  <div id={panelId} className="brand-panel__surface">
+    <div className="brand-panel__header">
+      <p className="eyebrow">okorion</p>
+      <button
+        type="button"
+        className="brand-panel__close"
+        onClick={onClose}
+        aria-label="패널 닫기"
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 20 20"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        >
+          <path d="M5 5L15 15" />
+          <path d="M15 5L5 15" />
+        </svg>
+      </button>
+    </div>
+    <h1 className="brand-title">
+      <span className="brand-title__line">생각과 작업을 담아둔</span>
+      <span className="brand-title__line">나만의 디지털 공간.</span>
+    </h1>
+    <p className="brand-copy">
+      <span className="brand-copy__line">
+        자주 쓰는 링크를 한 곳에 모았어요.
+      </span>
+      <span className="brand-copy__line">
+        scene은 그대로, 원하는 곳으로 바로 이동하세요.
+      </span>
+    </p>
+
+    <div className="brand-actions">
+      {links.map((link) => (
+        <BrandLink key={link.href} {...link} />
+      ))}
+    </div>
+
+    <div className="brand-meta">
+      <span>드래그로 회전</span>
+      <span>스크롤로 시점 높이 조절</span>
+    </div>
+  </div>
+);
+
+type BrandPanelToggleProps = {
+  panelId: string;
+  onOpen: () => void;
+};
+
+const BrandPanelToggle = ({ panelId, onOpen }: BrandPanelToggleProps) => (
+  <button
+    type="button"
+    className="brand-panel__toggle"
+    onClick={onOpen}
+    aria-controls={panelId}
+    aria-expanded="false"
+    aria-label="패널 열기"
+  >
+    <span className="brand-panel__toggle-mark" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="3.25" />
+        <path d="M12 2.75v3.1" />
+        <path d="M12 18.15v3.1" />
+        <path d="M2.75 12h3.1" />
+        <path d="M18.15 12h3.1" />
+      </svg>
+    </span>
+    <span className="brand-panel__toggle-copy">
+      <span className="brand-panel__toggle-eyebrow">okorion</span>
+      <span className="brand-panel__toggle-label">바로가기</span>
+    </span>
+    <span className="brand-panel__toggle-arrow" aria-hidden="true">
+      <svg
+        viewBox="0 0 20 20"
+        width="14"
+        height="14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M4 7l6 6 6-6" />
+      </svg>
+    </span>
+  </button>
+);
+
 const Panel = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const panelId = useId();
@@ -26,6 +151,14 @@ const Panel = () => {
 
   const stopPanelEvent = (event: { stopPropagation: () => void }) => {
     event.stopPropagation();
+  };
+
+  const closePanel = () => {
+    setIsExpanded(false);
+  };
+
+  const openPanel = () => {
+    setIsExpanded(true);
   };
 
   useEffect(() => {
@@ -36,13 +169,13 @@ const Panel = () => {
       if (!(target instanceof Node)) return;
 
       if (!panelRef.current?.contains(target)) {
-        setIsExpanded(false);
+        closePanel();
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsExpanded(false);
+        closePanel();
       }
     };
 
@@ -69,108 +202,9 @@ const Panel = () => {
       onDragStart={(event) => event.preventDefault()}
     >
       {isExpanded ? (
-        <div id={panelId} className="brand-panel__surface">
-          <div className="brand-panel__header">
-            <p className="eyebrow">okorion</p>
-            <button
-              type="button"
-              className="brand-panel__close"
-              onClick={() => setIsExpanded(false)}
-              aria-label="패널 닫기"
-            >
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 20 20"
-                width="16"
-                height="16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-              >
-                <path d="M5 5L15 15" />
-                <path d="M15 5L5 15" />
-              </svg>
-            </button>
-          </div>
-          <h1 className="brand-title">
-            <span className="brand-title__line">생각과 작업을 담아둔</span>
-            <span className="brand-title__line">나만의 디지털 공간.</span>
-          </h1>
-          <p className="brand-copy">
-            <span className="brand-copy__line">
-              자주 쓰는 링크를 한 곳에 모았어요.
-            </span>
-            <span className="brand-copy__line">
-              scene은 그대로, 원하는 곳으로 바로 이동하세요.
-            </span>
-          </p>
-
-          <div className="brand-actions">
-            {links.map((link) => (
-              <a
-                key={link.href}
-                className="brand-link"
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          <div className="brand-meta">
-            <span>드래그로 회전</span>
-            <span>스크롤로 시점 높이 조절</span>
-          </div>
-        </div>
+        <BrandPanelSurface panelId={panelId} onClose={closePanel} />
       ) : (
-        <button
-          type="button"
-          className="brand-panel__toggle"
-          onClick={() => setIsExpanded(true)}
-          aria-controls={panelId}
-          aria-expanded="false"
-          aria-label="패널 열기"
-        >
-          <span className="brand-panel__toggle-mark" aria-hidden="true">
-            <svg
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="3.25" />
-              <path d="M12 2.75v3.1" />
-              <path d="M12 18.15v3.1" />
-              <path d="M2.75 12h3.1" />
-              <path d="M18.15 12h3.1" />
-            </svg>
-          </span>
-          <span className="brand-panel__toggle-copy">
-            <span className="brand-panel__toggle-eyebrow">okorion</span>
-            <span className="brand-panel__toggle-label">바로가기</span>
-          </span>
-          <span className="brand-panel__toggle-arrow" aria-hidden="true">
-            <svg
-              viewBox="0 0 20 20"
-              width="14"
-              height="14"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M4 7l6 6 6-6" />
-            </svg>
-          </span>
-        </button>
+        <BrandPanelToggle panelId={panelId} onOpen={openPanel} />
       )}
     </aside>
   );

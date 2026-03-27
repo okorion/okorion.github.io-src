@@ -5,6 +5,10 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler.js";
 import { sampleSurfacePoints } from "./utils/sampleSurfacePoints";
 
+const disposeBufferGeometry = (geometry?: THREE.BufferGeometry) => {
+  geometry?.dispose();
+};
+
 export function useGLTFPoints(
   path: string,
   pointCount: number,
@@ -16,7 +20,7 @@ export function useGLTFPoints(
   const movementDirections = useRef<THREE.Vector3[] | null>(null);
   const boundingBoxRef = useRef<THREE.Box3 | null>(null);
 
-  const geometry = useMemo<THREE.BufferGeometry | null>(() => {
+  const geometry: THREE.BufferGeometry | null = useMemo(() => {
     let geo: THREE.BufferGeometry | null = null;
 
     gltf.scene.traverse((child) => {
@@ -58,7 +62,7 @@ export function useGLTFPoints(
 
   useEffect(() => {
     return () => {
-      geometry?.dispose();
+      disposeBufferGeometry(geometry ?? undefined);
       originalPositions.current = null;
       startPositions.current = null;
       movementDirections.current = null;
