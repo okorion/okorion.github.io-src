@@ -1,5 +1,5 @@
 import { Html } from "@react-three/drei";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 interface Props {
   position?: [number, number, number];
@@ -9,47 +9,44 @@ interface Props {
 }
 
 const InteractiveLabel = ({ position, label, url, icon }: Props) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   const iconSize = 40;
-  const handleClick = () => {
-    if (url) window.open(url, "_blank");
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
 
   return (
     <Html position={position} scale={0.06} transform>
-      <div
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${label} (opens in a new tab)`}
         className={`
-          pointer-events-auto cursor-pointer select-none
+          pointer-events-auto select-none
           px-6 py-4 rounded-lg
           flex items-center gap-3
-          transition-all duration-200
-          text-black text-3xl font-bold 
+          transition-all duration-200 ease-out
+          text-black text-3xl font-bold
           border border-white/30
-          ${isHovered ? " bg-white/90 backdrop-brightness-125" : "bg-white/70"}
+          bg-white/72
+          shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_12px_32px_rgba(0,0,0,0.18)]
+          backdrop-blur-sm
+          hover:bg-white/88 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_16px_36px_rgba(0,0,0,0.24)]
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/70
+          active:translate-y-0
         `}
-        onClick={handleClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          boxShadow: isHovered ? "0 0 20px rgba(255, 255, 255, 0.3)" : "none",
-        }}
       >
         {icon && typeof icon === "string" ? (
-          <img src={icon} alt={label} width={iconSize} height={iconSize} />
+          <img
+            src={icon}
+            alt=""
+            aria-hidden="true"
+            width={iconSize}
+            height={iconSize}
+            className="shrink-0"
+          />
         ) : (
           icon
         )}
         {label}
-      </div>
+      </a>
     </Html>
   );
 };
