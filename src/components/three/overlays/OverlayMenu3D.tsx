@@ -1,112 +1,105 @@
 import { Html } from "@react-three/drei";
 import { ReactNode } from "react";
 
-interface OverlayLinkProps {
-  label: string;
-  badge?: string;
-  url: string;
-  icon?: ReactNode;
-  variant?: "default" | "anchor";
-}
-
-const OverlayLink = ({
-  label,
-  badge,
-  url,
-  icon,
-  variant = "default",
-}: OverlayLinkProps) => {
-  const accessibleLabel = badge ? `${badge} ${label}` : label;
-  const isAnchor = variant === "anchor";
-  const widthClassName = isAnchor
-    ? "w-[9rem]"
-    : label === "Portfolio"
-      ? "w-[10rem]"
-      : "w-[12.2rem]";
-
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${accessibleLabel} (opens in a new tab)`}
-      className={[
-        "pointer-events-auto group inline-flex items-center gap-2.5 rounded-[1rem] border no-underline backdrop-blur-md",
-        "transition-[transform,background-color,border-color,box-shadow] duration-200 ease-out",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/70",
-        "hover:-translate-y-0.5 active:translate-y-0",
-        isAnchor
-          ? "min-h-[3.1rem] border-white/18 bg-white/70 px-3.75 py-2.5 text-black shadow-[0_10px_24px_rgba(0,0,0,0.14)] hover:bg-white/78 hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
-          : "min-h-[3.35rem] border-white/22 bg-white/78 px-3.75 py-2.75 text-black shadow-[0_12px_28px_rgba(0,0,0,0.16)] hover:bg-white/88 hover:shadow-[0_16px_34px_rgba(0,0,0,0.22)]",
-        widthClassName,
-      ].join(" ")}
-    >
-      <span className="flex h-[2.15rem] w-[2.15rem] shrink-0 items-center justify-center rounded-[0.8rem] bg-black/10 ring-1 ring-black/8">
-        {icon && typeof icon === "string" ? (
-          <img
-            src={icon}
-            alt=""
-            aria-hidden="true"
-            width="19"
-            height="19"
-            className="shrink-0 object-contain opacity-90 transition-transform duration-200 ease-out group-hover:scale-[1.04]"
-          />
-        ) : (
-          icon
-        )}
-      </span>
-      <span className="flex min-w-0 items-center gap-1.5">
-        {badge ? (
-          <span className="shrink-0 rounded-full border border-black/8 bg-black/6 px-1.75 py-0.5 text-[0.5rem] font-semibold uppercase tracking-[0.16em] text-black/54">
-            {badge}
-          </span>
-        ) : null}
-        <span
-          className={
-            isAnchor
-              ? "truncate text-[0.98rem] font-semibold tracking-[-0.035em] text-black/84"
-              : "truncate text-[1rem] font-semibold tracking-[-0.035em] text-black/88"
-          }
-        >
-          {label}
-        </span>
-      </span>
-    </a>
-  );
+type OverlayAction = {
+  title: string;
+  subtitle: string;
+  href: string;
+  icon: string;
 };
+
+type ActionTileProps = Omit<OverlayAction, "icon"> & {
+  icon: ReactNode;
+};
+
+const actions: OverlayAction[] = [
+  {
+    title: "GitHub",
+    subtitle: "코드와 사이드 프로젝트의 모든 기록",
+    href: "https://github.com/okorion",
+    icon: "/icons/github.svg",
+  },
+  {
+    title: "Portfolio",
+    subtitle: "대표 작업물과 경력을 한눈에",
+    href: "https://okorion.notion.site/Portfolio-1d50242aaedf80988f93f5af21fe0304",
+    icon: "/icons/notion.svg",
+  },
+  {
+    title: "Velog",
+    subtitle: "개발 관련 정보와 회고",
+    href: "https://velog.io/@okorion",
+    icon: "/icons/velog.svg",
+  },
+  {
+    title: "Jekyll Blog",
+    subtitle: "깊이 있는 개발 학습 자료를 남기는 곳",
+    href: "https://okorion.github.io/tech-blog/",
+    icon: "/icons/jekyll.svg",
+  },
+];
+
+const ActionTile = ({ title, subtitle, href, icon }: ActionTileProps) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={`${title} 새 탭에서 열기`}
+    className="pointer-events-auto group flex min-h-[7rem] flex-col gap-3 rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-3.5 text-white no-underline shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-[transform,border-color,background-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.08] hover:shadow-[0_18px_34px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/70"
+  >
+    <span className="flex h-11 w-11 items-center justify-center rounded-[1rem] bg-white/[0.92] shadow-[0_10px_24px_rgba(255,255,255,0.08)] ring-1 ring-white/18 transition-colors duration-200 group-hover:bg-white">
+      {icon}
+    </span>
+    <span className="flex min-h-[3.45rem] flex-col gap-1">
+      <span className="text-[1.12rem] font-semibold leading-none tracking-[-0.04em] text-white/92">
+        {title}
+      </span>
+      <span className="max-w-[9.8rem] text-[0.77rem] font-medium leading-[1.35] tracking-[-0.01em] text-white/52">
+        {subtitle}
+      </span>
+    </span>
+  </a>
+);
+
+const OverlayIcon = ({ src }: { src: string }) => (
+  <img
+    src={src}
+    alt=""
+    aria-hidden="true"
+    width="22"
+    height="22"
+    className="shrink-0 object-contain opacity-95 transition-transform duration-200 ease-out group-hover:scale-[1.04]"
+  />
+);
 
 export const OverlayMenu3D = () => {
   return (
-    <Html position={[0.02, 0.12, 1.2]} transform scale={0.074}>
-      <div className="pointer-events-none flex flex-col items-start gap-3">
-        <div className="pl-2">
-          <OverlayLink
-            label="okorion"
-            url="https://github.com/okorion"
-            icon="/icons/github.svg"
-            variant="anchor"
-          />
+    <Html position={[0.9, 0.84, 1.06]} transform scale={0.11}>
+      <section className="pointer-events-none w-[26rem] rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(10,10,12,0.82),rgba(6,6,8,0.7))] p-4 text-white shadow-[0_28px_90px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl">
+        <div className="flex items-start gap-4">
+          <div className="min-w-0">
+            <p className="text-[0.62rem] font-semibold tracking-[0.2em] text-white/38">
+              둘러볼 경로
+            </p>
+            <h2 className="mt-2 text-[1.72rem] font-semibold leading-[0.96] tracking-[-0.05em] text-white/92">
+              okorion
+            </h2>
+            <p className="mt-2 whitespace-nowrap text-[0.86rem] leading-[1.35] text-white/56">
+              지금 가고 싶은 링크로 바로 이동하세요.
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <OverlayLink
-            badge="Jekyll"
-            label="Tech Blog"
-            url="https://okorion.github.io/tech-blog/"
-            icon="/icons/jekyll.svg"
-          />
-          <OverlayLink
-            badge="Velog"
-            label="Tech Blog"
-            url="https://velog.io/@okorion"
-            icon="/icons/velog.svg"
-          />
-          <OverlayLink
-            label="Portfolio"
-            url="https://okorion.notion.site/Portfolio-1d50242aaedf80988f93f5af21fe0304"
-            icon="/icons/notion.svg"
-          />
+
+        <div className="mt-4 grid grid-cols-2 gap-2.5">
+          {actions.map((action) => (
+            <ActionTile
+              key={action.href}
+              {...action}
+              icon={<OverlayIcon src={action.icon} />}
+            />
+          ))}
         </div>
-      </div>
+      </section>
     </Html>
   );
 };
