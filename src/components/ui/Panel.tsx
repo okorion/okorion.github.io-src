@@ -39,7 +39,9 @@ export default function Panel() {
       onMouseMove={stopPanelEvent}
       onMouseUp={stopPanelEvent}
       onWheel={stopPanelEvent}
-      onDragStart={(event) => event.preventDefault()}
+      onDragStart={(event) => {
+        event.preventDefault();
+      }}
     >
       {isExpanded ? (
         <HubSurface

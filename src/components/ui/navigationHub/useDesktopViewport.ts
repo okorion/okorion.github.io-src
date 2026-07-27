@@ -18,7 +18,9 @@ export function useDesktopViewport() {
     setIsDesktop(mediaQuery.matches);
     mediaQuery.addEventListener("change", handleChange);
 
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
   }, []);
 
   return isDesktop;

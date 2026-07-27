@@ -10,7 +10,9 @@ export function useNavigationHubState() {
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const pendingFocusRef = useRef<"surface" | "toggle" | null>(null);
 
-  useEffect(() => setIsExpanded(isDesktop), [isDesktop]);
+  useEffect(() => {
+    setIsExpanded(isDesktop);
+  }, [isDesktop]);
   useEffect(() => {
     if (isExpanded && pendingFocusRef.current === "surface") {
       closeButtonRef.current?.focus();
@@ -29,7 +31,9 @@ export function useNavigationHubState() {
     pendingFocusRef.current = "toggle";
     setIsExpanded(false);
   };
-  const closePanelWithoutFocus = () => setIsExpanded(false);
+  const closePanelWithoutFocus = () => {
+    setIsExpanded(false);
+  };
 
   return {
     closeButtonRef,
