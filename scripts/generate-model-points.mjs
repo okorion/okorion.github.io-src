@@ -150,20 +150,25 @@ function validateAccessorBounds({
   elementBytes,
   stride,
 }) {
-  const bufferViewOffset = bufferView.byteOffset ?? 0;
+  const bufferViewOffset = getOptionalNumber(bufferView.byteOffset, 0);
   const lastElementEnd =
     baseOffset + Math.max(0, accessor.count - 1) * stride + elementBytes;
-  const bufferViewEnd = bufferViewOffset + (bufferView.byteLength ?? 0);
+  const bufferViewEnd =
+    bufferViewOffset + getOptionalNumber(bufferView.byteLength, 0);
+  const fitsBuffer =
+    accessor.count > 0 &&
+    stride >= elementBytes &&
+    baseOffset >= bufferViewOffset &&
+    lastElementEnd <= bufferViewEnd &&
+    bufferViewEnd <= binaryLength;
 
-  if (
-    accessor.count <= 0 ||
-    stride < elementBytes ||
-    baseOffset < bufferViewOffset ||
-    lastElementEnd > bufferViewEnd ||
-    bufferViewEnd > binaryLength
-  ) {
+  if (!fitsBuffer) {
     throw new Error(`Invalid accessor bounds: ${accessorIndex}`);
   }
+}
+
+function getOptionalNumber(value, fallback) {
+  return value ?? fallback;
 }
 
 function createAccessorReader(json, binary, accessorIndex) {
@@ -211,22 +216,34 @@ function findNodeTrianglePrimitive(json, node) {
   return json.meshes?.[node.mesh]?.primitives?.find(isTrianglePrimitive);
 }
 
-function findFirstTrianglePrimitive(json) {
+function getDefaultSceneNodes(json) {
   const sceneIndex = json.scene ?? 0;
   const scene = json.scenes?.[sceneIndex];
-  const pendingNodeIndices = [...(scene?.nodes ?? [])];
-  const visitedNodeIndices = new Set();
+  return scene?.nodes ?? [];
+}
 
+function takeUnvisitedNode(pendingNodeIndices, visitedNodeIndices) {
   while (pendingNodeIndices.length > 0) {
     const nodeIndex = pendingNodeIndices.shift();
-    if (nodeIndex === undefined || visitedNodeIndices.has(nodeIndex)) continue;
-    visitedNodeIndices.add(nodeIndex);
+    if (nodeIndex === undefined) continue;
+    if (!visitedNodeIndices.has(nodeIndex)) return nodeIndex;
+  }
+  return undefined;
+}
 
+function findFirstTrianglePrimitive(json) {
+  const pendingNodeIndices = [...getDefaultSceneNodes(json)];
+  const visitedNodeIndices = new Set();
+  let nodeIndex = takeUnvisitedNode(pendingNodeIndices, visitedNodeIndices);
+
+  while (nodeIndex !== undefined) {
+    visitedNodeIndices.add(nodeIndex);
     const node = json.nodes?.[nodeIndex];
     const primitive = findNodeTrianglePrimitive(json, node);
     if (primitive) return primitive;
 
     pendingNodeIndices.unshift(...(node?.children ?? []));
+    nodeIndex = takeUnvisitedNode(pendingNodeIndices, visitedNodeIndices);
   }
 
   throw new Error("No triangle primitive found in default scene");
