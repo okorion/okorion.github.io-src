@@ -31,29 +31,44 @@ interface PointCloudHeader {
 const readMagic = (buffer: ArrayBuffer) =>
   new TextDecoder().decode(new Uint8Array(buffer, 0, 4));
 
-function readPointCloudHeader(buffer: ArrayBuffer): PointCloudHeader {
+function validatePointCloudEnvelope(buffer: ArrayBuffer) {
   if (
     buffer.byteLength < HEADER_BYTES ||
     readMagic(buffer) !== EXPECTED_MAGIC
   ) {
     throw new Error("Invalid point cloud asset");
   }
+}
+
+function validatePointCloudFields(
+  version: number,
+  flags: number,
+  pointCount: number,
+  scatterDistance: number,
+) {
+  const hasUnsupportedFlags = (flags & ~SUPPORTED_FLAGS) !== 0;
+  const hasInvalidScatter =
+    !Number.isFinite(scatterDistance) || scatterDistance <= 0;
+
+  if (
+    version !== SUPPORTED_VERSION ||
+    hasUnsupportedFlags ||
+    pointCount === 0 ||
+    hasInvalidScatter
+  ) {
+    throw new Error("Unsupported point cloud asset header");
+  }
+}
+
+function readPointCloudHeader(buffer: ArrayBuffer): PointCloudHeader {
+  validatePointCloudEnvelope(buffer);
 
   const view = new DataView(buffer, 0, HEADER_BYTES);
   const version = view.getUint32(4, true);
   const pointCount = view.getUint32(8, true);
   const flags = view.getUint32(12, true);
   const scatterDistance = view.getFloat32(16, true);
-
-  if (
-    version !== SUPPORTED_VERSION ||
-    (flags & ~SUPPORTED_FLAGS) !== 0 ||
-    pointCount === 0 ||
-    !Number.isFinite(scatterDistance) ||
-    scatterDistance <= 0
-  ) {
-    throw new Error("Unsupported point cloud asset header");
-  }
+  validatePointCloudFields(version, flags, pointCount, scatterDistance);
 
   const positionsOffset = HEADER_BYTES;
   const directionsOffset = positionsOffset + pointCount * 3 * 4;

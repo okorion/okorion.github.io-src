@@ -1,3 +1,5 @@
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
+// Build-only converter: indices are bounds-checked and file paths come from the fixed jobs below.
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -64,7 +66,7 @@ const jobs = [
   },
 ];
 
-function parseGlb(fileBuffer) {
+function validateGlbHeader(fileBuffer) {
   if (
     fileBuffer.length < GLB_HEADER_BYTES ||
     fileBuffer.toString("ascii", 0, 4) !== "glTF" ||
@@ -73,35 +75,46 @@ function parseGlb(fileBuffer) {
   ) {
     throw new Error("Invalid GLB header");
   }
+}
+
+function readGlbChunk(fileBuffer, offset) {
+  if (offset + GLB_CHUNK_HEADER_BYTES > fileBuffer.length) {
+    throw new Error("Invalid GLB chunk header");
+  }
+
+  const chunkLength = fileBuffer.readUInt32LE(offset);
+  const type = fileBuffer.readUInt32LE(offset + 4);
+  const end = offset + GLB_CHUNK_HEADER_BYTES + chunkLength;
+  if (end > fileBuffer.length) {
+    throw new Error("Invalid GLB chunk length");
+  }
+
+  return {
+    data: fileBuffer.subarray(offset + GLB_CHUNK_HEADER_BYTES, end),
+    end,
+    type,
+  };
+}
+
+function parseGlb(fileBuffer) {
+  validateGlbHeader(fileBuffer);
 
   let json;
   let binary;
   let offset = GLB_HEADER_BYTES;
 
   while (offset < fileBuffer.length) {
-    if (offset + GLB_CHUNK_HEADER_BYTES > fileBuffer.length) {
-      throw new Error("Invalid GLB chunk header");
+    const chunk = readGlbChunk(fileBuffer, offset);
+
+    if (chunk.type === GLB_JSON_CHUNK) {
+      json = JSON.parse(
+        chunk.data.toString("utf8").replace(/\0+$/u, "").trim(),
+      );
+    } else if (chunk.type === GLB_BINARY_CHUNK) {
+      binary = chunk.data;
     }
 
-    const chunkLength = fileBuffer.readUInt32LE(offset);
-    const chunkType = fileBuffer.readUInt32LE(offset + 4);
-    const chunkEnd = offset + GLB_CHUNK_HEADER_BYTES + chunkLength;
-    if (chunkEnd > fileBuffer.length) {
-      throw new Error("Invalid GLB chunk length");
-    }
-
-    const chunk = fileBuffer.subarray(
-      offset + GLB_CHUNK_HEADER_BYTES,
-      chunkEnd,
-    );
-
-    if (chunkType === GLB_JSON_CHUNK) {
-      json = JSON.parse(chunk.toString("utf8").replace(/\0+$/u, "").trim());
-    } else if (chunkType === GLB_BINARY_CHUNK) {
-      binary = chunk;
-    }
-
-    offset = chunkEnd;
+    offset = chunk.end;
   }
 
   if (!json || !binary) {
@@ -111,7 +124,7 @@ function parseGlb(fileBuffer) {
   return { json, binary };
 }
 
-function createAccessorReader(json, binary, accessorIndex) {
+function readAccessorLayout(json, accessorIndex) {
   const accessor = json.accessors?.[accessorIndex];
   if (!accessor || accessor.sparse) {
     throw new Error(`Unsupported accessor: ${accessorIndex}`);
@@ -125,23 +138,50 @@ function createAccessorReader(json, binary, accessorIndex) {
     throw new Error(`Unsupported accessor layout: ${accessorIndex}`);
   }
 
-  const baseOffset = (bufferView.byteOffset ?? 0) + (accessor.byteOffset ?? 0);
-  const stride = bufferView.byteStride ?? component.bytes * componentCount;
-  const elementBytes = component.bytes * componentCount;
+  return { accessor, bufferView, component, componentCount };
+}
+
+function validateAccessorBounds({
+  accessor,
+  accessorIndex,
+  baseOffset,
+  binaryLength,
+  bufferView,
+  elementBytes,
+  stride,
+}) {
+  const bufferViewOffset = bufferView.byteOffset ?? 0;
   const lastElementEnd =
     baseOffset + Math.max(0, accessor.count - 1) * stride + elementBytes;
-  const bufferViewEnd =
-    (bufferView.byteOffset ?? 0) + (bufferView.byteLength ?? 0);
+  const bufferViewEnd = bufferViewOffset + (bufferView.byteLength ?? 0);
 
   if (
     accessor.count <= 0 ||
     stride < elementBytes ||
-    baseOffset < (bufferView.byteOffset ?? 0) ||
+    baseOffset < bufferViewOffset ||
     lastElementEnd > bufferViewEnd ||
-    bufferViewEnd > binary.byteLength
+    bufferViewEnd > binaryLength
   ) {
     throw new Error(`Invalid accessor bounds: ${accessorIndex}`);
   }
+}
+
+function createAccessorReader(json, binary, accessorIndex) {
+  const { accessor, bufferView, component, componentCount } =
+    readAccessorLayout(json, accessorIndex);
+
+  const baseOffset = (bufferView.byteOffset ?? 0) + (accessor.byteOffset ?? 0);
+  const stride = bufferView.byteStride ?? component.bytes * componentCount;
+  const elementBytes = component.bytes * componentCount;
+  validateAccessorBounds({
+    accessor,
+    accessorIndex,
+    baseOffset,
+    binaryLength: binary.byteLength,
+    bufferView,
+    elementBytes,
+    stride,
+  });
 
   const dataView = new DataView(
     binary.buffer,
@@ -161,37 +201,32 @@ function createAccessorReader(json, binary, accessorIndex) {
   };
 }
 
-function findFirstTrianglePrimitive(json) {
-  const scene = json.scenes?.[json.scene ?? 0];
-  const visited = new Set();
+function isTrianglePrimitive(candidate) {
+  const mode = candidate.mode ?? 4;
+  return mode === 4 && candidate.attributes?.POSITION !== undefined;
+}
 
-  function visitNode(nodeIndex) {
-    if (visited.has(nodeIndex)) return null;
-    visited.add(nodeIndex);
+function findNodeTrianglePrimitive(json, node) {
+  if (node?.mesh === undefined) return undefined;
+  return json.meshes?.[node.mesh]?.primitives?.find(isTrianglePrimitive);
+}
+
+function findFirstTrianglePrimitive(json) {
+  const sceneIndex = json.scene ?? 0;
+  const scene = json.scenes?.[sceneIndex];
+  const pendingNodeIndices = [...(scene?.nodes ?? [])];
+  const visitedNodeIndices = new Set();
+
+  while (pendingNodeIndices.length > 0) {
+    const nodeIndex = pendingNodeIndices.shift();
+    if (nodeIndex === undefined || visitedNodeIndices.has(nodeIndex)) continue;
+    visitedNodeIndices.add(nodeIndex);
 
     const node = json.nodes?.[nodeIndex];
-    const primitive =
-      node?.mesh === undefined
-        ? undefined
-        : json.meshes?.[node.mesh]?.primitives?.find(
-            (candidate) =>
-              (candidate.mode ?? 4) === 4 &&
-              candidate.attributes?.POSITION !== undefined,
-          );
-
+    const primitive = findNodeTrianglePrimitive(json, node);
     if (primitive) return primitive;
 
-    for (const childIndex of node?.children ?? []) {
-      const childPrimitive = visitNode(childIndex);
-      if (childPrimitive) return childPrimitive;
-    }
-
-    return null;
-  }
-
-  for (const nodeIndex of scene?.nodes ?? []) {
-    const primitive = visitNode(nodeIndex);
-    if (primitive) return primitive;
+    pendingNodeIndices.unshift(...(node?.children ?? []));
   }
 
   throw new Error("No triangle primitive found in default scene");
