@@ -34,7 +34,7 @@
     "@biomejs/biome": "2.5.5",
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.185.1",
-    "@vitejs/plugin-react": "^6.0.3",
+    "@vitejs/plugin-react": "^6.0.4",
     "gh-pages": "^6.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.1.0",
