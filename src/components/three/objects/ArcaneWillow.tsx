@@ -1,48 +1,18 @@
-import { useRef } from "react";
-import * as THREE from "three";
-import { ModelPointsLoader } from "../../../loaders/modelPointsLoader";
-import { useGLTFPoints } from "../../../loaders/modelPointsLoader/useGLTFPoints";
-import { usePointsAnimation } from "../../../loaders/modelPointsLoader/usePointsAnimation";
+import { useThree } from "@react-three/fiber";
+import { AnimatedPointCloud } from "../../../loaders/modelPointsLoader/AnimatedPointCloud";
 
-export const ArcaneWillow = () => {
-  const pointCount = 60000;
-  const pointSize = 0.015;
-  const path = "/models/ArcaneWillow.glb";
-  const pointsRef = useRef<THREE.Points>(null!);
-  const color = undefined; // vertexColors를 사용하므로 color는 undefined
-
-  // 1. GLTF 로드 및 포인트 샘플링
-  const {
-    geometry,
-    originalPositions,
-    startPositions,
-    movementDirections,
-    boundingBoxRef,
-  } = useGLTFPoints(path, pointCount, color);
-
-  // 2. 애니메이션 처리
-  usePointsAnimation({
-    pointsRef,
-    originalPositions,
-    startPositions,
-    movementDirections,
-    boundingBoxRef,
-    isAnimating: true,
-    vertexColors: true,
-    color,
-    animationDuration: 0.5,
-  });
-
-  if (!geometry) return null;
+export function ArcaneWillow() {
+  const isCompactViewport = useThree(
+    (state) => state.size.width <= 720 || state.size.height <= 680,
+  );
 
   return (
     <group position={[0, -10, 0]} scale={1}>
-      <ModelPointsLoader
-        geometry={geometry}
-        pointSize={pointSize}
-        color={color}
-        pointsRef={pointsRef}
+      <AnimatedPointCloud
+        path="/models/ArcaneWillow.points"
+        pointSize={0.015}
+        pointLimit={isCompactViewport ? 36_000 : 60_000}
       />
     </group>
   );
-};
+}
