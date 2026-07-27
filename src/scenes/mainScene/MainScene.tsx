@@ -4,7 +4,6 @@ import { Group, Object3DEventMap } from "three";
 import { useScrollRotateScene } from "../../hooks/scene/useScrollRotateScene";
 import { SceneControllers } from "./SceneControllers";
 import { SceneObjects } from "./SceneObjects";
-import { SceneOverlays } from "./SceneOverlays";
 
 const SceneContent = () => {
   const sceneRef = useRef<Group<Object3DEventMap>>(null);
@@ -13,7 +12,6 @@ const SceneContent = () => {
 
   return (
     <group ref={sceneRef}>
-      <SceneOverlays />
       <SceneObjects />
     </group>
   );

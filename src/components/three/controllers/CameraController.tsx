@@ -1,24 +1,72 @@
 import { CameraControls } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
 import { Vector3 } from "three";
 import { useScrollCameraControl } from "../../../hooks/camera/useScrollCameraControl";
 
 export const CameraController = () => {
+  const viewportWidth = useThree((state) => state.size.width);
+  const isNarrowViewport = viewportWidth <= 720;
   const controlsRef = useRef<CameraControls | null>(null);
   const introElapsed = useRef(0);
   const introTargetYRef = useRef<number | null>(null);
+  const previousNarrowViewportRef = useRef(isNarrowViewport);
   const introVectors = useMemo(
-    () => ({
-      startPos: new Vector3(0, 2, 6),
-      endPos: new Vector3(0, 0.37, 2.9),
-      startTarget: new Vector3(0, 2, 0),
-      endTarget: new Vector3(0, 0.37, 0),
-      pos: new Vector3(),
-      target: new Vector3(),
-    }),
-    [],
+    () =>
+      isNarrowViewport
+        ? {
+            startPos: new Vector3(-0.15, 2.2, 7.2),
+            endPos: new Vector3(-0.15, 0.48, 4.8),
+            startTarget: new Vector3(-0.15, 2.2, 0),
+            endTarget: new Vector3(-0.15, 0.48, 0),
+            pos: new Vector3(),
+            target: new Vector3(),
+          }
+        : {
+            startPos: new Vector3(0, 2, 6),
+            endPos: new Vector3(0, 0.37, 2.9),
+            startTarget: new Vector3(0, 2, 0),
+            endTarget: new Vector3(0, 0.37, 0),
+            pos: new Vector3(),
+            target: new Vector3(),
+          },
+    [isNarrowViewport],
   );
+
+  useEffect(() => {
+    if (previousNarrowViewportRef.current === isNarrowViewport) return;
+
+    previousNarrowViewportRef.current = isNarrowViewport;
+    const controls = controlsRef.current;
+
+    if (!controls) {
+      introElapsed.current = 0;
+      return;
+    }
+
+    const wasIntroComplete = introElapsed.current >= 2;
+    controls.getPosition(introVectors.pos);
+    controls.getTarget(introVectors.target);
+
+    const nextPositionY = wasIntroComplete
+      ? introVectors.pos.y
+      : introVectors.endPos.y;
+    const nextTargetY = wasIntroComplete
+      ? introVectors.target.y
+      : introVectors.endTarget.y;
+
+    introElapsed.current = 2;
+    introTargetYRef.current = null;
+    controls.setLookAt(
+      introVectors.endPos.x,
+      nextPositionY,
+      introVectors.endPos.z,
+      introVectors.endTarget.x,
+      nextTargetY,
+      introVectors.endTarget.z,
+      true,
+    );
+  }, [introVectors, isNarrowViewport]);
 
   useFrame((_, delta) => {
     if (!controlsRef.current) return;
