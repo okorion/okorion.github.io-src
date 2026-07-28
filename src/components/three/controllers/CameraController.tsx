@@ -14,7 +14,7 @@ export const CameraController = () => {
   const introTargetYRef = useRef<number | null>(null);
   const suspendScrollLookAtRef = useRef(false);
   const reframeSequenceRef = useRef(0);
-  const releaseIntroTargetRef = useRef(false);
+  const introTargetReleaseFramesRef = useRef(0);
   const previousNarrowViewportRef = useRef(isNarrowViewport);
   const previousReducedMotionRef = useRef(prefersReducedMotion);
   const introVectors = useMemo(
@@ -62,7 +62,12 @@ export const CameraController = () => {
     controls.getTarget(introVectors.target);
 
     introElapsed.current = 2;
-    introTargetYRef.current = null;
+    introTargetYRef.current = shouldCompleteIntro
+      ? introVectors.endTarget.y
+      : null;
+    // The camera frame runs before the scroll-control frame. Keep the final
+    // target through one full frame so the scroll controller can sync to it.
+    introTargetReleaseFramesRef.current = shouldCompleteIntro ? 2 : 0;
     suspendScrollLookAtRef.current = true;
     const reframeSequence = reframeSequenceRef.current + 1;
     reframeSequenceRef.current = reframeSequence;
@@ -88,9 +93,11 @@ export const CameraController = () => {
   useFrame((_, delta) => {
     if (!controlsRef.current) return;
 
-    if (releaseIntroTargetRef.current) {
-      releaseIntroTargetRef.current = false;
-      introTargetYRef.current = null;
+    if (introTargetReleaseFramesRef.current > 0) {
+      introTargetReleaseFramesRef.current -= 1;
+      if (introTargetReleaseFramesRef.current === 0) {
+        introTargetYRef.current = null;
+      }
     }
 
     const duration = 2;
@@ -99,7 +106,7 @@ export const CameraController = () => {
     if (prefersReducedMotion) {
       introElapsed.current = duration;
       introTargetYRef.current = introVectors.endTarget.y;
-      releaseIntroTargetRef.current = true;
+      introTargetReleaseFramesRef.current = 1;
       controlsRef.current.setLookAt(
         introVectors.endPos.x,
         introVectors.endPos.y,
