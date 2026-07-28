@@ -10,22 +10,22 @@ const App = () => {
   const { ErrorBoundary, didCatch, error } = useErrorBoundary();
 
   return didCatch ? (
-    <div className="app-shell app-shell--error">
+    <main className="app-shell app-shell--error">
       <div className="error-card" role="alert" aria-live="polite">
         <p className="eyebrow">okorion</p>
-        <h1 className="error-title">Scene failed to load.</h1>
+        <h1 className="error-title">3D 장면을 불러오지 못했습니다.</h1>
         <p className="error-copy">{error.message}</p>
       </div>
-    </div>
+    </main>
   ) : (
-    <div className="app-shell">
+    <main className="app-shell">
       <ErrorBoundary>
         <Suspense fallback={<SceneLoadingState />}>
           <MainScene />
         </Suspense>
       </ErrorBoundary>
       <Panel />
-    </div>
+    </main>
   );
 };
 

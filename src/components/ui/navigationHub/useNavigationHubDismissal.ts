@@ -16,6 +16,18 @@ export function useNavigationHubDismissal({
   panelRef,
 }: DismissalOptions) {
   useEffect(() => {
+    if (!isExpanded) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closePanel();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closePanel, isExpanded]);
+
+  useEffect(() => {
     if (!isExpanded || isDesktop) return;
     const handleMouseDown = (event: MouseEvent) => {
       const target = event.target;
@@ -23,15 +35,10 @@ export function useNavigationHubDismissal({
         closePanelWithoutFocus();
       }
     };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closePanel();
-    };
 
     window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [closePanel, closePanelWithoutFocus, isDesktop, isExpanded, panelRef]);
+  }, [closePanelWithoutFocus, isDesktop, isExpanded, panelRef]);
 }

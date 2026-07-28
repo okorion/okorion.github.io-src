@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { usePointCloudAsset } from "./usePointCloudAsset";
 
 const vertexShader = `
@@ -71,6 +72,7 @@ function createPointUniforms(props: PointCloudMaterialProps) {
 
 function PointCloudMaterial(props: PointCloudMaterialProps) {
   const { gl, size } = useThree();
+  const prefersReducedMotion = useReducedMotion();
   const animationProgress = useRef(0);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const uniforms = useMemo(
@@ -86,6 +88,16 @@ function PointCloudMaterial(props: PointCloudMaterialProps) {
   useFrame(({ clock }, delta) => {
     const material = materialRef.current;
     if (!material) return;
+
+    if (prefersReducedMotion) {
+      animationProgress.current = 1;
+      material.uniforms.uProgress.value = 1;
+      material.uniforms.uTime.value = 0;
+      material.uniforms.uPointScale.value =
+        (size.height * gl.getPixelRatio()) / 2;
+      return;
+    }
+
     animationProgress.current = Math.min(
       animationProgress.current + delta / props.animationDuration,
       1,
