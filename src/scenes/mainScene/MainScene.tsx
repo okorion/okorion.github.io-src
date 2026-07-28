@@ -30,6 +30,7 @@ const MainScene = () => {
   return (
     <div className="relative h-full w-full">
       <Canvas
+        aria-hidden="true"
         dpr={[1, 1.5]}
         gl={{
           alpha: false,
@@ -74,10 +75,11 @@ const MainScene = () => {
         <div
           aria-atomic="true"
           aria-live="polite"
+          role="status"
           className="absolute inset-0 z-10 grid place-items-center bg-black text-white"
         >
           <div className="rounded-full border border-white/12 bg-white/5 px-4 py-2 text-xs font-semibold tracking-[0.18em] text-white/70 shadow-[0_12px_36px_rgba(0,0,0,0.24)] backdrop-blur-md">
-            WEBGL CONTEXT LOST
+            3D 장면 연결 복구 중
           </div>
         </div>
       ) : null}

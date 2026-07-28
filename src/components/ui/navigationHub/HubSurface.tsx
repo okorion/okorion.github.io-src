@@ -44,8 +44,8 @@ export function HubSurface({
         role="group"
         aria-label="3D 장면 조작 안내"
       >
-        <span>드래그로 회전</span>
-        <span>스크롤로 시점 높이 조절</span>
+        <span>마우스 드래그로 회전</span>
+        <span>스크롤로 시점 높이·장면 회전</span>
       </div>
     </div>
   );

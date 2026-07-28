@@ -16,7 +16,6 @@ export function HubToggle({ panelId, onOpen, toggleRef }: HubToggleProps) {
       onClick={onOpen}
       aria-controls={panelId}
       aria-expanded="false"
-      aria-label="바로가기 메뉴 열기"
     >
       <span className="nav-hub__toggle-mark" aria-hidden="true">
         <HubMarkIcon />

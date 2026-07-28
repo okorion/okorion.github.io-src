@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useReducedMotion } from "../../../hooks/useReducedMotion";
 
 type Props = {
   radius?: number;
@@ -34,6 +35,7 @@ export const FloorPoints = ({
   color = "#bbbbbb",
   opacity = 0.7,
 }: Props) => {
+  const prefersReducedMotion = useReducedMotion();
   const pointsRef = useRef<THREE.Points>(null!);
   const jitterStateRef = useRef<JitterSample[] | null>(null);
   const frameSkipRef = useRef(0);
@@ -66,7 +68,7 @@ export const FloorPoints = ({
   }, [radius, pointCount]);
 
   useFrame(({ clock }) => {
-    if (!pointsRef.current) return;
+    if (prefersReducedMotion || !pointsRef.current) return;
 
     pointsRef.current.rotation.y += 0.0005;
     frameSkipRef.current = (frameSkipRef.current + 1) % 3;

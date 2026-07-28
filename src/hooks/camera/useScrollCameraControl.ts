@@ -15,6 +15,7 @@ export const useScrollCameraControl = (
   maxY = 10,
   smoothness = 0.05,
   externalTargetYRef?: React.RefObject<number | null>,
+  suspendLookAtRef?: React.RefObject<boolean>,
 ) => {
   const { camera } = useThree();
   const targetY = useRef(camera.position.y);
@@ -38,6 +39,8 @@ export const useScrollCameraControl = (
     ) {
       targetY.current = externalTargetYRef.current;
     }
+
+    if (suspendLookAtRef?.current) return;
 
     controlsRef.current.getPosition(positionRef.current);
     controlsRef.current.getTarget(targetRef.current);

@@ -3,14 +3,20 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import { Vector3 } from "three";
 import { useScrollCameraControl } from "../../../hooks/camera/useScrollCameraControl";
+import { useReducedMotion } from "../../../hooks/useReducedMotion";
 
 export const CameraController = () => {
   const viewportWidth = useThree((state) => state.size.width);
   const isNarrowViewport = viewportWidth <= 720;
+  const prefersReducedMotion = useReducedMotion();
   const controlsRef = useRef<CameraControls | null>(null);
   const introElapsed = useRef(0);
   const introTargetYRef = useRef<number | null>(null);
+  const suspendScrollLookAtRef = useRef(false);
+  const reframeSequenceRef = useRef(0);
+  const releaseIntroTargetRef = useRef(false);
   const previousNarrowViewportRef = useRef(isNarrowViewport);
+  const previousReducedMotionRef = useRef(prefersReducedMotion);
   const introVectors = useMemo(
     () =>
       isNarrowViewport
@@ -34,45 +40,77 @@ export const CameraController = () => {
   );
 
   useEffect(() => {
-    if (previousNarrowViewportRef.current === isNarrowViewport) return;
+    const viewportChanged =
+      previousNarrowViewportRef.current !== isNarrowViewport;
+    const reducedMotionEnabled =
+      !previousReducedMotionRef.current && prefersReducedMotion;
 
     previousNarrowViewportRef.current = isNarrowViewport;
+    previousReducedMotionRef.current = prefersReducedMotion;
+    if (!viewportChanged && !reducedMotionEnabled) return;
+
     const controls = controlsRef.current;
 
     if (!controls) {
-      introElapsed.current = 0;
+      if (viewportChanged) introElapsed.current = 0;
       return;
     }
 
-    const wasIntroComplete = introElapsed.current >= 2;
+    const shouldCompleteIntro =
+      reducedMotionEnabled && introElapsed.current < 2;
     controls.getPosition(introVectors.pos);
     controls.getTarget(introVectors.target);
 
-    const nextPositionY = wasIntroComplete
-      ? introVectors.pos.y
-      : introVectors.endPos.y;
-    const nextTargetY = wasIntroComplete
-      ? introVectors.target.y
-      : introVectors.endTarget.y;
-
     introElapsed.current = 2;
     introTargetYRef.current = null;
-    controls.setLookAt(
-      introVectors.endPos.x,
-      nextPositionY,
-      introVectors.endPos.z,
-      introVectors.endTarget.x,
-      nextTargetY,
-      introVectors.endTarget.z,
-      true,
-    );
-  }, [introVectors, isNarrowViewport]);
+    suspendScrollLookAtRef.current = true;
+    const reframeSequence = reframeSequenceRef.current + 1;
+    reframeSequenceRef.current = reframeSequence;
+    const finishReframing = () => {
+      if (reframeSequenceRef.current === reframeSequence) {
+        suspendScrollLookAtRef.current = false;
+      }
+    };
+
+    void controls
+      .setLookAt(
+        introVectors.endPos.x,
+        shouldCompleteIntro ? introVectors.endPos.y : introVectors.pos.y,
+        introVectors.endPos.z,
+        introVectors.endTarget.x,
+        shouldCompleteIntro ? introVectors.endTarget.y : introVectors.target.y,
+        introVectors.endTarget.z,
+        !prefersReducedMotion,
+      )
+      .then(finishReframing, finishReframing);
+  }, [introVectors, isNarrowViewport, prefersReducedMotion]);
 
   useFrame((_, delta) => {
     if (!controlsRef.current) return;
 
+    if (releaseIntroTargetRef.current) {
+      releaseIntroTargetRef.current = false;
+      introTargetYRef.current = null;
+    }
+
     const duration = 2;
     if (introElapsed.current >= duration) return;
+
+    if (prefersReducedMotion) {
+      introElapsed.current = duration;
+      introTargetYRef.current = introVectors.endTarget.y;
+      releaseIntroTargetRef.current = true;
+      controlsRef.current.setLookAt(
+        introVectors.endPos.x,
+        introVectors.endPos.y,
+        introVectors.endPos.z,
+        introVectors.endTarget.x,
+        introVectors.endTarget.y,
+        introVectors.endTarget.z,
+        false,
+      );
+      return;
+    }
 
     introElapsed.current = Math.min(introElapsed.current + delta, duration);
 
@@ -102,7 +140,15 @@ export const CameraController = () => {
   const fixedPolarAngle = Math.PI / 2;
   const epsilon = 0.0001;
 
-  useScrollCameraControl(controlsRef, 0.2, -2, 15, 0.05, introTargetYRef);
+  useScrollCameraControl(
+    controlsRef,
+    0.2,
+    -2,
+    15,
+    0.05,
+    introTargetYRef,
+    suspendScrollLookAtRef,
+  );
 
   return (
     <CameraControls

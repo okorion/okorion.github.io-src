@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useReducedMotion } from "../../../hooks/useReducedMotion";
 
 type Props = {
   radius?: number;
@@ -24,6 +25,7 @@ export const FallingParticle = ({
   endY = -10,
 }: Props) => {
   const { camera } = useThree();
+  const prefersReducedMotion = useReducedMotion();
   const globalAlpha = useRef(1);
   const pointsRef = useRef<THREE.Points>(null!);
   const velocities = useRef<number[]>([]);
@@ -61,6 +63,8 @@ export const FallingParticle = ({
   }, [radius, pointCount, startY, endY, fallSpeed]);
 
   useFrame(() => {
+    if (prefersReducedMotion) return;
+
     const geom = pointsRef.current.geometry;
     const positionAttr = geom.attributes.position as THREE.BufferAttribute;
     const alphaAttr = geom.attributes.alpha as THREE.BufferAttribute;
