@@ -1,4 +1,26 @@
-## 최근 UI 업데이트
+# okorion.github.io
+
+채용 검토자가 문제·기여·판단·검증 근거를 빠르게 확인할 수 있도록 구성한 콘텐츠 우선 포트폴리오입니다.
+
+| 화면 | 경로 | 역할 |
+| --- | --- | --- |
+| Portfolio | [okorion.github.io](https://okorion.github.io/) | 현업 증거, 공개 프로젝트, 경력·자격 |
+| 3D Lab | [okorion.github.io/?view=3d](https://okorion.github.io/?view=3d) | 기존 인터랙티브 3D 경험 보존 |
+
+기본 화면은 `src/app/siteView.ts`의 `DEFAULT_SITE_VIEW` 한 줄로 전환할 수 있으며, 기존 3D 구현은 `src/legacy/` 아래에 보존되어 있습니다.
+
+## 현재 포트폴리오
+
+![콘텐츠 우선 포트폴리오](./docs/pr-evidence/portfolio-hybrid-landing/after.png)
+
+```bash
+npm run lint
+npm run typecheck
+npm run test:portfolio
+npm run build
+```
+
+## 3D Lab UI
 
 |메인 장면|브랜드 패널 확장 상태|
 |-|-|
