@@ -34,7 +34,7 @@ export const evidenceItems: readonly EvidenceItem[] = [
     id: "builder-consistency",
     index: "01",
     title: "2D Web Builder — 페이지·Header 저장 일관성",
-    context: "티맥스가이아 · GAIA / FX Studio",
+    context: "GAIA / FX Studio · 프로젝트 참여",
     period: "프로젝트 2025.12–현재",
     problem:
       "페이지 구조를 직접 변경하면 화면은 바뀌어도 저장 가능한 변경 이력이 남지 않았고, 기존 Header 동작과 신규 버튼 이벤트가 충돌했습니다.",
@@ -121,7 +121,7 @@ export const publicProjects: readonly PublicProject[] = [
     image:
       "https://raw.githubusercontent.com/okorion/vizport-studio/main/public/og.png",
     imageAlt: "VizPort Studio의 데이터 시각화 작업 화면",
-    technologies: ["React", "TypeScript", "Canvas", "WebGPU"],
+    technologies: ["React", "TypeScript", "Canvas", "ECharts"],
     links: [
       {
         label: "Demo",
@@ -169,7 +169,7 @@ export const experienceItems = [
     role: "Frontend Engineer",
     period: "2026.02–현재",
     details: [
-      "GAIA 2D Web Builder·FX Studio · 프로젝트 2025.12–현재",
+      "GAIA 2D Web Builder·FX Studio · 현 소속 참여 2026.02–현재",
       "Editor·Builder의 모드, 위젯, 이벤트, 저장과 Runtime 연계",
     ],
   },

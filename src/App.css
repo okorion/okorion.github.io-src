@@ -81,6 +81,72 @@ svg {
   letter-spacing: 0.12em;
 }
 
+.route-error {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  place-content: center;
+  justify-items: start;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(184, 243, 107, 0.1),
+      transparent 34%
+    ),
+    #050606;
+}
+
+.route-error > p {
+  margin: 0 0 0.7rem;
+  color: var(--page-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.route-error h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.route-error > span {
+  max-width: 38rem;
+  margin-top: 1rem;
+  color: var(--page-muted);
+  line-height: 1.7;
+}
+
+.route-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.route-error__actions button,
+.route-error__actions a {
+  min-height: 2.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--page-line);
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.route-error__actions button {
+  background: var(--page-accent);
+  color: #080a0b;
+  font-weight: 800;
+}
+
+.route-error__actions a {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--page-text);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
