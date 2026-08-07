@@ -1,14 +1,20 @@
 import { ExternalArrowIcon } from "./NavigationHubIcons";
 import type { HubLink } from "./navigationLinks";
 
-export function HubLinkCard({ label, description, href, icon }: HubLink) {
+export function HubLinkCard({
+  label,
+  description,
+  href,
+  icon,
+  external = true,
+}: HubLink) {
   return (
     <a
       className="nav-hub__link"
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${label} 새 탭에서 열기`}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      aria-label={external ? `${label} 새 탭에서 열기` : label}
     >
       <span className="nav-hub__icon" aria-hidden="true">
         <img src={icon} alt="" width="22" height="22" />

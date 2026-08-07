@@ -1,32 +1,28 @@
-import "./App.css";
 import { lazy, Suspense } from "react";
-import { useErrorBoundary } from "use-error-boundary";
-import Panel from "./components/ui/Panel";
-import { SceneLoadingState } from "./components/ui/SceneLoadingState";
+import "./App.css";
+import { DEFAULT_SITE_VIEW, resolveSiteView } from "./app/siteView";
+import { PortfolioPage } from "./portfolio/PortfolioPage";
 
-const MainScene = lazy(() => import("./scenes/mainScene/MainScene"));
+const LegacyThreeHubPage = lazy(() => import("./legacy/LegacyThreeHubPage"));
 
 const App = () => {
-  const { ErrorBoundary, didCatch, error } = useErrorBoundary();
+  const siteView = resolveSiteView();
 
-  return didCatch ? (
-    <main className="app-shell app-shell--error">
-      <div className="error-card" role="alert" aria-live="polite">
-        <p className="eyebrow">okorion</p>
-        <h1 className="error-title">3D 장면을 불러오지 못했습니다.</h1>
-        <p className="error-copy">{error.message}</p>
-      </div>
-    </main>
-  ) : (
-    <main className="app-shell">
-      <ErrorBoundary>
-        <Suspense fallback={<SceneLoadingState />}>
-          <MainScene />
-        </Suspense>
-      </ErrorBoundary>
-      <Panel />
-    </main>
-  );
+  if (siteView === "3d") {
+    return (
+      <Suspense
+        fallback={
+          <main className="route-loading" aria-busy="true" aria-live="polite">
+            <p>3D Lab을 불러오는 중입니다.</p>
+          </main>
+        }
+      >
+        <LegacyThreeHubPage />
+      </Suspense>
+    );
+  }
+
+  return <PortfolioPage defaultView={DEFAULT_SITE_VIEW} />;
 };
 
 export default App;

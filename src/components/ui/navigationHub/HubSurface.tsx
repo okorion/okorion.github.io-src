@@ -19,7 +19,7 @@ export function HubSurface({
       <div className="nav-hub__header">
         <div>
           <p className="eyebrow">Explore okorion</p>
-          <h1 className="nav-hub__title">원하는 곳으로 바로 이동하세요.</h1>
+          <h1 className="nav-hub__title">3D 장면과 공개 기록을 둘러보세요.</h1>
         </div>
         <button
           ref={closeButtonRef}
@@ -32,9 +32,9 @@ export function HubSurface({
         </button>
       </div>
       <p className="nav-hub__intro">
-        프로젝트와 기록을 살펴보거나, 장면을 움직이며 공간을 둘러보세요.
+        경력 포트폴리오, 공개 소스와 기술 기록으로 이동할 수 있습니다.
       </p>
-      <nav className="nav-hub__links" aria-label="외부 링크">
+      <nav className="nav-hub__links" aria-label="외부 및 내부 링크">
         {navigationLinks.map((link) => (
           <HubLinkCard key={link.href} {...link} />
         ))}
