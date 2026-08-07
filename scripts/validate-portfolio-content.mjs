@@ -12,13 +12,38 @@ function assertExcludes(content, unexpected, label) {
   }
 }
 
+function parseStaticImportSpecifier(statement) {
+  const fromMarker = " from ";
+  const markerIndex = statement.lastIndexOf(fromMarker);
+  const searchStart =
+    markerIndex === -1 ? "import ".length : markerIndex + fromMarker.length;
+  const quoteStart = statement.indexOf('"', searchStart);
+  const quoteEnd = statement.indexOf('"', quoteStart + 1);
+
+  if (quoteStart === -1 || quoteEnd === -1) {
+    throw new Error(`Unsupported static import syntax (${statement})`);
+  }
+
+  return statement.slice(quoteStart + 1, quoteEnd);
+}
+
 function getStaticImportSpecifiers(source) {
   const specifiers = [];
-  const staticImportPattern =
-    /\bimport\s+(?:type\s+)?(?:[\s\S]*?\s+from\s+)?["']([^"']+)["'];/g;
+  let statement = "";
 
-  for (const match of source.matchAll(staticImportPattern)) {
-    specifiers.push(match[1]);
+  for (const sourceLine of source.split("\n")) {
+    const line = sourceLine.trim();
+    if (statement || line.startsWith("import ")) {
+      statement = `${statement} ${line}`.trim();
+    }
+    if (statement.endsWith(";")) {
+      specifiers.push(parseStaticImportSpecifier(statement));
+      statement = "";
+    }
+  }
+
+  if (statement) {
+    throw new Error(`Unterminated static import (${statement})`);
   }
 
   return specifiers;

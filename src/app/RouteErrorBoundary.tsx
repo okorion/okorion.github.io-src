@@ -29,7 +29,12 @@ export class RouteErrorBoundary extends Component<
             있습니다.
           </span>
           <div className="route-error__actions">
-            <button type="button" onClick={() => window.location.reload()}>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
               다시 시도
             </button>
             <a href="/">경력 포트폴리오로 돌아가기</a>
