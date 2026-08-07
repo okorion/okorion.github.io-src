@@ -34,6 +34,7 @@ const [
   header,
   hero,
   index,
+  main,
   page,
   profile,
   projects,
@@ -51,6 +52,7 @@ const [
   readFile("src/portfolio/components/SiteHeader.tsx", "utf8"),
   readFile("src/portfolio/components/HeroSection.tsx", "utf8"),
   readFile("index.html", "utf8"),
+  readFile("src/main.tsx", "utf8"),
   readFile("src/portfolio/PortfolioPage.tsx", "utf8"),
   readFile("src/portfolio/components/ProfileSection.tsx", "utf8"),
   readFile("src/portfolio/components/PublicBuildsSection.tsx", "utf8"),
@@ -61,6 +63,7 @@ const [
 ]);
 
 const auditedRootSources = [
+  ["main.tsx", main],
   ["App.tsx", app],
   ["RouteErrorBoundary.tsx", routeBoundary],
   ["PortfolioPage.tsx", page],
@@ -79,6 +82,8 @@ const auditedRootSources = [
 
 const approvedRootStaticImports = new Set([
   "react",
+  "react-dom/client",
+  "./App.tsx",
   "./App.css",
   "./app/RouteErrorBoundary",
   "./app/siteView",
@@ -165,8 +170,16 @@ for (const metadata of [
   "application/ld+json",
   "Product/Application Engineer",
   "<noscript>",
+  '<script type="module" src="/src/main.tsx"></script>',
 ]) {
   assertIncludes(index, metadata, "index.html");
+}
+
+const moduleEntryCount = index.match(/type=["']module["']/g)?.length ?? 0;
+if (moduleEntryCount !== 1) {
+  throw new Error(
+    `index.html: expected one module entry (${moduleEntryCount})`,
+  );
 }
 
 for (const forbiddenClaim of [
