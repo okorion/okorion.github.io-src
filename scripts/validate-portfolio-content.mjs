@@ -12,20 +12,6 @@ function assertExcludes(content, unexpected, label) {
   }
 }
 
-function getStringArrayExport(source, exportName) {
-  const declaration = `export const ${exportName} = [`;
-  const blockStart = source.indexOf(declaration);
-  const contentStart = blockStart + declaration.length;
-  const blockEnd = source.indexOf("] as const;", contentStart);
-
-  if (blockStart === -1 || blockEnd === -1) {
-    throw new Error(`portfolioContent.ts: ${exportName} export is missing`);
-  }
-
-  const block = source.slice(contentStart, blockEnd);
-  return [...block.matchAll(/^\s*"([^"]+)",?$/gm)].map(([, value]) => value);
-}
-
 function parseStaticImportSpecifier(statement) {
   const fromMarker = " from ";
   const markerIndex = statement.lastIndexOf(fromMarker);
@@ -290,11 +276,27 @@ const expectedAdditionalCredentials = [
   "투자자산운용사 · 한국금융투자협회 · 2026.05",
 ];
 
-for (const [exportName, expected] of [
-  ["credentials", expectedCredentials],
-  ["additionalCredentials", expectedAdditionalCredentials],
+for (const [exportName, block, expected] of [
+  [
+    "credentials",
+    content.match(/export const credentials = \[([\s\S]*?)\] as const;/)?.[1],
+    expectedCredentials,
+  ],
+  [
+    "additionalCredentials",
+    content.match(
+      /export const additionalCredentials = \[([\s\S]*?)\] as const;/,
+    )?.[1],
+    expectedAdditionalCredentials,
+  ],
 ]) {
-  const actual = getStringArrayExport(content, exportName);
+  if (!block) {
+    throw new Error(`portfolioContent.ts: ${exportName} export is missing`);
+  }
+
+  const actual = [...block.matchAll(/^\s*"([^"]+)",?$/gm)].map(
+    ([, value]) => value,
+  );
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     throw new Error(
       `portfolioContent.ts: ${exportName} does not match the approved public order`,
