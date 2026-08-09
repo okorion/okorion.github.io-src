@@ -24,8 +24,8 @@ function HeroCopy() {
         HYOUNKYU OH · PRODUCT / APPLICATION ENGINEER
       </p>
       <h1 id="hero-title">
-        Editor·Builder의 복잡한 상태를
-        <span> 저장·Runtime·서버까지 연결합니다.</span>
+        Editor·Builder의 편집 흐름을
+        <span> 저장과 실행까지 연결합니다.</span>
       </h1>
       <p className="hero__summary">
         React·TypeScript·Three.js 기반의 2D·3D Editor·Builder와 지도 제품을

@@ -36,6 +36,10 @@ body {
   color: var(--page-text);
 }
 
+:root[data-portfolio-theme="light"] body {
+  background: #f4f6f2;
+}
+
 body,
 button,
 a {

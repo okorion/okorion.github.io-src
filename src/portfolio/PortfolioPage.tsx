@@ -7,6 +7,7 @@ import { PublicBuildsSection } from "./components/PublicBuildsSection";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
 import { TechnicalWritingSection } from "./components/TechnicalWritingSection";
+import { usePortfolioTheme } from "./usePortfolioTheme";
 import "./portfolio.css";
 
 interface PortfolioPageProps {
@@ -14,12 +15,18 @@ interface PortfolioPageProps {
 }
 
 export function PortfolioPage({ defaultView }: PortfolioPageProps) {
+  const { theme, toggleTheme } = usePortfolioTheme();
+
   return (
-    <div className="portfolio" data-default-view={defaultView}>
+    <div
+      className="portfolio"
+      data-default-view={defaultView}
+      data-theme={theme}
+    >
       <a className="skip-link" href="#main-content">
         본문으로 건너뛰기
       </a>
-      <SiteHeader />
+      <SiteHeader theme={theme} onToggleTheme={toggleTheme} />
       <main id="main-content">
         <HeroSection />
         <ProfessionalEvidenceSection />

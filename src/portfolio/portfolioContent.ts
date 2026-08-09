@@ -32,7 +32,7 @@ export interface PublicProject {
 export interface TechnicalWritingItem {
   id: string;
   index: string;
-  category: "Troubleshooting" | "Implementation" | "Technical Judgment";
+  category: "Troubleshooting" | "Implementation" | "Architecture Decision";
   title: string;
   summary: string;
   takeaway: string;
@@ -206,18 +206,18 @@ export const technicalWritingItems: readonly TechnicalWritingItem[] = [
     href: "https://velog.io/@okorion/GitHub.io-페이지-제작기-2-Points-web",
   },
   {
-    id: "react-library-criteria",
+    id: "mermaid-url-sharing",
     index: "03",
-    category: "Technical Judgment",
-    title: "2026년 React 프로젝트에서 라이브러리를 고르는 기준",
+    category: "Architecture Decision",
+    title: "URL 기반 다이어그램 공유 설계 및 구현 (완전 클라이언트 방식)",
     summary:
-      "React 생태계의 도구를 프로젝트 뼈대·상태·데이터·UI·운영으로 나누고, 제품 요구에 따라 선택지를 좁히는 기준을 정리했습니다.",
+      "Mermaid Sky Exporter에서 서버 저장소 없이 다이어그램 상태를 URL로 공유하기 위해 JSON 직렬화와 LZ-String 압축·복원 흐름을 설계하고, 버전 호환성과 URL 길이·민감 정보 노출 한계를 정리했습니다.",
     takeaway:
-      "좋은 라이브러리인지보다 팀과 제품의 유지보수 비용을 줄이는 선택인지가 우선입니다.",
-    publishedAt: "2026-07-10",
-    publishedLabel: "2026.07",
-    technologies: ["React", "Architecture", "Tooling"],
-    href: "https://velog.io/@okorion/2026년-React-프로젝트에서-라이브러리를-고르는-기준",
+      "작은 공유 도구에서는 서버를 먼저 추가하기보다 데이터 크기·보안·확장 경계를 명시한 클라이언트 상태 전달이 운영 부담과 공유 UX를 함께 줄일 수 있습니다.",
+    publishedAt: "2025-10-04",
+    publishedLabel: "2025.10",
+    technologies: ["TypeScript", "LZ-String", "Client Architecture"],
+    href: "https://velog.io/@okorion/URL-기반-다이어그램-공유-설계-및-구현완전-클라이언트-방식",
   },
 ];
 
@@ -245,6 +245,13 @@ export const experienceItems = [
 export const credentials = [
   "SSAFY 7기 · 1,600시간 · 2022",
   "AWS Certified Solutions Architect – Associate · 2025.07 · 2028.07까지 유효",
+  "리눅스마스터 2급 · 2025.07",
   "정보처리기사 · 2022.11",
   "SQL 개발자(SQLD) · 2021.12",
+] as const;
+
+export const additionalCredentials = [
+  "빅데이터분석기사 · 2025.12",
+  "데이터분석 준전문가(ADsP) · 2025.09",
+  "투자자산운용사 · 한국금융투자협회 · 2026.05",
 ] as const;

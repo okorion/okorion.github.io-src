@@ -62,12 +62,15 @@ const [
   index,
   main,
   page,
+  portfolioCss,
   profile,
   projects,
   readme,
   routeBoundary,
   sectionHeading,
   siteView,
+  themeToggle,
+  themeHook,
   writing,
 ] = await Promise.all([
   readFile("src/App.tsx", "utf8"),
@@ -82,12 +85,15 @@ const [
   readFile("index.html", "utf8"),
   readFile("src/main.tsx", "utf8"),
   readFile("src/portfolio/PortfolioPage.tsx", "utf8"),
+  readFile("src/portfolio/portfolio.css", "utf8"),
   readFile("src/portfolio/components/ProfileSection.tsx", "utf8"),
   readFile("src/portfolio/components/PublicBuildsSection.tsx", "utf8"),
   readFile("README.md", "utf8"),
   readFile("src/app/RouteErrorBoundary.tsx", "utf8"),
   readFile("src/portfolio/components/SectionHeading.tsx", "utf8"),
   readFile("src/app/siteView.ts", "utf8"),
+  readFile("src/portfolio/components/ThemeToggle.tsx", "utf8"),
+  readFile("src/portfolio/usePortfolioTheme.ts", "utf8"),
   readFile("src/portfolio/components/TechnicalWritingSection.tsx", "utf8"),
 ]);
 
@@ -105,7 +111,9 @@ const auditedRootSources = [
   ["SectionHeading.tsx", sectionHeading],
   ["SiteFooter.tsx", footer],
   ["SiteHeader.tsx", header],
+  ["ThemeToggle.tsx", themeToggle],
   ["TechnicalWritingSection.tsx", writing],
+  ["usePortfolioTheme.ts", themeHook],
   ["portfolioContent.ts", content],
   ["siteView.ts", siteView],
 ];
@@ -127,10 +135,12 @@ const approvedRootStaticImports = new Set([
   "./components/SiteFooter",
   "./components/SiteHeader",
   "./components/TechnicalWritingSection",
+  "./usePortfolioTheme",
   "./portfolio.css",
   "../portfolioContent",
   "./ExternalLink",
   "./SectionHeading",
+  "./ThemeToggle",
 ]);
 
 for (const [label, source] of auditedRootSources) {
@@ -155,6 +165,7 @@ const portfolio = [
   profile,
   projects,
   readme,
+  themeToggle,
   writing,
 ].join("\n");
 
@@ -171,6 +182,69 @@ assertIncludes(
   'DEFAULT_SITE_VIEW: SiteView = "portfolio"',
   "siteView.ts",
 );
+
+for (const [label, surface] of [
+  ["HeroSection.tsx", hero],
+  ["index.html", index],
+]) {
+  assertIncludes(surface, "Editor·Builder의 편집 흐름을", label);
+  assertIncludes(surface, "저장과 실행까지 연결합니다.", label);
+  assertExcludes(surface, "Editor·Builder의 복잡한 상태를", label);
+}
+
+for (const [label, surface, expected] of [
+  ["PortfolioPage.tsx", page, "data-theme={theme}"],
+  ["SiteHeader.tsx", header, "<ThemeToggle"],
+  ["ThemeToggle.tsx", themeToggle, "aria-label={label}"],
+  ["usePortfolioTheme.ts", themeHook, "hasManualOverride.current"],
+  [
+    "usePortfolioTheme.ts",
+    themeHook,
+    'window.matchMedia("(prefers-color-scheme: light)")',
+  ],
+  ["index.html", index, 'content="light dark"'],
+]) {
+  assertIncludes(surface, expected, label);
+}
+
+for (const [label, surface] of [
+  ["usePortfolioTheme.ts", themeHook],
+  ["index.html", index],
+]) {
+  assertIncludes(surface, "okorion.portfolio.theme.v1", label);
+}
+
+assertIncludes(portfolioCss, '.portfolio[data-theme="light"]', "portfolio.css");
+
+const projectHoverRule = portfolioCss.match(
+  /\.project-card:hover\s*\{([^}]*)\}/,
+)?.[1];
+if (!projectHoverRule) {
+  throw new Error("portfolio.css: project card hover rule is missing");
+}
+assertExcludes(
+  projectHoverRule,
+  "transform:",
+  "project card hover compositing",
+);
+
+const typographyTokens = new Set(
+  [...portfolioCss.matchAll(/font-size:\s*var\((--type-[^)]+)\);/g)].map(
+    ([, token]) => token,
+  ),
+);
+const fontSizeDeclarationCount = portfolioCss.match(/font-size:/g)?.length ?? 0;
+const tokenizedFontSizeDeclarationCount =
+  portfolioCss.match(/font-size:\s*var\(--type-[^)]+\);/g)?.length ?? 0;
+
+if (
+  typographyTokens.size !== 8 ||
+  tokenizedFontSizeDeclarationCount !== fontSizeDeclarationCount
+) {
+  throw new Error(
+    `portfolio.css: expected eight typography tokens across every font-size declaration (${typographyTokens.size} tokens, ${tokenizedFontSizeDeclarationCount}/${fontSizeDeclarationCount} declarations)`,
+  );
+}
 
 for (const evidenceLabel of [
   "Problem",
@@ -189,12 +263,69 @@ for (const projectName of [
   assertIncludes(content, projectName, "portfolioContent.ts");
 }
 
+const expectedCredentials = [
+  "SSAFY 7기 · 1,600시간 · 2022",
+  "AWS Certified Solutions Architect – Associate · 2025.07 · 2028.07까지 유효",
+  "리눅스마스터 2급 · 2025.07",
+  "정보처리기사 · 2022.11",
+  "SQL 개발자(SQLD) · 2021.12",
+];
+const expectedAdditionalCredentials = [
+  "빅데이터분석기사 · 2025.12",
+  "데이터분석 준전문가(ADsP) · 2025.09",
+  "투자자산운용사 · 한국금융투자협회 · 2026.05",
+];
+
+for (const [exportName, block, expected] of [
+  [
+    "credentials",
+    content.match(/export const credentials = \[([\s\S]*?)\] as const;/)?.[1],
+    expectedCredentials,
+  ],
+  [
+    "additionalCredentials",
+    content.match(
+      /export const additionalCredentials = \[([\s\S]*?)\] as const;/,
+    )?.[1],
+    expectedAdditionalCredentials,
+  ],
+]) {
+  if (!block) {
+    throw new Error(`portfolioContent.ts: ${exportName} export is missing`);
+  }
+
+  const actual = [...block.matchAll(/^\s*"([^"]+)",?$/gm)].map(
+    ([, value]) => value,
+  );
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error(
+      `portfolioContent.ts: ${exportName} does not match the approved public order`,
+    );
+  }
+}
+
+for (const disclosureContract of [
+  '<details className="credential-disclosure">',
+  "<summary>",
+  "Additional credentials",
+  "additionalCredentials.length",
+]) {
+  assertIncludes(profile, disclosureContract, "ProfileSection.tsx");
+}
+
 for (const writingTitle of [
   "PWA 서비스워커가 MyHits 조회수 배지를 캐시한 문제 해결기",
   "🌆 GitHub.io 페이지 제작기 (2) - Points 컨셉의 3D Web 구현",
-  "2026년 React 프로젝트에서 라이브러리를 고르는 기준",
+  "URL 기반 다이어그램 공유 설계 및 구현 (완전 클라이언트 방식)",
 ]) {
   assertIncludes(content, writingTitle, "portfolioContent.ts");
+}
+
+for (const replacedWritingContent of [
+  "2026년 React 프로젝트에서 라이브러리를 고르는 기준",
+  "https://velog.io/@okorion/2026년-React-프로젝트에서-라이브러리를-고르는-기준",
+]) {
+  assertExcludes(content, replacedWritingContent, "portfolioContent.ts");
 }
 
 assertIncludes(
@@ -219,7 +350,7 @@ for (const publicUrl of [
   "https://velog.io/@okorion",
   "https://velog.io/@okorion/PWA-서비스워커가-MyHits-조회수-배지를-캐시한-문제-해결기-rfvfju0v",
   "https://velog.io/@okorion/GitHub.io-페이지-제작기-2-Points-web",
-  "https://velog.io/@okorion/2026년-React-프로젝트에서-라이브러리를-고르는-기준",
+  "https://velog.io/@okorion/URL-기반-다이어그램-공유-설계-및-구현완전-클라이언트-방식",
 ]) {
   assertIncludes(portfolio, publicUrl, "public links");
 }
@@ -304,6 +435,17 @@ for (const forbiddenClaim of [
   "Deploy Lens",
   "Private",
   "Restricted",
+  "26-011371",
+  "금융투자전문인력",
+  "국가자격",
+  "투자자산운용사 취득",
+  "투자자산운용사 등록",
+  "시험 합격일",
+  "합격증 번호",
+  "등록번호",
+  "TOEIC",
+  "토익",
+  "한국사",
 ]) {
   assertExcludes(`${portfolio}\n${index}`, forbiddenClaim, "public portfolio");
 }
