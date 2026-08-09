@@ -3,10 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 export type PortfolioTheme = "dark" | "light";
 
 const STORAGE_KEY = "okorion.portfolio.theme.v1";
-const THEME_COLORS: Record<PortfolioTheme, string> = {
-  dark: "#080a0b",
-  light: "#f4f6f2",
-};
+const DARK_THEME_COLOR = "#080a0b";
+const LIGHT_THEME_COLOR = "#f4f6f2";
 
 function isPortfolioTheme(value: string | null): value is PortfolioTheme {
   return value === "dark" || value === "light";
@@ -27,6 +25,10 @@ function readSystemTheme(): PortfolioTheme {
     : "dark";
 }
 
+function getThemeColor(theme: PortfolioTheme) {
+  return theme === "light" ? LIGHT_THEME_COLOR : DARK_THEME_COLOR;
+}
+
 function getInitialTheme(): PortfolioTheme {
   const bootstrappedTheme =
     document.documentElement.dataset.portfolioTheme ?? null;
@@ -40,13 +42,14 @@ function getInitialTheme(): PortfolioTheme {
 
 function syncBrowserTheme(theme: PortfolioTheme) {
   const root = document.documentElement;
+  const themeColor = getThemeColor(theme);
   root.dataset.portfolioTheme = theme;
   root.style.colorScheme = theme;
-  root.style.backgroundColor = THEME_COLORS[theme];
+  root.style.backgroundColor = themeColor;
 
   document
     .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
-    ?.setAttribute("content", THEME_COLORS[theme]);
+    ?.setAttribute("content", themeColor);
 }
 
 export function usePortfolioTheme() {

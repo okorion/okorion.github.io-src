@@ -13,14 +13,16 @@ function assertExcludes(content, unexpected, label) {
 }
 
 function getStringArrayExport(source, exportName) {
-  const block = source.match(
-    new RegExp(`export const ${exportName} = \\[([\\s\\S]*?)\\] as const;`),
-  )?.[1];
+  const declaration = `export const ${exportName} = [`;
+  const blockStart = source.indexOf(declaration);
+  const contentStart = blockStart + declaration.length;
+  const blockEnd = source.indexOf("] as const;", contentStart);
 
-  if (!block) {
+  if (blockStart === -1 || blockEnd === -1) {
     throw new Error(`portfolioContent.ts: ${exportName} export is missing`);
   }
 
+  const block = source.slice(contentStart, blockEnd);
   return [...block.matchAll(/^\s*"([^"]+)",?$/gm)].map(([, value]) => value);
 }
 
