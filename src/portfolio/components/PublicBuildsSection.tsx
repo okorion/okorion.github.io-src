@@ -26,7 +26,7 @@ function ProjectCard({ project }: { project: PublicProject }) {
           ))}
         </ul>
         <p className="project-card__boundary">
-          <strong>공개 범위</strong>
+          <strong>현재 구현 범위</strong>
           {project.boundary}
         </p>
         <nav
@@ -54,8 +54,8 @@ export function PublicBuildsSection() {
       <SectionHeading
         eyebrow="02 · PUBLIC BUILDS"
         headingId="public-builds-title"
-        title="직접 열어보고, 코드를 확인할 수 있는 실험입니다."
-        description="현업 제품과 분리된 개인 공개 프로젝트입니다. 데모의 동작 범위와 구현 경계를 함께 밝혔습니다."
+        title="직접 사용해 보고 코드를 살펴볼 수 있습니다."
+        description="업무와 별도로 만든 개인 프로젝트입니다. 각 데모에서 구현한 기능과 현재 제한 사항을 함께 적었습니다."
       />
       <div className="project-list">
         {publicProjects.map((project) => (

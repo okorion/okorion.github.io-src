@@ -22,13 +22,13 @@ export const navigationLinks: HubLink[] = [
   },
   {
     label: "Career Profile",
-    description: "경력과 공개 근거 요약",
+    description: "경력과 프로젝트를 정리한 프로필",
     href: "https://okorion.notion.site/Developer-Portfolio-1d50242aaedf80988f93f5af21fe0304",
     icon: "/icons/notion.svg",
   },
   {
     label: "Technical Writing",
-    description: "기술 아티클 해석과 구현·트러블슈팅 기록",
+    description: "직접 구현한 내용과 문제 해결 기록",
     href: "https://velog.io/@okorion",
     icon: "/icons/velog.svg",
   },

@@ -55,10 +55,10 @@ export function ProfessionalEvidenceSection() {
       aria-labelledby="professional-evidence-title"
     >
       <SectionHeading
-        eyebrow="01 · PROFESSIONAL EVIDENCE"
+        eyebrow="01 · SELECTED WORK"
         headingId="professional-evidence-title"
-        title="구현보다 먼저, 상태의 의미와 책임 경계를 맞춥니다."
-        description="공개 가능한 범위에서 문제, 직접 기여, 핵심 판단, 검증 방법을 분리해 적었습니다."
+        title="복잡한 기능일수록 상태와 책임부터 정리합니다."
+        description="각 사례에서 어떤 문제를 맡았고, 어떻게 판단해 구현하고 확인했는지 정리했습니다."
       />
       <div className="evidence-list">
         {evidenceItems.map((item) => (
