@@ -52,11 +52,11 @@ export const evidenceItems: readonly EvidenceItem[] = [
     problem:
       "페이지 구조를 직접 변경하면 화면은 바뀌어도 저장 가능한 변경 이력이 남지 않았고, 기존 Header 동작과 신규 버튼 이벤트가 충돌했습니다.",
     contribution:
-      "페이지 추가·삭제·이름 변경·순서 이동을 전용 동기화 이벤트와 command batch로 연결하고 client·Runtime·server·DB 저장 경계를 따라 동작을 확인했습니다.",
+      "페이지 추가·삭제·이름 변경·순서 이동을 전용 동기화 이벤트와 command batch로 처리하고, 저장한 변경 내용이 Studio와 Runtime, 서버와 DB에 동일하게 반영되는지 확인했습니다.",
     decision:
-      "페이지 변경과 Header 재구성을 묵시적 side effect로 두지 않고 하나의 저장 가능한 명령 흐름으로 묶어 중간 상태를 줄였습니다.",
+      "페이지 변경과 Header 재구성이 암묵적으로 실행되지 않도록 저장 가능한 하나의 명령 흐름으로 묶어, 중간 상태를 줄였습니다.",
     validation:
-      "Studio에서 페이지 구조를 바꾼 뒤 저장·불러오기와 Runtime 실행을 대조해 페이지 식별자·이름·순서가 일치하는지 검증했습니다.",
+      "Studio에서 페이지 구조를 바꾼 뒤 저장·불러오기와 Runtime 실행을 대조해 페이지 식별자·이름·순서가 일치하는지 확인했습니다.",
     technologies: ["React", "TypeScript", "MobX", "WebSocket"],
   },
   {
@@ -68,11 +68,11 @@ export const evidenceItems: readonly EvidenceItem[] = [
     problem:
       "Studio 편집 상태, 저장 모델, Runtime 표시와 서버 메타데이터가 같은 의미를 유지해야 했고, 모바일에서는 터치·현재 위치·시설 선택·유효하지 않은 좌표도 함께 다뤄야 했습니다.",
     contribution:
-      "현재 위치·선택·추적·좌표 보정의 저장·파싱·fallback과 이벤트 흐름을 client·Runtime·server 경계에 연결했습니다.",
+      "현재 위치·선택·추적·좌표 보정이 client·Runtime·server에서 같은 방식으로 저장되고 해석되도록 구현했습니다. 잘못된 좌표를 처리하는 fallback과 이벤트 흐름도 정리했습니다.",
     decision:
-      "Studio에서는 위치 추적을 차단하고 Runtime이 실제 사용자 상호작용을 소유하도록 편집·실행 환경의 책임을 분리했습니다.",
+      "위치 추적은 Studio에서 실행하지 않고 Runtime에서만 동작하도록 나눴습니다. 편집 중 상태와 실제 사용자의 위치 추적이 섞이지 않게 하기 위한 선택이었습니다.",
     validation:
-      "저장·불러오기와 Runtime 실행을 확인한 뒤 운영 앱에 적용했고, 출시 전과 운영 기간 중 실제 모바일·현장 환경에서 현재 위치·방향을 검증했습니다.",
+      "저장·불러오기와 Runtime 실행을 확인한 뒤 운영 앱에 적용했고, 출시 전과 운영 기간 중 실제 모바일·현장 환경에서 현재 위치와 방향을 확인했습니다.",
     technologies: ["React", "TypeScript", "Mobile WebView", "Runtime"],
   },
   {
@@ -84,11 +84,11 @@ export const evidenceItems: readonly EvidenceItem[] = [
     problem:
       "캔버스 선택, 계층 구조, 속성 패널, 씬 설정과 저장 데이터가 서로 다른 시점의 상태를 가리키면 이전 객체가 수정되거나 불러오기 후 속성이 달라질 수 있었습니다.",
     contribution:
-      "오브젝트·씬 편집 UI, 계층 구조 UX와 상호작용·이벤트 오류를 수정하고 생성·삭제·변경을 추적 가능한 상태와 기존 command·Undo/Redo 흐름에 연결했습니다.",
+      "오브젝트·씬 편집 UI와 계층 구조 UX를 개선하고 상호작용·이벤트 오류를 수정했습니다. 생성·삭제·변경은 기존 command와 Undo/Redo에 기록되도록 연결했습니다.",
     decision:
-      "Three.js 객체 직접 변경에 의존하지 않고 UI가 구독할 상태 모델을 두어 단일·다중 선택과 기본 도형·외부 에셋을 같은 편집 경계로 맞췄습니다.",
+      "Three.js 객체를 직접 바꾸는 대신 UI가 구독하는 상태 모델을 두었습니다. 단일·다중 선택과 기본 도형·외부 에셋을 같은 방식으로 편집할 수 있게 했습니다.",
     validation:
-      "저장·불러오기, 복제·삭제, Undo/Redo, 선택 전환·입력 포커스 시나리오에서 캔버스·패널·계층이 같은 사용자 의도를 반영하도록 안정화했습니다.",
+      "저장·불러오기, 복제·삭제, Undo/Redo, 선택 전환·입력 포커스 시나리오에서 캔버스·패널·계층 UI가 서로 다른 상태를 보여주지 않도록 안정화했습니다.",
     technologies: ["React", "TypeScript", "Three.js", "MobX"],
   },
 ];
@@ -98,11 +98,11 @@ export const publicProjects: readonly PublicProject[] = [
     id: "localmesh",
     index: "01",
     title: "LocalMesh Studio",
-    category: "Local-first 3D · AI experiment",
+    category: "Local-first 3D · AI project",
     description:
-      "3D 장면 편집, 로컬 LLM 명령과 브라우저 저장을 하나의 SceneCommand·Yjs 문서 흐름으로 연결한 local-first Studio 실험입니다. 모델 응답은 스키마 검증과 사용자 승인 뒤 장면에 적용됩니다.",
+      "3D 장면 편집, 로컬 LLM 명령, 브라우저 저장이 하나의 SceneCommand·Yjs 문서를 거쳐 동작하도록 만든 local-first Studio입니다. 모델 응답은 스키마 검증과 사용자 승인 뒤 장면에 적용됩니다.",
     boundary:
-      "공개 데모는 IndexedDB 기반 로컬 모드입니다. 협업 서버는 로컬 개발용이며 운영 인증·접근 제어·서버 영속 저장을 갖춘 서비스가 아닙니다.",
+      "공개 데모는 IndexedDB에 저장하는 로컬 모드로 동작합니다. 협업 서버는 로컬 개발용이라 운영 환경에 필요한 인증, 접근 제어, 서버 저장 기능은 포함하지 않았습니다.",
     image:
       "https://raw.githubusercontent.com/okorion/localmesh-studio/main/public/og.png",
     imageAlt: "LocalMesh Studio의 3D 편집 화면",
@@ -128,9 +128,9 @@ export const publicProjects: readonly PublicProject[] = [
     title: "VizPort Studio",
     category: "Data visualization studio",
     description:
-      "CSV·TSV·JSON을 브라우저에서 분석해 규칙 기반 그래프 후보와 추천 근거를 제시하고, 실제 미리보기에서 React 코드·LLM 프롬프트·VizSpec까지 내보내는 시각화 Studio입니다.",
+      "CSV·TSV·JSON을 브라우저에서 분석해 규칙에 따라 그래프 후보와 추천 이유를 보여줍니다. 미리보기 결과는 React 코드·LLM 프롬프트·VizSpec으로 내보낼 수 있습니다.",
     boundary:
-      "AI는 선택적 추천 보정 기능입니다. 차트는 현재 Canvas 기반이며 WebGPU 렌더러는 확장 경계만 정의됐습니다.",
+      "AI 추천은 필요할 때만 사용할 수 있습니다. 차트는 Canvas로 렌더링하며, WebGPU 렌더러는 확장을 위한 인터페이스만 마련했습니다.",
     image:
       "https://raw.githubusercontent.com/okorion/vizport-studio/main/public/og.png",
     imageAlt: "VizPort Studio의 데이터 시각화 작업 화면",
@@ -156,9 +156,9 @@ export const publicProjects: readonly PublicProject[] = [
     title: "Mermaid Sky Exporter",
     category: "Diagram export · PWA",
     description:
-      "Mermaid 다이어그램을 실시간 렌더링하고 SVG·PNG·JPG로 내보내며, URL 공유·모바일 공유 fallback·설치 가능한 PWA 흐름을 제공하는 공개 웹 도구입니다.",
+      "Mermaid 다이어그램을 실시간으로 미리 보고 SVG·PNG·JPG로 내보낼 수 있는 웹 도구입니다. URL 및 모바일 공유와 PWA 설치도 지원합니다.",
     boundary:
-      "브라우저에서 바로 사용할 수 있는 단일 목적 도구로, 다이어그램 편집·내보내기·공유 흐름에 범위를 집중했습니다.",
+      "브라우저에서 바로 사용할 수 있으며, 다이어그램 편집·내보내기·공유에 필요한 기능만 담았습니다.",
     image:
       "https://raw.githubusercontent.com/okorion/mermaid-sky-exporter/main/public/homepage.png",
     imageAlt: "Mermaid Sky Exporter의 편집기와 미리보기 화면",
@@ -185,7 +185,7 @@ export const technicalWritingItems: readonly TechnicalWritingItem[] = [
     summary:
       "일반 브라우저에서만 오래된 조회수가 보이는 증상을 시크릿 모드와 비교하고, 서비스워커가 동적 이미지 응답을 캐시한 원인을 좁혀 예외 처리했습니다.",
     takeaway:
-      "조회수처럼 매 요청 최신성이 필요한 동적 리소스는 서비스워커 캐시 대상에서 분리하고, 업데이트 지연까지 함께 검증해야 합니다.",
+      "조회수처럼 요청할 때마다 최신 값이 필요한 리소스는 서비스워커 캐시에서 제외하고, 실제 업데이트 시점까지 확인해야 합니다.",
     publishedAt: "2026-05-29",
     publishedLabel: "2026.05",
     technologies: ["PWA", "Service Worker", "Cache Storage"],
@@ -199,7 +199,7 @@ export const technicalWritingItems: readonly TechnicalWritingItem[] = [
     summary:
       "Points 기반 수렴·입자 효과와 카메라 인터랙션을 구현하고, 이동 시 오브젝트가 사라지는 절두체 컬링 이슈를 기록했습니다.",
     takeaway:
-      "Points 기반 초기 시각 구현과 당시 확인한 절두체 컬링 이슈를 확인할 수 있습니다.",
+      "Points 기반 시각 효과를 구현하면서 마주친 절두체 컬링 문제를 기록한 글입니다.",
     publishedAt: "2025-04-20",
     publishedLabel: "2025.04",
     technologies: ["Three.js", "Particles", "Camera Interaction"],
@@ -213,7 +213,7 @@ export const technicalWritingItems: readonly TechnicalWritingItem[] = [
     summary:
       "Mermaid Sky Exporter에서 서버 저장소 없이 다이어그램 상태를 URL로 공유하기 위해 JSON 직렬화와 LZ-String 압축·복원 흐름을 설계하고, 버전 호환성과 URL 길이·민감 정보 노출 한계를 정리했습니다.",
     takeaway:
-      "작은 공유 도구에서는 서버를 먼저 추가하기보다 데이터 크기·보안·확장 경계를 명시한 클라이언트 상태 전달이 운영 부담과 공유 UX를 함께 줄일 수 있습니다.",
+      "작은 공유 도구라면 서버를 바로 추가하기보다 URL로 상태를 전달하는 방식도 선택지가 됩니다. 다만 데이터 크기와 보안, 확장 범위는 먼저 정해야 합니다.",
     publishedAt: "2025-10-04",
     publishedLabel: "2025.10",
     technologies: ["TypeScript", "LZ-String", "Client Architecture"],

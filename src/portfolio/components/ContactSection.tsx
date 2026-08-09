@@ -7,12 +7,9 @@ export function ContactSection() {
   return (
     <section className="contact-section" aria-labelledby="contact-title">
       <div>
-        <p className="contact-section__eyebrow">VERIFIED LINKS</p>
-        <h2 id="contact-title">다음 근거를 바로 확인할 수 있습니다.</h2>
-        <p>
-          지원용 이력서와 연락처는 채용 과정에서 전달한 최신 문서를 기준으로
-          합니다.
-        </p>
+        <p className="contact-section__eyebrow">EXPLORE MORE</p>
+        <h2 id="contact-title">프로젝트와 경력, 기술 글을 더 살펴보세요.</h2>
+        <p>지원용 이력서와 연락처는 채용 과정에서 별도로 공유합니다.</p>
       </div>
       <div className="contact-section__links">
         <ExternalLink href="https://github.com/okorion">GitHub</ExternalLink>

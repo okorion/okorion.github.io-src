@@ -28,12 +28,13 @@ function HeroCopy() {
         <span> 저장과 실행까지 연결합니다.</span>
       </h1>
       <p className="hero__summary">
-        React·TypeScript·Three.js 기반의 2D·3D Editor·Builder와 지도 제품을
-        개발해 왔습니다. 편집 상태와 command·event, 저장 모델, Runtime 실행의
-        의미를 맞추고 모바일·현장·운영 환경에서 실제 동작을 검증합니다.
+        React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해
+        왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로
+        동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다.
       </p>
       <p className="hero__experiment">
-        공개 프로젝트에서는 local-first AI, 3D·데이터 시각화 도구를 실험합니다.
+        개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고
+        공개합니다.
       </p>
       <HeroActions />
     </div>
@@ -45,7 +46,7 @@ function HeroVisual() {
     <a
       className="hero-visual"
       href="/?view=3d"
-      aria-label="기존 인터랙티브 3D Lab 열기"
+      aria-label="이전 포트폴리오의 3D Lab 열기"
     >
       <img
         src="/favicon/og-image.png"
@@ -56,12 +57,12 @@ function HeroVisual() {
       />
       <span className="hero-visual__veil" aria-hidden="true" />
       <span className="hero-visual__topline">
-        <span>Original 3D experience</span>
+        <span>Previous 3D portfolio</span>
         <span aria-hidden="true">↗</span>
       </span>
       <span className="hero-visual__caption">
         <strong>3D Lab</strong>
-        <span>기존 인터랙티브 장면은 별도 경험으로 보존했습니다.</span>
+        <span>이전 포트폴리오의 인터랙티브 3D 장면도 함께 볼 수 있습니다.</span>
       </span>
     </a>
   );

@@ -59,6 +59,7 @@ const [
   header,
   hero,
   hubLinks,
+  hubSurface,
   index,
   main,
   page,
@@ -82,6 +83,7 @@ const [
   readFile("src/portfolio/components/SiteHeader.tsx", "utf8"),
   readFile("src/portfolio/components/HeroSection.tsx", "utf8"),
   readFile("src/components/ui/navigationHub/navigationLinks.ts", "utf8"),
+  readFile("src/components/ui/navigationHub/HubSurface.tsx", "utf8"),
   readFile("index.html", "utf8"),
   readFile("src/main.tsx", "utf8"),
   readFile("src/portfolio/PortfolioPage.tsx", "utf8"),
@@ -190,6 +192,134 @@ for (const [label, surface] of [
   assertIncludes(surface, "Editor·Builder의 편집 흐름을", label);
   assertIncludes(surface, "저장과 실행까지 연결합니다.", label);
   assertExcludes(surface, "Editor·Builder의 복잡한 상태를", label);
+}
+
+for (const [label, surface, approvedCopy] of [
+  [
+    "HeroSection.tsx",
+    hero,
+    "이전 포트폴리오의 인터랙티브 3D 장면도 함께 볼 수 있습니다.",
+  ],
+  [
+    "ProfessionalEvidenceSection.tsx",
+    evidence,
+    "복잡한 기능일수록 상태와 책임부터 정리합니다.",
+  ],
+  [
+    "ProfessionalEvidenceSection.tsx",
+    evidence,
+    "어떻게 판단해 구현하고 확인했는지 정리했습니다.",
+  ],
+  [
+    "PublicBuildsSection.tsx",
+    projects,
+    "직접 사용해 보고 코드를 살펴볼 수 있습니다.",
+  ],
+  [
+    "PublicBuildsSection.tsx",
+    projects,
+    "업무와 별도로 만든 개인 프로젝트입니다.",
+  ],
+  [
+    "TechnicalWritingSection.tsx",
+    writing,
+    "문제를 어떻게 좁혔고, 왜 이 방법을 택했는지 기록합니다.",
+  ],
+  [
+    "TechnicalWritingSection.tsx",
+    writing,
+    "기술 선택 이유가 담긴 세 편을 골랐습니다.",
+  ],
+  [
+    "ProfileSection.tsx",
+    profile,
+    "제품의 편집 화면부터 실행과 운영까지 다뤄 왔습니다.",
+  ],
+  [
+    "ProfileSection.tsx",
+    profile,
+    "경력과 교육, 자격, 공개 특허를 한곳에 정리했습니다.",
+  ],
+  ["ContactSection.tsx", contact, "프로젝트와 경력, 기술 글을 더 살펴보세요."],
+  [
+    "ContactSection.tsx",
+    contact,
+    "지원용 이력서와 연락처는 채용 과정에서 별도로 공유합니다.",
+  ],
+  ["SiteFooter.tsx", footer, "개인 프로젝트는 회사 업무와 따로 진행했습니다."],
+  ["navigationLinks.ts", hubLinks, "직접 구현한 내용과 문제 해결 기록"],
+  ["HubSurface.tsx", hubSurface, "포트폴리오와 3D 장면을 둘러보세요."],
+  [
+    "HubSurface.tsx",
+    hubSurface,
+    "경력 프로필, 기술 글로 바로 이동할 수 있습니다.",
+  ],
+  ["portfolioContent.ts", content, "Local-first 3D · AI project"],
+  [
+    "README.md",
+    readme,
+    "주요 업무와 역할, 기술적 판단을 빠르게 살펴볼 수 있도록",
+  ],
+  ["index.html", index, "실제 환경에서 동작을 확인합니다."],
+]) {
+  assertIncludes(surface, approvedCopy, label);
+}
+
+for (const [label, surface, replacedCopy] of [
+  [
+    "HeroSection.tsx",
+    hero,
+    "기존 인터랙티브 장면은 별도 경험으로 보존했습니다.",
+  ],
+  ["ProfessionalEvidenceSection.tsx", evidence, "PROFESSIONAL EVIDENCE"],
+  [
+    "ProfessionalEvidenceSection.tsx",
+    evidence,
+    "공개 가능한 범위에서 문제, 직접 기여, 핵심 판단, 검증 방법을 분리해 적었습니다.",
+  ],
+  [
+    "PublicBuildsSection.tsx",
+    projects,
+    "직접 열어보고, 코드를 확인할 수 있는 실험입니다.",
+  ],
+  [
+    "PublicBuildsSection.tsx",
+    projects,
+    "현업 제품과 분리된 개인 공개 프로젝트입니다.",
+  ],
+  [
+    "PublicBuildsSection.tsx",
+    projects,
+    "데모의 동작 범위와 구현 경계를 함께 밝혔습니다.",
+  ],
+  [
+    "TechnicalWritingSection.tsx",
+    writing,
+    "Velog의 글 중 트러블슈팅, 직접 구현, 기술 선택 기준이 드러나는 세 편만 선별했습니다.",
+  ],
+  ["ProfileSection.tsx", profile, "직무 포지셔닝과 직접 연결되는"],
+  ["ContactSection.tsx", contact, "다음 근거를 바로 확인할 수 있습니다."],
+  [
+    "ContactSection.tsx",
+    contact,
+    "지원용 이력서와 연락처는 채용 과정에서 전달한 최신 문서를 기준으로",
+  ],
+  [
+    "SiteFooter.tsx",
+    footer,
+    "개인 공개 프로젝트는 현업 제품과 별개의 실험입니다.",
+  ],
+  ["navigationLinks.ts", hubLinks, "경력과 공개 근거 요약"],
+  ["HubSurface.tsx", hubSurface, "3D 장면과 공개 기록을 둘러보세요."],
+  [
+    "HubSurface.tsx",
+    hubSurface,
+    "경력 포트폴리오, 공개 소스와 기술 기록으로 이동할 수 있습니다.",
+  ],
+  ["portfolioContent.ts", content, "AI experiment"],
+  ["README.md", readme, "3D 경험 보존"],
+]) {
+  assertExcludes(surface, replacedCopy, label);
 }
 
 for (const [label, surface, expected] of [
