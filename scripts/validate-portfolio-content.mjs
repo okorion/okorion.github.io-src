@@ -210,6 +210,7 @@ for (const [label, surface, expected] of [
   ["PortfolioPage.tsx", page, "data-theme={theme}"],
   ["SiteHeader.tsx", header, "<ThemeToggle"],
   ["ThemeToggle.tsx", themeToggle, "aria-label={label}"],
+  ["usePortfolioTheme.ts", themeHook, "hasManualOverride.current"],
   [
     "usePortfolioTheme.ts",
     themeHook,

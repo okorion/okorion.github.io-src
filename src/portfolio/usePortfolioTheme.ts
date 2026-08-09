@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type PortfolioTheme = "dark" | "light";
 
@@ -54,6 +54,7 @@ function syncBrowserTheme(theme: PortfolioTheme) {
 
 export function usePortfolioTheme() {
   const [theme, setTheme] = useState<PortfolioTheme>(getInitialTheme);
+  const hasManualOverride = useRef(false);
 
   useEffect(() => {
     syncBrowserTheme(theme);
@@ -66,7 +67,7 @@ export function usePortfolioTheme() {
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
     const handleSystemThemeChange = () => {
-      if (!readStoredTheme()) {
+      if (!hasManualOverride.current && !readStoredTheme()) {
         setTheme(mediaQuery.matches ? "light" : "dark");
       }
     };
@@ -79,6 +80,7 @@ export function usePortfolioTheme() {
 
   const toggleTheme = useCallback(() => {
     const nextTheme = theme === "dark" ? "light" : "dark";
+    hasManualOverride.current = true;
 
     try {
       window.localStorage.setItem(STORAGE_KEY, nextTheme);
