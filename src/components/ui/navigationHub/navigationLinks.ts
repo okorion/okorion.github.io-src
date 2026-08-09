@@ -27,9 +27,9 @@ export const navigationLinks: HubLink[] = [
     icon: "/icons/notion.svg",
   },
   {
-    label: "Tech Blog",
-    description: "개발 학습과 문제 해결 기록",
-    href: "https://okorion.github.io/tech-blog/",
-    icon: "/icons/jekyll.svg",
+    label: "Technical Writing",
+    description: "기술 아티클 해석과 구현·트러블슈팅 기록",
+    href: "https://velog.io/@okorion",
+    icon: "/icons/velog.svg",
   },
 ];

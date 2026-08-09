@@ -17,8 +17,8 @@ export function ContactSection() {
       <div className="contact-section__links">
         <ExternalLink href="https://github.com/okorion">GitHub</ExternalLink>
         <ExternalLink href={PROFILE_URL}>Career Profile</ExternalLink>
-        <ExternalLink href="https://okorion.github.io/tech-blog/">
-          Tech Blog
+        <ExternalLink href="https://velog.io/@okorion">
+          Technical Writing
         </ExternalLink>
         <a href="/?view=3d">
           3D Lab <span aria-hidden="true">↗</span>

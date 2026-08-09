@@ -58,7 +58,7 @@ export function ProfileSection() {
       aria-labelledby="experience-title"
     >
       <SectionHeading
-        eyebrow="03 · EXPERIENCE & CREDENTIALS"
+        eyebrow="04 · EXPERIENCE & CREDENTIALS"
         headingId="experience-title"
         title="제품의 편집 경험부터 실행·운영 경계까지 다뤄 왔습니다."
         description="직무 포지셔닝과 직접 연결되는 경력, 교육, 자격과 공개 특허만 간결하게 정리했습니다."

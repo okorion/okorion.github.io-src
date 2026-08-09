@@ -29,12 +29,25 @@ export interface PublicProject {
   links: readonly ProjectLink[];
 }
 
+export interface TechnicalWritingItem {
+  id: string;
+  index: string;
+  category: "Troubleshooting" | "Implementation" | "Technical Judgment";
+  title: string;
+  summary: string;
+  takeaway: string;
+  publishedAt: string;
+  publishedLabel: string;
+  technologies: readonly string[];
+  href: string;
+}
+
 export const evidenceItems: readonly EvidenceItem[] = [
   {
     id: "builder-consistency",
     index: "01",
     title: "2D Web Builder — 페이지·Header 저장 일관성",
-    context: "GAIA / FX Studio · 프로젝트 참여",
+    context: "B2B 2D Web Builder / Studio · 프로젝트 참여",
     period: "프로젝트 2025.12–현재",
     problem:
       "페이지 구조를 직접 변경하면 화면은 바뀌어도 저장 가능한 변경 이력이 남지 않았고, 기존 Header 동작과 신규 버튼 이벤트가 충돌했습니다.",
@@ -49,8 +62,8 @@ export const evidenceItems: readonly EvidenceItem[] = [
   {
     id: "smartmap-contract",
     index: "02",
-    title: "SmartMap — Studio·Runtime 상태 계약과 현장 검증",
-    context: "티맥스가이아 · 지도 제품",
+    title: "B2B Map Studio — Studio·Runtime 상태 계약과 현장 검증",
+    context: "B2B 지도 제품 · 프로젝트 참여",
     period: "2026.03–2026.07",
     problem:
       "Studio 편집 상태, 저장 모델, Runtime 표시와 서버 메타데이터가 같은 의미를 유지해야 했고, 모바일에서는 터치·현재 위치·시설 선택·유효하지 않은 좌표도 함께 다뤄야 했습니다.",
@@ -59,14 +72,14 @@ export const evidenceItems: readonly EvidenceItem[] = [
     decision:
       "Studio에서는 위치 추적을 차단하고 Runtime이 실제 사용자 상호작용을 소유하도록 편집·실행 환경의 책임을 분리했습니다.",
     validation:
-      "저장·불러오기와 Runtime 실행을 확인한 뒤 공식 행사 앱에 적용했고, 출시 전 송도와 행사 중 현장에서 현재 위치·방향을 검증했습니다.",
+      "저장·불러오기와 Runtime 실행을 확인한 뒤 운영 앱에 적용했고, 출시 전과 운영 기간 중 실제 모바일·현장 환경에서 현재 위치·방향을 검증했습니다.",
     technologies: ["React", "TypeScript", "Mobile WebView", "Runtime"],
   },
   {
     id: "editor-consistency",
     index: "03",
     title: "3D Interactive Content Editor — 편집 상태 일관성",
-    context: "티맥스메타에이아이 (구 티맥스메타버스)",
+    context: "B2B 3D Interactive Content Editor · 프로젝트 참여",
     period: "2023.05–2025.12",
     problem:
       "캔버스 선택, 계층 구조, 속성 패널, 씬 설정과 저장 데이터가 서로 다른 시점의 상태를 가리키면 이전 객체가 수정되거나 불러오기 후 속성이 달라질 수 있었습니다.",
@@ -163,13 +176,58 @@ export const publicProjects: readonly PublicProject[] = [
   },
 ];
 
+export const technicalWritingItems: readonly TechnicalWritingItem[] = [
+  {
+    id: "pwa-service-worker-cache",
+    index: "01",
+    category: "Troubleshooting",
+    title: "PWA 서비스워커가 MyHits 조회수 배지를 캐시한 문제 해결기",
+    summary:
+      "일반 브라우저에서만 오래된 조회수가 보이는 증상을 시크릿 모드와 비교하고, 서비스워커가 동적 이미지 응답을 캐시한 원인을 좁혀 예외 처리했습니다.",
+    takeaway:
+      "조회수처럼 매 요청 최신성이 필요한 동적 리소스는 서비스워커 캐시 대상에서 분리하고, 업데이트 지연까지 함께 검증해야 합니다.",
+    publishedAt: "2026-05-29",
+    publishedLabel: "2026.05",
+    technologies: ["PWA", "Service Worker", "Cache Storage"],
+    href: "https://velog.io/@okorion/PWA-서비스워커가-MyHits-조회수-배지를-캐시한-문제-해결기-rfvfju0v",
+  },
+  {
+    id: "github-pages-points-web",
+    index: "02",
+    category: "Implementation",
+    title: "🌆 GitHub.io 페이지 제작기 (2) - Points 컨셉의 3D Web 구현",
+    summary:
+      "Points 기반 수렴·입자 효과와 카메라 인터랙션을 구현하고, 이동 시 오브젝트가 사라지는 절두체 컬링 이슈를 기록했습니다.",
+    takeaway:
+      "Points 기반 초기 시각 구현과 당시 확인한 절두체 컬링 이슈를 확인할 수 있습니다.",
+    publishedAt: "2025-04-20",
+    publishedLabel: "2025.04",
+    technologies: ["Three.js", "Particles", "Camera Interaction"],
+    href: "https://velog.io/@okorion/GitHub.io-페이지-제작기-2-Points-web",
+  },
+  {
+    id: "react-library-criteria",
+    index: "03",
+    category: "Technical Judgment",
+    title: "2026년 React 프로젝트에서 라이브러리를 고르는 기준",
+    summary:
+      "React 생태계의 도구를 프로젝트 뼈대·상태·데이터·UI·운영으로 나누고, 제품 요구에 따라 선택지를 좁히는 기준을 정리했습니다.",
+    takeaway:
+      "좋은 라이브러리인지보다 팀과 제품의 유지보수 비용을 줄이는 선택인지가 우선입니다.",
+    publishedAt: "2026-07-10",
+    publishedLabel: "2026.07",
+    technologies: ["React", "Architecture", "Tooling"],
+    href: "https://velog.io/@okorion/2026년-React-프로젝트에서-라이브러리를-고르는-기준",
+  },
+];
+
 export const experienceItems = [
   {
     company: "티맥스가이아",
     role: "Frontend Engineer",
     period: "2026.02–현재",
     details: [
-      "GAIA 2D Web Builder·FX Studio · 현 소속 참여 2026.02–현재",
+      "B2B 2D Web Builder / Studio · 현 소속 참여 2026.02–현재",
       "Editor·Builder의 모드, 위젯, 이벤트, 저장과 Runtime 연계",
     ],
   },

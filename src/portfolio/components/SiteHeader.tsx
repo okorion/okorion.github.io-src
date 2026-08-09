@@ -13,6 +13,7 @@ export function SiteHeader() {
       <nav className="site-nav" aria-label="주요 섹션">
         <a href="#professional-evidence">경력 사례</a>
         <a href="#public-builds">공개 프로젝트</a>
+        <a href="#technical-writing">기술 글</a>
         <a href="#experience">경력</a>
       </nav>
       <a className="site-header__lab" href="/?view=3d">
