@@ -1,4 +1,8 @@
-import { credentials, experienceItems } from "../portfolioContent";
+import {
+  additionalCredentials,
+  credentials,
+  experienceItems,
+} from "../portfolioContent";
 import { ExternalLink } from "./ExternalLink";
 import { SectionHeading } from "./SectionHeading";
 
@@ -38,6 +42,19 @@ function CredentialsPanel() {
           <li key={credential}>{credential}</li>
         ))}
       </ul>
+      <details className="credential-disclosure">
+        <summary>
+          <span>Additional credentials</span>
+          <span className="credential-disclosure__count">
+            {additionalCredentials.length}
+          </span>
+        </summary>
+        <ul className="credential-list credential-list--additional">
+          {additionalCredentials.map((credential) => (
+            <li key={credential}>{credential}</li>
+          ))}
+        </ul>
+      </details>
       <div className="patent-card">
         <p>Patent · 공동 발명자</p>
         <h3>웹 환경에서 3D 컴포넌트를 생성하는 방법 및 장치</h3>

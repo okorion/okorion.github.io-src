@@ -1,4 +1,11 @@
-export function SiteHeader() {
+import { ThemeToggle } from "./ThemeToggle";
+
+interface SiteHeaderProps {
+  theme: "dark" | "light";
+  onToggleTheme: () => void;
+}
+
+export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
   return (
     <header className="site-header">
       <a className="site-brand" href="/" aria-label="오현규 포트폴리오 홈">
@@ -16,10 +23,13 @@ export function SiteHeader() {
         <a href="#technical-writing">기술 글</a>
         <a href="#experience">경력</a>
       </nav>
-      <a className="site-header__lab" href="/?view=3d">
-        <span className="site-header__lab-dot" aria-hidden="true" />
-        3D Lab
-      </a>
+      <div className="site-header__actions">
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+        <a className="site-header__lab" href="/?view=3d">
+          <span className="site-header__lab-dot" aria-hidden="true" />
+          3D Lab
+        </a>
+      </div>
     </header>
   );
 }
