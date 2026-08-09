@@ -6,6 +6,7 @@ import { ProfileSection } from "./components/ProfileSection";
 import { PublicBuildsSection } from "./components/PublicBuildsSection";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
+import { TechnicalWritingSection } from "./components/TechnicalWritingSection";
 import "./portfolio.css";
 
 interface PortfolioPageProps {
@@ -23,6 +24,7 @@ export function PortfolioPage({ defaultView }: PortfolioPageProps) {
         <HeroSection />
         <ProfessionalEvidenceSection />
         <PublicBuildsSection />
+        <TechnicalWritingSection />
         <ProfileSection />
         <ContactSection />
       </main>

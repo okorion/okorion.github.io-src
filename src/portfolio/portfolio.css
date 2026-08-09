@@ -298,6 +298,7 @@
 
 .text-link,
 .project-card__links a,
+.writing-card__link,
 .patent-card a,
 .contact-section__links a {
   display: inline-flex;
@@ -749,6 +750,112 @@
   color: var(--page-accent);
 }
 
+.writing-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.writing-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2.6vw, 2.35rem);
+  border: 1px solid var(--page-line);
+  background:
+    linear-gradient(145deg, rgba(184, 243, 107, 0.045), transparent 42%),
+    rgba(255, 255, 255, 0.018);
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease,
+    background-color 180ms ease;
+}
+
+.writing-card:hover {
+  border-color: rgba(184, 243, 107, 0.34);
+  background-color: rgba(255, 255, 255, 0.03);
+  transform: translateY(-4px);
+}
+
+.writing-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.writing-card__meta p,
+.writing-card__takeaway strong {
+  margin: 0;
+  color: var(--page-accent);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.6rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.writing-card__meta time {
+  flex: 0 0 auto;
+  color: #7e8580;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.64rem;
+  font-weight: 650;
+}
+
+.writing-card h3 {
+  margin: 1.45rem 0 0;
+  color: #f0f1ed;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 620;
+  line-height: 1.28;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.writing-card__summary {
+  margin: 1.1rem 0 0;
+  color: #afb4b0;
+  font-size: 0.82rem;
+  line-height: 1.75;
+  word-break: keep-all;
+}
+
+.writing-card__takeaway {
+  margin-top: 1.45rem;
+  padding: 1.1rem 0 0 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  border-left: 1px solid rgba(184, 243, 107, 0.32);
+}
+
+.writing-card__takeaway strong {
+  color: var(--page-warm);
+}
+
+.writing-card__takeaway p {
+  margin: 0.55rem 0 0;
+  color: #929993;
+  font-size: 0.74rem;
+  line-height: 1.65;
+  word-break: keep-all;
+}
+
+.writing-card .tag-list {
+  margin-top: 1.3rem;
+}
+
+.writing-card__link {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 1.6rem;
+  color: #dde0dc;
+}
+
+.writing-card__link:hover {
+  color: var(--page-accent);
+}
+
 .profile-grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -994,6 +1101,14 @@
     border-right: 1px solid var(--page-line);
     border-bottom: 0;
   }
+
+  .writing-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .writing-card:last-child {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1197,6 +1312,14 @@
     border-bottom: 1px solid var(--page-line);
   }
 
+  .writing-list {
+    grid-template-columns: 1fr;
+  }
+
+  .writing-card:last-child {
+    grid-column: auto;
+  }
+
   .profile-panel {
     padding: 1.35rem;
   }
@@ -1231,6 +1354,7 @@
   .hero-visual img,
   .project-card,
   .project-card__visual img,
+  .writing-card,
   .site-nav a,
   .site-header__lab,
   .contact-section__links a {
@@ -1238,7 +1362,8 @@
   }
 
   .button:hover,
-  .project-card:hover {
+  .project-card:hover,
+  .writing-card:hover {
     transform: none;
   }
 
@@ -1255,6 +1380,7 @@
   .evidence-list,
   .evidence-card,
   .project-card,
+  .writing-card,
   .profile-panel,
   .patent-card,
   .contact-section,

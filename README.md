@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | Portfolio | [okorion.github.io](https://okorion.github.io/) | 현업 증거, 공개 프로젝트, 경력·자격 |
 | 3D Lab | [okorion.github.io/?view=3d](https://okorion.github.io/?view=3d) | 기존 인터랙티브 3D 경험 보존 |
+| Technical Writing | [velog.io/@okorion](https://velog.io/@okorion) | 구현·트러블슈팅·기술 판단 기록 |
 
 기본 화면은 `src/app/siteView.ts`의 `DEFAULT_SITE_VIEW` 한 줄로 전환할 수 있으며, 기존 3D 구현은 `src/legacy/` 아래에 보존되어 있습니다.
 
@@ -70,3 +71,4 @@ npm run build
 
 ## Docs
 - [Codex performance testing docs](./docs/README.md)
+- [Learning Archive — 이전 강의 및 기술 학습 기록](https://okorion.github.io/tech-blog/)
