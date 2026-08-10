@@ -77,7 +77,6 @@ export function ProfileSection() {
       <SectionHeading
         eyebrow="04 · EXPERIENCE & CREDENTIALS"
         headingId="experience-title"
-        title="제품의 편집 화면부터 실행과 운영까지 다뤄 왔습니다."
         description="지금까지의 경력과 교육, 자격, 공개 특허를 한곳에 정리했습니다."
       />
       <div className="profile-grid">

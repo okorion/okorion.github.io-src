@@ -602,8 +602,7 @@
   max-width: 56rem;
 }
 
-.section-heading h2,
-.contact-section h2 {
+.section-heading__title {
   margin: 0;
   color: var(--page-text);
   font-size: var(--type-section-title);
@@ -621,6 +620,14 @@
   font-size: var(--type-body);
   line-height: 1.72;
   word-break: keep-all;
+}
+
+.section-heading h2.section-heading__eyebrow {
+  padding-top: 0;
+}
+
+.section-heading__body > p:only-child {
+  margin-top: 0;
 }
 
 .evidence-list {
@@ -1201,13 +1208,6 @@
 
 .contact-section__eyebrow {
   color: color-mix(in srgb, var(--page-on-accent) 72%, transparent);
-}
-
-.contact-section h2 {
-  max-width: 42rem;
-  margin-top: 1rem;
-  color: var(--page-on-accent);
-  font-size: var(--type-section-title);
 }
 
 .contact-section > div > p:last-child {
