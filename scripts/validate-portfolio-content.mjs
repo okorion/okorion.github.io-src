@@ -203,11 +203,6 @@ for (const [label, surface, approvedCopy] of [
   [
     "ProfessionalEvidenceSection.tsx",
     evidence,
-    "복잡한 기능일수록 상태와 책임부터 정리합니다.",
-  ],
-  [
-    "ProfessionalEvidenceSection.tsx",
-    evidence,
     "어떻게 판단해 구현하고 확인했는지 정리했습니다.",
   ],
   [
@@ -233,14 +228,8 @@ for (const [label, surface, approvedCopy] of [
   [
     "ProfileSection.tsx",
     profile,
-    "제품의 편집 화면부터 실행과 운영까지 다뤄 왔습니다.",
-  ],
-  [
-    "ProfileSection.tsx",
-    profile,
     "경력과 교육, 자격, 공개 특허를 한곳에 정리했습니다.",
   ],
-  ["ContactSection.tsx", contact, "프로젝트와 경력, 기술 글을 더 살펴보세요."],
   [
     "ContactSection.tsx",
     contact,
@@ -287,6 +276,18 @@ for (const [label, surface, approvedCopy] of [
     "주요 업무와 역할, 기술적 판단을 빠르게 살펴볼 수 있도록",
   ],
   ["index.html", index, "실제 환경에서 동작을 확인합니다."],
+  ["SectionHeading.tsx", sectionHeading, "title?: string"],
+  [
+    "SectionHeading.tsx",
+    sectionHeading,
+    '<h2 id={headingId} className="section-heading__eyebrow">',
+  ],
+  [
+    "ContactSection.tsx",
+    contact,
+    '<h2 id="contact-title" className="contact-section__eyebrow">',
+  ],
+  ["portfolio.css", portfolioCss, ".section-heading__body > p:only-child"],
 ]) {
   assertIncludes(surface, approvedCopy, label);
 }
@@ -297,6 +298,17 @@ for (const [label, surface, replacedCopy] of [
     hero,
     "기존 인터랙티브 장면은 별도 경험으로 보존했습니다.",
   ],
+  [
+    "ProfessionalEvidenceSection.tsx",
+    evidence,
+    "복잡한 기능일수록 상태와 책임부터 정리합니다.",
+  ],
+  [
+    "ProfileSection.tsx",
+    profile,
+    "제품의 편집 화면부터 실행과 운영까지 다뤄 왔습니다.",
+  ],
+  ["ContactSection.tsx", contact, "프로젝트와 경력, 기술 글을 더 살펴보세요."],
   ["ProfessionalEvidenceSection.tsx", evidence, "PROFESSIONAL EVIDENCE"],
   [
     "ProfessionalEvidenceSection.tsx",
