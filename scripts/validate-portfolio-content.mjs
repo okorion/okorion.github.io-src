@@ -255,6 +255,25 @@ for (const [label, surface, approvedCopy] of [
     "경력 프로필, 기술 글로 바로 이동할 수 있습니다.",
   ],
   ["portfolioContent.ts", content, "Local-first 3D · AI project"],
+  ["portfolioContent.ts", content, "오브젝트 선택·강조"],
+  ["portfolioContent.ts", content, "이동·회전·크기 기즈모"],
+  [
+    "portfolioContent.ts",
+    content,
+    "W/E/R·Esc·Delete/Backspace·Undo/Redo 단축키",
+  ],
+  ["portfolioContent.ts", content, "변경 축만 기록해 서로 다른 축의 동시 편집"],
+  [
+    "portfolioContent.ts",
+    content,
+    "단축키는 뷰포트 또는 트랜스폼 도구에 포커스가 있을 때 W/E/R 변환",
+  ],
+  ["portfolioContent.ts", content, "Ctrl/⌘+Shift+Z 또는 Ctrl/⌘+Y 다시 실행"],
+  [
+    "portfolioContent.ts",
+    content,
+    "LocalMesh Studio 로고와 네트워크·AI 아이콘이 있는 보라색 3D 큐브 브랜드 그래픽",
+  ],
   [
     "README.md",
     readme,
@@ -317,6 +336,7 @@ for (const [label, surface, replacedCopy] of [
     "경력 포트폴리오, 공개 소스와 기술 기록으로 이동할 수 있습니다.",
   ],
   ["portfolioContent.ts", content, "AI experiment"],
+  ["portfolioContent.ts", content, "LocalMesh Studio의 3D 편집 화면"],
   ["README.md", readme, "3D 경험 보존"],
 ]) {
   assertExcludes(surface, replacedCopy, label);
