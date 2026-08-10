@@ -12,29 +12,6 @@ function assertExcludes(content, unexpected, label) {
   }
 }
 
-function normalizeWhitespace(content) {
-  return content.replace(/\s+/g, " ").trim();
-}
-
-function assertNormalizedExcludes(content, unexpected, label) {
-  if (normalizeWhitespace(content).includes(normalizeWhitespace(unexpected))) {
-    throw new Error(`${label}: forbidden content is present (${unexpected})`);
-  }
-}
-
-function assertSectionHeadingContract(source, headingId, label) {
-  const labelledByMatch = source.match(/aria-labelledby\s*=\s*"([^"]+)"/);
-  const headingIdMatch = source.match(/headingId\s*=\s*"([^"]+)"/);
-  const labelledBy = labelledByMatch ? labelledByMatch[1] : undefined;
-  const sectionHeadingId = headingIdMatch ? headingIdMatch[1] : undefined;
-
-  if (labelledBy !== headingId || sectionHeadingId !== headingId) {
-    throw new Error(
-      `${label}: aria-labelledby and SectionHeading headingId must both be ${headingId}`,
-    );
-  }
-}
-
 function parseStaticImportSpecifier(statement) {
   const fromMarker = " from ";
   const markerIndex = statement.lastIndexOf(fromMarker);
@@ -203,7 +180,15 @@ for (const [source, headingId, label] of [
   [writing, "technical-writing-title", "TechnicalWritingSection.tsx"],
   [profile, "experience-title", "ProfileSection.tsx"],
 ]) {
-  assertSectionHeadingContract(source, headingId, label);
+  const labelledByMatch = source.match(/aria-labelledby\s*=\s*"([^"]+)"/);
+  const headingIdMatch = source.match(/headingId\s*=\s*"([^"]+)"/);
+  const labelledBy = labelledByMatch ? labelledByMatch[1] : undefined;
+  const sectionHeadingId = headingIdMatch ? headingIdMatch[1] : undefined;
+  if (labelledBy !== headingId || sectionHeadingId !== headingId) {
+    throw new Error(
+      `${label}: aria-labelledby and SectionHeading headingId must both be ${headingId}`,
+    );
+  }
 }
 
 const contactLabelledByMatch = contact.match(/aria-labelledby\s*=\s*"([^"]+)"/);
@@ -280,7 +265,7 @@ if (rendersHeroExperiment) {
   throw new Error("HeroSection.tsx: hero experiment paragraph must not render");
 }
 
-const heroSummary = normalizeWhitespace(heroSummaryBodies[0]);
+const heroSummary = heroSummaryBodies[0].replace(/\s+/g, " ").trim();
 const approvedHeroSummary =
   "React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해 왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로 동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다. 개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.";
 if (heroSummary !== approvedHeroSummary) {
@@ -289,6 +274,7 @@ if (heroSummary !== approvedHeroSummary) {
   );
 }
 
+const normalizedPortfolio = portfolio.replace(/\s+/g, " ").trim();
 for (const removedCopy of [
   "각 사례에서 어떤 문제를 맡았고, 어떻게 판단해 구현하고 확인했는지 정리했습니다.",
   "직접 사용해 보고 코드를 살펴볼 수 있습니다.",
@@ -300,7 +286,12 @@ for (const removedCopy of [
   "업무 사례의 내부 명칭·스키마·고객 정보는 외부에 공개할 수 있도록 바꿔 적었습니다.",
   "개인 프로젝트는 회사 업무와 따로 진행했습니다.",
 ]) {
-  assertNormalizedExcludes(portfolio, removedCopy, "public portfolio sources");
+  const normalizedRemovedCopy = removedCopy.replace(/\s+/g, " ").trim();
+  if (normalizedPortfolio.includes(normalizedRemovedCopy)) {
+    throw new Error(
+      `public portfolio sources: forbidden content is present (${removedCopy})`,
+    );
+  }
 }
 
 for (const [label, surface, approvedCopy] of [
