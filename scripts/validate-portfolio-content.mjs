@@ -266,13 +266,15 @@ for (const [label, surface, approvedCopy] of [
   [
     "portfolioContent.ts",
     content,
-    "W/E/R 변환 모드는 뷰포트 또는 트랜스폼 도구에 포커스가 있을 때만 동작합니다.",
+    "단축키는 뷰포트·변환 도구에 포커스가 있을 때만 작동하고",
   ],
-  ["portfolioContent.ts", content, "Ctrl/⌘+Shift+Z 또는 Ctrl/⌘+Y 다시 실행"],
+  ["portfolioContent.ts", content, "텍스트 입력·IME 중에는 가로채지 않습니다."],
+  ["portfolioContent.ts", content, "장면은 IndexedDB에 저장합니다."],
+  ["portfolioContent.ts", content, "협업 서버는 로컬 개발용"],
   [
     "portfolioContent.ts",
     content,
-    "입력 필드·편집 영역·IME 조합 중·키 반복에는 편집 단축키를 가로채지 않습니다.",
+    "운영 인증·권한·서버 저장은 제공하지 않습니다.",
   ],
   [
     "portfolioContent.ts",
@@ -342,6 +344,11 @@ for (const [label, surface, replacedCopy] of [
   ],
   ["portfolioContent.ts", content, "AI experiment"],
   ["portfolioContent.ts", content, "LocalMesh Studio의 3D 편집 화면"],
+  [
+    "portfolioContent.ts",
+    content,
+    "Esc 선택·드래그 취소, Delete/Backspace 삭제",
+  ],
   ["README.md", readme, "3D 경험 보존"],
 ]) {
   assertExcludes(surface, replacedCopy, label);
