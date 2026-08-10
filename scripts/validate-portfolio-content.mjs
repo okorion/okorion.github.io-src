@@ -266,9 +266,14 @@ for (const [label, surface, approvedCopy] of [
   [
     "portfolioContent.ts",
     content,
-    "단축키는 뷰포트 또는 트랜스폼 도구에 포커스가 있을 때 W/E/R 변환",
+    "W/E/R 변환 모드는 뷰포트 또는 트랜스폼 도구에 포커스가 있을 때만 동작합니다.",
   ],
   ["portfolioContent.ts", content, "Ctrl/⌘+Shift+Z 또는 Ctrl/⌘+Y 다시 실행"],
+  [
+    "portfolioContent.ts",
+    content,
+    "입력 필드·편집 영역·IME 조합 중·키 반복에는 편집 단축키를 가로채지 않습니다.",
+  ],
   [
     "portfolioContent.ts",
     content,

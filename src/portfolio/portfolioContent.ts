@@ -102,7 +102,7 @@ export const publicProjects: readonly PublicProject[] = [
     description:
       "오브젝트 선택·강조, 이동·회전·크기 기즈모, W/E/R·Esc·Delete/Backspace·Undo/Redo 단축키를 SceneCommand·Yjs 기반 편집 흐름에 연결한 local-first 3D Studio입니다. 기즈모 드래그는 변경 축만 기록해 서로 다른 축의 동시 편집을 보존하고, 로컬 LLM 명령은 스키마 검증과 사용자 승인 뒤 적용되며 장면은 브라우저에 저장됩니다.",
     boundary:
-      "단축키는 뷰포트 또는 트랜스폼 도구에 포커스가 있을 때 W/E/R 변환, Esc 해제, Delete/Backspace 삭제, Ctrl/⌘+Z 실행 취소, Ctrl/⌘+Shift+Z 또는 Ctrl/⌘+Y 다시 실행을 지원합니다. 공개 데모는 IndexedDB에 저장하는 로컬 모드이며, 협업 서버는 로컬 개발용이라 운영 환경에 필요한 인증, 접근 제어, 서버 저장 기능은 포함하지 않았습니다.",
+      "W/E/R 변환 모드는 뷰포트 또는 트랜스폼 도구에 포커스가 있을 때만 동작합니다. Esc 선택·드래그 취소, Delete/Backspace 삭제, Ctrl/⌘+Z 실행 취소, Ctrl/⌘+Shift+Z 또는 Ctrl/⌘+Y 다시 실행도 지원하며, 입력 필드·편집 영역·IME 조합 중·키 반복에는 편집 단축키를 가로채지 않습니다. 공개 데모는 IndexedDB에 저장하는 로컬 모드이며, 협업 서버는 로컬 개발용이라 운영 환경에 필요한 인증, 접근 제어, 서버 저장 기능은 포함하지 않았습니다.",
     image:
       "https://raw.githubusercontent.com/okorion/localmesh-studio/main/public/og.png",
     imageAlt:
