@@ -22,15 +22,6 @@ function assertNormalizedExcludes(content, unexpected, label) {
   }
 }
 
-function hasStaticClassName(attributes, className) {
-  const classNameMatch = attributes.match(/\bclassName\s*=\s*"([^"]*)"/);
-  if (!classNameMatch) {
-    return false;
-  }
-
-  return classNameMatch[1].split(/\s+/).includes(className);
-}
-
 function assertSectionHeadingContract(source, headingId, label) {
   const labelledBy = source.match(/aria-labelledby\s*=\s*"([^"]+)"/)?.[1];
   const sectionHeadingId = source.match(/headingId\s*=\s*"([^"]+)"/)?.[1];
@@ -260,21 +251,28 @@ for (const [label, surface] of [
 }
 
 const heroParagraphs = [...hero.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/g)];
-const heroSummaryParagraphs = heroParagraphs.filter(([, attributes]) =>
-  hasStaticClassName(attributes, "hero__summary"),
+const heroParagraphDetails = heroParagraphs.map(([, attributes, body]) => {
+  const classNameMatch = attributes.match(/\bclassName\s*=\s*"([^"]*)"/);
+  return {
+    body,
+    classNames: classNameMatch ? classNameMatch[1].split(/\s+/) : [],
+  };
+});
+const heroSummaryParagraphs = heroParagraphDetails.filter(({ classNames }) =>
+  classNames.includes("hero__summary"),
 );
 if (heroSummaryParagraphs.length !== 1) {
   throw new Error("HeroSection.tsx: hero summary must render exactly once");
 }
 if (
-  heroParagraphs.some(([, attributes]) =>
-    hasStaticClassName(attributes, "hero__experiment"),
+  heroParagraphDetails.some(({ classNames }) =>
+    classNames.includes("hero__experiment"),
   )
 ) {
   throw new Error("HeroSection.tsx: hero experiment paragraph must not render");
 }
 
-const heroSummary = normalizeWhitespace(heroSummaryParagraphs[0][2]);
+const heroSummary = normalizeWhitespace(heroSummaryParagraphs[0].body);
 const approvedHeroSummary =
   "React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해 왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로 동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다. 개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.";
 if (heroSummary !== approvedHeroSummary) {
