@@ -23,8 +23,10 @@ function assertNormalizedExcludes(content, unexpected, label) {
 }
 
 function assertSectionHeadingContract(source, headingId, label) {
-  const labelledBy = source.match(/aria-labelledby\s*=\s*"([^"]+)"/)?.[1];
-  const sectionHeadingId = source.match(/headingId\s*=\s*"([^"]+)"/)?.[1];
+  const labelledByMatch = source.match(/aria-labelledby\s*=\s*"([^"]+)"/);
+  const headingIdMatch = source.match(/headingId\s*=\s*"([^"]+)"/);
+  const labelledBy = labelledByMatch ? labelledByMatch[1] : undefined;
+  const sectionHeadingId = headingIdMatch ? headingIdMatch[1] : undefined;
 
   if (labelledBy !== headingId || sectionHeadingId !== headingId) {
     throw new Error(
@@ -34,9 +36,14 @@ function assertSectionHeadingContract(source, headingId, label) {
 }
 
 function assertDirectHeadingContract(source, headingId, label) {
-  const labelledBy = source.match(/aria-labelledby\s*=\s*"([^"]+)"/)?.[1];
-  const headingTag = source.match(/<h2\b[^>]*>/)?.[0];
-  const directHeadingId = headingTag?.match(/\bid\s*=\s*"([^"]+)"/)?.[1];
+  const labelledByMatch = source.match(/aria-labelledby\s*=\s*"([^"]+)"/);
+  const headingTagMatch = source.match(/<h2\b[^>]*>/);
+  const labelledBy = labelledByMatch ? labelledByMatch[1] : undefined;
+  const headingTag = headingTagMatch ? headingTagMatch[0] : "";
+  const directHeadingIdMatch = headingTag.match(/\bid\s*=\s*"([^"]+)"/);
+  const directHeadingId = directHeadingIdMatch
+    ? directHeadingIdMatch[1]
+    : undefined;
 
   if (labelledBy !== headingId || directHeadingId !== headingId) {
     throw new Error(
