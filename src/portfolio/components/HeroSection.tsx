@@ -30,11 +30,8 @@ function HeroCopy() {
       <p className="hero__summary">
         React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해
         왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로
-        동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다.
-      </p>
-      <p className="hero__experiment">
-        개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고
-        공개합니다.
+        동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다. 개인
+        프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.
       </p>
       <HeroActions />
     </div>
