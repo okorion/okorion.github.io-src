@@ -6,12 +6,9 @@ const PROFILE_URL =
 export function ContactSection() {
   return (
     <section className="contact-section" aria-labelledby="contact-title">
-      <div>
-        <h2 id="contact-title" className="contact-section__eyebrow">
-          EXPLORE MORE
-        </h2>
-        <p>지원용 이력서와 연락처는 채용 과정에서 별도로 공유합니다.</p>
-      </div>
+      <h2 id="contact-title" className="contact-section__eyebrow">
+        EXPLORE MORE
+      </h2>
       <div className="contact-section__links">
         <ExternalLink href="https://github.com/okorion">GitHub</ExternalLink>
         <ExternalLink href={PROFILE_URL}>Career Profile</ExternalLink>

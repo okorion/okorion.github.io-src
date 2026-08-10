@@ -57,7 +57,6 @@ export function ProfessionalEvidenceSection() {
       <SectionHeading
         eyebrow="01 · SELECTED WORK"
         headingId="professional-evidence-title"
-        description="각 사례에서 어떤 문제를 맡았고, 어떻게 판단해 구현하고 확인했는지 정리했습니다."
       />
       <div className="evidence-list">
         {evidenceItems.map((item) => (

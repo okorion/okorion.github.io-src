@@ -46,8 +46,6 @@ export function TechnicalWritingSection() {
       <SectionHeading
         eyebrow="03 · Technical Writing"
         headingId="technical-writing-title"
-        title="문제를 어떻게 좁혔고, 왜 이 방법을 택했는지 기록합니다."
-        description="Velog에 쓴 글 가운데 문제 해결 과정과 직접 구현한 내용, 기술 선택 이유가 담긴 세 편을 골랐습니다."
       />
       <div className="writing-list">
         {technicalWritingItems.map((item) => (

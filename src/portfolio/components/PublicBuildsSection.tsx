@@ -54,8 +54,6 @@ export function PublicBuildsSection() {
       <SectionHeading
         eyebrow="02 · PUBLIC BUILDS"
         headingId="public-builds-title"
-        title="직접 사용해 보고 코드를 살펴볼 수 있습니다."
-        description="업무와 별도로 만든 개인 프로젝트입니다. 각 데모에서 구현한 기능과 현재 제한 사항을 함께 적었습니다."
       />
       <div className="project-list">
         {publicProjects.map((project) => (

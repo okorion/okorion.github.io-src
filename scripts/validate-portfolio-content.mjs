@@ -163,13 +163,64 @@ const portfolio = [
   header,
   hero,
   hubLinks,
+  hubSurface,
+  index,
   page,
   profile,
   projects,
   readme,
+  sectionHeading,
   themeToggle,
   writing,
 ].join("\n");
+
+for (const [source, headingId, label] of [
+  [evidence, "professional-evidence-title", "ProfessionalEvidenceSection.tsx"],
+  [projects, "public-builds-title", "PublicBuildsSection.tsx"],
+  [writing, "technical-writing-title", "TechnicalWritingSection.tsx"],
+  [profile, "experience-title", "ProfileSection.tsx"],
+]) {
+  const labelledByMatch = source.match(/aria-labelledby\s*=\s*"([^"]+)"/);
+  const headingIdMatch = source.match(/headingId\s*=\s*"([^"]+)"/);
+  const labelledBy = labelledByMatch ? labelledByMatch[1] : undefined;
+  const sectionHeadingId = headingIdMatch ? headingIdMatch[1] : undefined;
+  if (labelledBy !== headingId || sectionHeadingId !== headingId) {
+    throw new Error(
+      `${label}: aria-labelledby and SectionHeading headingId must both be ${headingId}`,
+    );
+  }
+}
+
+const contactLabelledByMatch = contact.match(/aria-labelledby\s*=\s*"([^"]+)"/);
+const contactHeadingTagMatch = contact.match(/<h2\b[^>]*>/);
+const contactLabelledBy = contactLabelledByMatch
+  ? contactLabelledByMatch[1]
+  : undefined;
+const contactHeadingTag = contactHeadingTagMatch
+  ? contactHeadingTagMatch[0]
+  : "";
+const contactHeadingIdMatch = contactHeadingTag.match(/\bid\s*=\s*"([^"]+)"/);
+const contactHeadingId = contactHeadingIdMatch
+  ? contactHeadingIdMatch[1]
+  : undefined;
+if (
+  contactLabelledBy !== "contact-title" ||
+  contactHeadingId !== "contact-title"
+) {
+  throw new Error(
+    "ContactSection.tsx: aria-labelledby and visible h2 id must both be contact-title",
+  );
+}
+
+const sharedHeadingTag = sectionHeading.match(/<h2\b[^>]*>/)?.[0];
+if (
+  !sharedHeadingTag?.includes("id={headingId}") ||
+  !sharedHeadingTag.includes('className="section-heading__eyebrow"')
+) {
+  throw new Error(
+    "SectionHeading.tsx: the visible h2 must receive headingId and the eyebrow class",
+  );
+}
 
 for (const legacyImport of [
   "scenes/mainScene",
@@ -194,48 +245,62 @@ for (const [label, surface] of [
   assertExcludes(surface, "Editor·Builder의 복잡한 상태를", label);
 }
 
+const heroParagraphs = [...hero.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/g)];
+const heroSummaryBodies = [];
+let rendersHeroExperiment = false;
+for (const [, attributes, body] of heroParagraphs) {
+  const classNameMatch = attributes.match(/\bclassName\s*=\s*"([^"]*)"/);
+  const classNames = classNameMatch ? classNameMatch[1].split(/\s+/) : [];
+  if (classNames.includes("hero__summary")) {
+    heroSummaryBodies.push(body);
+  }
+  if (classNames.includes("hero__experiment")) {
+    rendersHeroExperiment = true;
+  }
+}
+if (heroSummaryBodies.length !== 1) {
+  throw new Error("HeroSection.tsx: hero summary must render exactly once");
+}
+if (rendersHeroExperiment) {
+  throw new Error("HeroSection.tsx: hero experiment paragraph must not render");
+}
+
+const heroSummary = heroSummaryBodies[0].replace(/\s+/g, " ").trim();
+const approvedHeroSummary =
+  "React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해 왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로 동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다. 개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.";
+if (heroSummary !== approvedHeroSummary) {
+  throw new Error(
+    "HeroSection.tsx: the approved description must remain a single hero summary paragraph",
+  );
+}
+
+const normalizedPortfolio = portfolio.replace(/\s+/g, " ").trim();
+for (const removedCopy of [
+  "각 사례에서 어떤 문제를 맡았고, 어떻게 판단해 구현하고 확인했는지 정리했습니다.",
+  "직접 사용해 보고 코드를 살펴볼 수 있습니다.",
+  "업무와 별도로 만든 개인 프로젝트입니다. 각 데모에서 구현한 기능과 현재 제한 사항을 함께 적었습니다.",
+  "문제를 어떻게 좁혔고, 왜 이 방법을 택했는지 기록합니다.",
+  "Velog에 쓴 글 가운데 문제 해결 과정과 직접 구현한 내용, 기술 선택 이유가 담긴 세 편을 골랐습니다.",
+  "지금까지의 경력과 교육, 자격, 공개 특허를 한곳에 정리했습니다.",
+  "지원용 이력서와 연락처는 채용 과정에서 별도로 공유합니다.",
+  "업무 사례의 내부 명칭·스키마·고객 정보는 외부에 공개할 수 있도록 바꿔 적었습니다.",
+  "개인 프로젝트는 회사 업무와 따로 진행했습니다.",
+]) {
+  const normalizedRemovedCopy = removedCopy.replace(/\s+/g, " ").trim();
+  if (normalizedPortfolio.includes(normalizedRemovedCopy)) {
+    throw new Error(
+      `public portfolio sources: forbidden content is present (${removedCopy})`,
+    );
+  }
+}
+
 for (const [label, surface, approvedCopy] of [
   [
     "HeroSection.tsx",
     hero,
     "이전 포트폴리오의 인터랙티브 3D 장면도 함께 볼 수 있습니다.",
   ],
-  [
-    "ProfessionalEvidenceSection.tsx",
-    evidence,
-    "어떻게 판단해 구현하고 확인했는지 정리했습니다.",
-  ],
-  [
-    "PublicBuildsSection.tsx",
-    projects,
-    "직접 사용해 보고 코드를 살펴볼 수 있습니다.",
-  ],
-  [
-    "PublicBuildsSection.tsx",
-    projects,
-    "업무와 별도로 만든 개인 프로젝트입니다.",
-  ],
-  [
-    "TechnicalWritingSection.tsx",
-    writing,
-    "문제를 어떻게 좁혔고, 왜 이 방법을 택했는지 기록합니다.",
-  ],
-  [
-    "TechnicalWritingSection.tsx",
-    writing,
-    "기술 선택 이유가 담긴 세 편을 골랐습니다.",
-  ],
-  [
-    "ProfileSection.tsx",
-    profile,
-    "경력과 교육, 자격, 공개 특허를 한곳에 정리했습니다.",
-  ],
-  [
-    "ContactSection.tsx",
-    contact,
-    "지원용 이력서와 연락처는 채용 과정에서 별도로 공유합니다.",
-  ],
-  ["SiteFooter.tsx", footer, "개인 프로젝트는 회사 업무와 따로 진행했습니다."],
+  ["HeroSection.tsx", hero, "프로젝트로 local-first AI와 3D·데이터"],
   ["navigationLinks.ts", hubLinks, "직접 구현한 내용과 문제 해결 기록"],
   ["HubSurface.tsx", hubSurface, "포트폴리오와 3D 장면을 둘러보세요."],
   [
@@ -276,23 +341,60 @@ for (const [label, surface, approvedCopy] of [
     "주요 업무와 역할, 기술적 판단을 빠르게 살펴볼 수 있도록",
   ],
   ["index.html", index, "실제 환경에서 동작을 확인합니다."],
-  ["SectionHeading.tsx", sectionHeading, "title?: string"],
   [
-    "SectionHeading.tsx",
-    sectionHeading,
-    '<h2 id={headingId} className="section-heading__eyebrow">',
+    "portfolio.css",
+    portfolioCss,
+    "color-mix(in srgb, var(--page-accent) 7%, var(--page-bg))",
   ],
-  [
-    "ContactSection.tsx",
-    contact,
-    '<h2 id="contact-title" className="contact-section__eyebrow">',
-  ],
-  ["portfolio.css", portfolioCss, ".section-heading__body > p:only-child"],
 ]) {
   assertIncludes(surface, approvedCopy, label);
 }
 
 for (const [label, surface, replacedCopy] of [
+  [
+    "ProfessionalEvidenceSection.tsx",
+    evidence,
+    "각 사례에서 어떤 문제를 맡았고, 어떻게 판단해 구현하고 확인했는지 정리했습니다.",
+  ],
+  [
+    "PublicBuildsSection.tsx",
+    projects,
+    "직접 사용해 보고 코드를 살펴볼 수 있습니다.",
+  ],
+  [
+    "PublicBuildsSection.tsx",
+    projects,
+    "업무와 별도로 만든 개인 프로젝트입니다.",
+  ],
+  [
+    "TechnicalWritingSection.tsx",
+    writing,
+    "문제를 어떻게 좁혔고, 왜 이 방법을 택했는지 기록합니다.",
+  ],
+  [
+    "TechnicalWritingSection.tsx",
+    writing,
+    "기술 선택 이유가 담긴 세 편을 골랐습니다.",
+  ],
+  [
+    "ProfileSection.tsx",
+    profile,
+    "지금까지의 경력과 교육, 자격, 공개 특허를 한곳에 정리했습니다.",
+  ],
+  [
+    "ContactSection.tsx",
+    contact,
+    "지원용 이력서와 연락처는 채용 과정에서 별도로 공유합니다.",
+  ],
+  [
+    "SiteFooter.tsx",
+    footer,
+    "업무 사례의 내부 명칭·스키마·고객 정보는 외부에 공개할 수 있도록 바꿔",
+  ],
+  ["SectionHeading.tsx", sectionHeading, "description:"],
+  ["SectionHeading.tsx", sectionHeading, "title?: string"],
+  ["portfolio.css", portfolioCss, ".section-heading__body"],
+  ["portfolio.css", portfolioCss, "--page-contact-muted"],
   [
     "HeroSection.tsx",
     hero,
@@ -412,11 +514,11 @@ const tokenizedFontSizeDeclarationCount =
   portfolioCss.match(/font-size:\s*var\(--type-[^)]+\);/g)?.length ?? 0;
 
 if (
-  typographyTokens.size !== 8 ||
+  typographyTokens.size !== 7 ||
   tokenizedFontSizeDeclarationCount !== fontSizeDeclarationCount
 ) {
   throw new Error(
-    `portfolio.css: expected eight typography tokens across every font-size declaration (${typographyTokens.size} tokens, ${tokenizedFontSizeDeclarationCount}/${fontSizeDeclarationCount} declarations)`,
+    `portfolio.css: expected seven typography tokens across every font-size declaration (${typographyTokens.size} tokens, ${tokenizedFontSizeDeclarationCount}/${fontSizeDeclarationCount} declarations)`,
   );
 }
 
