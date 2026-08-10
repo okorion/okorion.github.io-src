@@ -251,28 +251,26 @@ for (const [label, surface] of [
 }
 
 const heroParagraphs = [...hero.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/g)];
-const heroParagraphDetails = heroParagraphs.map(([, attributes, body]) => {
+const heroSummaryBodies = [];
+let rendersHeroExperiment = false;
+for (const [, attributes, body] of heroParagraphs) {
   const classNameMatch = attributes.match(/\bclassName\s*=\s*"([^"]*)"/);
-  return {
-    body,
-    classNames: classNameMatch ? classNameMatch[1].split(/\s+/) : [],
-  };
-});
-const heroSummaryParagraphs = heroParagraphDetails.filter(({ classNames }) =>
-  classNames.includes("hero__summary"),
-);
-if (heroSummaryParagraphs.length !== 1) {
+  const classNames = classNameMatch ? classNameMatch[1].split(/\s+/) : [];
+  if (classNames.includes("hero__summary")) {
+    heroSummaryBodies.push(body);
+  }
+  if (classNames.includes("hero__experiment")) {
+    rendersHeroExperiment = true;
+  }
+}
+if (heroSummaryBodies.length !== 1) {
   throw new Error("HeroSection.tsx: hero summary must render exactly once");
 }
-if (
-  heroParagraphDetails.some(({ classNames }) =>
-    classNames.includes("hero__experiment"),
-  )
-) {
+if (rendersHeroExperiment) {
   throw new Error("HeroSection.tsx: hero experiment paragraph must not render");
 }
 
-const heroSummary = normalizeWhitespace(heroSummaryParagraphs[0].body);
+const heroSummary = normalizeWhitespace(heroSummaryBodies[0]);
 const approvedHeroSummary =
   "React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해 왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로 동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다. 개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.";
 if (heroSummary !== approvedHeroSummary) {
