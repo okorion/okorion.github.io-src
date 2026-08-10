@@ -23,12 +23,12 @@ function assertNormalizedExcludes(content, unexpected, label) {
 }
 
 function hasStaticClassName(attributes, className) {
-  const staticClassNames = attributes
-    .match(/\bclassName\s*=\s*"([^"]*)"/)?.[1]
-    ?.split(/\s+/)
-    .filter(Boolean);
+  const classNameMatch = attributes.match(/\bclassName\s*=\s*"([^"]*)"/);
+  if (!classNameMatch) {
+    return false;
+  }
 
-  return staticClassNames?.includes(className) ?? false;
+  return classNameMatch[1].split(/\s+/).includes(className);
 }
 
 function assertSectionHeadingContract(source, headingId, label) {
