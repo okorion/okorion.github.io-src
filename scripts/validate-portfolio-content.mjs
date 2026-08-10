@@ -35,23 +35,6 @@ function assertSectionHeadingContract(source, headingId, label) {
   }
 }
 
-function assertDirectHeadingContract(source, headingId, label) {
-  const labelledByMatch = source.match(/aria-labelledby\s*=\s*"([^"]+)"/);
-  const headingTagMatch = source.match(/<h2\b[^>]*>/);
-  const labelledBy = labelledByMatch ? labelledByMatch[1] : undefined;
-  const headingTag = headingTagMatch ? headingTagMatch[0] : "";
-  const directHeadingIdMatch = headingTag.match(/\bid\s*=\s*"([^"]+)"/);
-  const directHeadingId = directHeadingIdMatch
-    ? directHeadingIdMatch[1]
-    : undefined;
-
-  if (labelledBy !== headingId || directHeadingId !== headingId) {
-    throw new Error(
-      `${label}: aria-labelledby and visible h2 id must both be ${headingId}`,
-    );
-  }
-}
-
 function parseStaticImportSpecifier(statement) {
   const fromMarker = " from ";
   const markerIndex = statement.lastIndexOf(fromMarker);
@@ -222,7 +205,27 @@ for (const [source, headingId, label] of [
 ]) {
   assertSectionHeadingContract(source, headingId, label);
 }
-assertDirectHeadingContract(contact, "contact-title", "ContactSection.tsx");
+
+const contactLabelledByMatch = contact.match(/aria-labelledby\s*=\s*"([^"]+)"/);
+const contactHeadingTagMatch = contact.match(/<h2\b[^>]*>/);
+const contactLabelledBy = contactLabelledByMatch
+  ? contactLabelledByMatch[1]
+  : undefined;
+const contactHeadingTag = contactHeadingTagMatch
+  ? contactHeadingTagMatch[0]
+  : "";
+const contactHeadingIdMatch = contactHeadingTag.match(/\bid\s*=\s*"([^"]+)"/);
+const contactHeadingId = contactHeadingIdMatch
+  ? contactHeadingIdMatch[1]
+  : undefined;
+if (
+  contactLabelledBy !== "contact-title" ||
+  contactHeadingId !== "contact-title"
+) {
+  throw new Error(
+    "ContactSection.tsx: aria-labelledby and visible h2 id must both be contact-title",
+  );
+}
 
 const sharedHeadingTag = sectionHeading.match(/<h2\b[^>]*>/)?.[0];
 if (
