@@ -129,9 +129,9 @@ export const publicProjects: readonly PublicProject[] = [
     title: "VizPort Studio",
     category: "Data visualization studio",
     description:
-      "CSV·TSV·JSON을 브라우저에서 분석해 규칙에 따라 그래프 후보와 추천 이유를 보여줍니다. 미리보기 결과는 React 코드·LLM 프롬프트·VizSpec으로 내보낼 수 있습니다.",
+      "샘플에서 추천 선택 → 미리보기 → React 코드 복사까지 30초 흐름으로 체험할 수 있습니다. CSV·TSV·JSON(파일 최대 5MB)은 브라우저에서 분석하며, 재분석 전에는 이전 결과를 잠가 입력과 추천이 섞이지 않게 합니다.",
     boundary:
-      "AI 추천은 필요할 때만 사용할 수 있습니다. 차트는 Canvas로 렌더링하며, WebGPU 렌더러는 확장을 위한 인터페이스만 마련했습니다.",
+      "규칙 기반 추천과 Canvas 미리보기는 AI 없이 동작합니다. 로컬 AI 보정은 선택 사항이고 WebGPU 렌더러는 확장 인터페이스만 마련했습니다. 데모는 GitHub Pages가 아닌 OpenAI Sites에 배포합니다.",
     image:
       "https://raw.githubusercontent.com/okorion/vizport-studio/main/public/og.png",
     imageAlt: "VizPort Studio의 데이터 시각화 작업 화면",
