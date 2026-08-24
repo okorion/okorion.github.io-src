@@ -95,65 +95,8 @@ export const evidenceItems: readonly EvidenceItem[] = [
 
 export const publicProjects: readonly PublicProject[] = [
   {
-    id: "localmesh",
-    index: "01",
-    title: "LocalMesh Studio",
-    category: "Local-first 3D · AI project",
-    description:
-      "오브젝트 선택·강조, 이동·회전·크기 기즈모, W/E/R·Esc·Delete/Backspace·Undo/Redo 단축키를 SceneCommand·Yjs 기반 편집 흐름에 연결한 local-first 3D Studio입니다. 기즈모 드래그는 변경 축만 기록해 서로 다른 축의 동시 편집을 보존하고, 로컬 LLM 명령은 스키마 검증과 사용자 승인 뒤 적용되며 장면은 브라우저에 저장됩니다.",
-    boundary:
-      "단축키는 뷰포트·변환 도구에 포커스가 있을 때만 작동하고, 텍스트 입력·IME 중에는 가로채지 않습니다. 장면은 IndexedDB에 저장합니다. 협업 서버는 로컬 개발용이며, 운영 인증·권한·서버 저장은 제공하지 않습니다.",
-    image:
-      "https://raw.githubusercontent.com/okorion/localmesh-studio/main/public/og.png",
-    imageAlt:
-      "LocalMesh Studio 로고와 네트워크·AI 아이콘이 있는 보라색 3D 큐브 브랜드 그래픽",
-    technologies: ["React", "Three.js", "WebGPU", "WebLLM", "Yjs"],
-    links: [
-      {
-        label: "Demo",
-        href: "https://localmesh-studio.okorion.chatgpt.site",
-      },
-      {
-        label: "Source",
-        href: "https://github.com/okorion/localmesh-studio",
-      },
-      {
-        label: "Architecture",
-        href: "https://github.com/okorion/localmesh-studio/blob/main/docs/architecture.md",
-      },
-    ],
-  },
-  {
-    id: "vizport",
-    index: "02",
-    title: "VizPort Studio",
-    category: "Data visualization studio",
-    description:
-      "샘플에서 추천 선택 → 미리보기 → React 코드 복사까지 30초 흐름으로 체험할 수 있습니다. CSV·TSV·JSON(파일 최대 5MB)은 브라우저에서 분석하며, 재분석 전에는 이전 결과를 잠가 입력과 추천이 섞이지 않게 합니다.",
-    boundary:
-      "규칙 기반 추천과 Canvas 미리보기는 AI 없이 동작합니다. 로컬 AI 보정은 선택 사항이고 WebGPU 렌더러는 확장 인터페이스만 마련했습니다. 데모는 GitHub Pages가 아닌 OpenAI Sites에 배포합니다.",
-    image:
-      "https://raw.githubusercontent.com/okorion/vizport-studio/main/public/og.png",
-    imageAlt: "VizPort Studio의 데이터 시각화 작업 화면",
-    technologies: ["React", "TypeScript", "Canvas", "ECharts"],
-    links: [
-      {
-        label: "Demo",
-        href: "https://vizport-studio.okorion.chatgpt.site",
-      },
-      {
-        label: "Source",
-        href: "https://github.com/okorion/vizport-studio",
-      },
-      {
-        label: "Architecture",
-        href: "https://github.com/okorion/vizport-studio/blob/main/ARCHITECTURE.md",
-      },
-    ],
-  },
-  {
     id: "mermaid-sky",
-    index: "03",
+    index: "01",
     title: "Mermaid Sky Exporter",
     category: "Diagram export · PWA",
     description:
