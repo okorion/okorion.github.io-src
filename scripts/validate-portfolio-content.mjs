@@ -1,4 +1,8 @@
 import { readFile } from "node:fs/promises";
+import {
+  assertNoBlockedCareerPortfolioContent,
+  loadCareerPortfolioTextSurfaces,
+} from "./portfolio-exclusion-policy.mjs";
 
 function assertIncludes(content, expected, label) {
   if (!content.includes(expected)) {
@@ -174,45 +178,10 @@ const portfolio = [
   writing,
 ].join("\n");
 
-const blockedCareerPortfolioAliases = [
-  "VizPort Studio",
-  "VizPort",
-  "vizport-studio",
-  "vizport-studio.okorion.chatgpt.site",
-  "github.com/okorion/vizport-studio",
-  "LocalMesh Studio",
-  "localmesh-studio",
-  "localmesh-studio.okorion.chatgpt.site",
-  "github.com/okorion/localmesh-studio",
-  "GPU UX Lab",
-  "gpu-ux-lab",
-  "github.com/okorion/gpu-ux-lab",
-];
-
-const blockedCareerPortfolioDescriptions = [
-  "개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.",
-  "오브젝트 선택·강조",
-  "SceneCommand·Yjs",
-  "로컬 LLM 명령",
-  "샘플에서 추천 선택 → 미리보기 → React 코드 복사",
-  "파일 최대 5MB",
-  "재분석 전에는 이전 결과를 잠가",
-  "WebGPU 렌더러는 확장 인터페이스만 마련했습니다.",
-  "raw.githubusercontent.com/okorion/localmesh-studio",
-  "raw.githubusercontent.com/okorion/vizport-studio",
-];
-
-const normalizedCareerPortfolio = portfolio.toLocaleLowerCase("en-US");
-for (const blockedContent of [
-  ...blockedCareerPortfolioAliases,
-  ...blockedCareerPortfolioDescriptions,
-]) {
-  assertExcludes(
-    normalizedCareerPortfolio,
-    blockedContent.toLocaleLowerCase("en-US"),
-    "career portfolio exclusion policy",
-  );
-}
+assertNoBlockedCareerPortfolioContent(
+  await loadCareerPortfolioTextSurfaces(),
+  "career portfolio exclusion policy",
+);
 
 for (const [source, headingId, label] of [
   [evidence, "professional-evidence-title", "ProfessionalEvidenceSection.tsx"],
