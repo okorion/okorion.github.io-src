@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { extname, join, relative, sep } from "node:path";
+import { extname, isAbsolute, join, relative, sep } from "node:path";
 
 const blockedCareerPortfolioAliases = [
   "VizPort Studio",
@@ -54,45 +54,71 @@ function normalizePath(filePath) {
   return relative(".", filePath).split(sep).join("/");
 }
 
-async function readTree(root, { optional = false } = {}) {
-  const surfaces = [];
+function assertPathInsideRoot(root, candidatePath) {
+  const relativePath = relative(root, candidatePath);
+  const escapesRoot =
+    relativePath === ".." ||
+    relativePath.startsWith(`..${sep}`) ||
+    isAbsolute(relativePath);
+  if (escapesRoot) {
+    throw new Error(`career portfolio scan escaped ${root} (${candidatePath})`);
+  }
+  return candidatePath;
+}
 
-  async function visit(directory) {
-    let entries;
-    try {
-      entries = await readdir(directory, { withFileTypes: true });
-    } catch (error) {
-      if (optional && directory === root && error?.code === "ENOENT") {
-        return;
-      }
-      throw error;
-    }
+async function listDirectory(root, directory) {
+  const safeDirectory = assertPathInsideRoot(root, directory);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- the path is constrained to a fixed scan root above.
+  return readdir(safeDirectory, { withFileTypes: true });
+}
 
-    for (const entry of entries) {
-      const filePath = join(directory, entry.name);
-      if (entry.isDirectory()) {
-        await visit(filePath);
-        continue;
-      }
-      if (!entry.isFile()) {
-        continue;
-      }
-
-      const label = normalizePath(filePath);
-      const content = textExtensions.has(extname(entry.name).toLowerCase())
-        ? await readFile(filePath, "utf8")
-        : "";
-      surfaces.push([label, content]);
-    }
+async function readSurfaceContent(root, filePath) {
+  if (!textExtensions.has(extname(filePath).toLowerCase())) {
+    return "";
   }
 
-  await visit(root);
+  const safeFilePath = assertPathInsideRoot(root, filePath);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- the path is constrained to a fixed scan root above.
+  return readFile(safeFilePath, "utf8");
+}
+
+async function collectTree(root, directory, surfaces) {
+  for (const entry of await listDirectory(root, directory)) {
+    const filePath = join(directory, entry.name);
+    if (entry.isDirectory()) {
+      await collectTree(root, filePath, surfaces);
+      continue;
+    }
+    if (!entry.isFile()) {
+      continue;
+    }
+
+    surfaces.push([
+      normalizePath(filePath),
+      await readSurfaceContent(root, filePath),
+    ]);
+  }
   return surfaces;
 }
 
+async function readTree(root, { optional = false } = {}) {
+  try {
+    return await collectTree(root, root, []);
+  } catch (error) {
+    if (optional && error?.code === "ENOENT" && error?.path === root) {
+      return [];
+    }
+    throw error;
+  }
+}
+
 export async function loadCareerPortfolioTextSurfaces({
-  contentMutations = {},
+  contentMutations = new Map(),
 } = {}) {
+  if (!(contentMutations instanceof Map)) {
+    throw new Error("career portfolio content mutations must be a Map");
+  }
+
   const surfaces = [
     ["index.html", await readFile("index.html", "utf8")],
     ["README.md", await readFile("README.md", "utf8")],
@@ -100,14 +126,14 @@ export async function loadCareerPortfolioTextSurfaces({
     ...(await readTree("public")),
     ...(await readTree("dist", { optional: true })),
   ];
-  const pendingMutations = new Set(Object.keys(contentMutations));
+  const pendingMutations = new Set(contentMutations.keys());
 
   const mutatedSurfaces = surfaces.map(([label, content]) => {
-    if (!Object.hasOwn(contentMutations, label)) {
+    if (!contentMutations.has(label)) {
       return [label, content];
     }
     pendingMutations.delete(label);
-    return [label, `${content}\n${contentMutations[label]}`];
+    return [label, `${content}\n${contentMutations.get(label)}`];
   });
 
   if (pendingMutations.size > 0) {

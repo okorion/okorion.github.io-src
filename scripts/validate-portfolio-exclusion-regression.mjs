@@ -9,9 +9,9 @@ const cssExclusionMutation = String.raw`
 }`;
 
 const mutatedSurfaces = await loadCareerPortfolioTextSurfaces({
-  contentMutations: {
-    "src/portfolio/portfolio.css": cssExclusionMutation,
-  },
+  contentMutations: new Map([
+    ["src/portfolio/portfolio.css", cssExclusionMutation],
+  ]),
 });
 
 let mutationBlocked = false;
