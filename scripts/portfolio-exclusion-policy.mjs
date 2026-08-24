@@ -1,20 +1,9 @@
 import { readdir, readFile } from "node:fs/promises";
-import { extname, isAbsolute, join, relative, sep } from "node:path";
-
-const blockedCareerPortfolioAliases = [
-  "VizPort Studio",
-  "VizPort",
-  "vizport-studio",
-  "vizport-studio.okorion.chatgpt.site",
-  "github.com/okorion/vizport-studio",
-  "LocalMesh Studio",
-  "localmesh-studio",
-  "localmesh-studio.okorion.chatgpt.site",
-  "github.com/okorion/localmesh-studio",
-  "GPU UX Lab",
-  "gpu-ux-lab",
-  "github.com/okorion/gpu-ux-lab",
-];
+import { extname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import {
+  careerExclusionAliases,
+  careerExclusionDerivedUrls,
+} from "./career-exclusion-catalog.mjs";
 
 const blockedCareerPortfolioDescriptions = [
   "개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.",
@@ -25,30 +14,48 @@ const blockedCareerPortfolioDescriptions = [
   "파일 최대 5MB",
   "재분석 전에는 이전 결과를 잠가",
   "WebGPU 렌더러는 확장 인터페이스만 마련했습니다.",
-  "raw.githubusercontent.com/okorion/localmesh-studio",
-  "raw.githubusercontent.com/okorion/vizport-studio",
 ];
 
-const blockedCareerPortfolioContent = [
-  ...blockedCareerPortfolioAliases,
-  ...blockedCareerPortfolioDescriptions,
+export const blockedCareerPortfolioContent = [
+  ...new Set([
+    ...careerExclusionAliases,
+    ...careerExclusionDerivedUrls,
+    ...blockedCareerPortfolioDescriptions,
+  ]),
 ];
 
-const textExtensions = new Set([
-  ".css",
-  ".html",
-  ".js",
-  ".json",
-  ".map",
-  ".md",
-  ".mjs",
-  ".svg",
-  ".ts",
-  ".tsx",
-  ".txt",
-  ".webmanifest",
-  ".xml",
+const binaryExtensions = new Set([
+  ".avif",
+  ".bmp",
+  ".gif",
+  ".glb",
+  ".ico",
+  ".jpeg",
+  ".jpg",
+  ".mp3",
+  ".mp4",
+  ".otf",
+  ".pdf",
+  ".png",
+  ".points",
+  ".ttf",
+  ".wasm",
+  ".webm",
+  ".webp",
+  ".woff",
+  ".woff2",
+  ".zip",
 ]);
+
+export function isCareerPortfolioBinaryAsset(filePath) {
+  return binaryExtensions.has(extname(filePath).toLowerCase());
+}
+
+export const catalogBlockedCareerPortfolioAliases = [...careerExclusionAliases];
+
+export const catalogDerivedCareerPortfolioUrls = [
+  ...careerExclusionDerivedUrls,
+];
 
 function normalizePath(filePath) {
   return relative(".", filePath).split(sep).join("/");
@@ -73,7 +80,7 @@ async function listDirectory(root, directory) {
 }
 
 async function readSurfaceContent(root, filePath) {
-  if (!textExtensions.has(extname(filePath).toLowerCase())) {
+  if (isCareerPortfolioBinaryAsset(filePath)) {
     return "";
   }
 
@@ -90,7 +97,9 @@ async function collectTree(root, directory, surfaces) {
       continue;
     }
     if (!entry.isFile()) {
-      continue;
+      throw new Error(
+        `career portfolio scan found an unsupported filesystem entry (${filePath})`,
+      );
     }
 
     surfaces.push([
@@ -101,11 +110,19 @@ async function collectTree(root, directory, surfaces) {
   return surfaces;
 }
 
-async function readTree(root, { optional = false } = {}) {
+export function isMissingOptionalRoot(error, root, resolvePath = resolve) {
+  return (
+    error?.code === "ENOENT" &&
+    typeof error?.path === "string" &&
+    resolvePath(error.path) === resolvePath(root)
+  );
+}
+
+export async function readCareerPortfolioTree(root, { optional = false } = {}) {
   try {
     return await collectTree(root, root, []);
   } catch (error) {
-    if (optional && error?.code === "ENOENT" && error?.path === root) {
+    if (optional && isMissingOptionalRoot(error, root)) {
       return [];
     }
     throw error;
@@ -122,9 +139,9 @@ export async function loadCareerPortfolioTextSurfaces({
   const surfaces = [
     ["index.html", await readFile("index.html", "utf8")],
     ["README.md", await readFile("README.md", "utf8")],
-    ...(await readTree("src")),
-    ...(await readTree("public")),
-    ...(await readTree("dist", { optional: true })),
+    ...(await readCareerPortfolioTree("src")),
+    ...(await readCareerPortfolioTree("public")),
+    ...(await readCareerPortfolioTree("dist", { optional: true })),
   ];
   const pendingMutations = new Set(contentMutations.keys());
 

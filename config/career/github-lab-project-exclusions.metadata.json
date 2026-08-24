@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "syncMode": "byte-identical-source-catalog",
+  "source": {
+    "kind": "installed-skill-reference",
+    "skill": "job-application-finalizer",
+    "relativePath": "references/github-lab-project-exclusions.json",
+    "sha256": "3399d932aa4b36bf8916f38ca8d6714e776c985fc4cac633811b2b77002ad7e2"
+  },
+  "snapshot": {
+    "path": "config/career/github-lab-project-exclusions.generated.json",
+    "sha256": "3399d932aa4b36bf8916f38ca8d6714e776c985fc4cac633811b2b77002ad7e2"
+  }
+}

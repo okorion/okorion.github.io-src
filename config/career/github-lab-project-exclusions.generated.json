@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0",
+  "policyId": "career-os-github-lab-exclusion-2026-08-21",
+  "decision": "omit-all",
+  "blockedSurfaceScope": "generated-external-artifacts-and-support-files",
+  "blockedSurfaces": [
+    "okorion.github.io"
+  ],
+  "applicationInputUrlExceptions": [
+    {
+      "type": "url",
+      "value": "https://okorion.github.io/",
+      "scope": "user-direct-official-application-form-portfolio-url-field-only"
+    },
+    {
+      "type": "notion-page",
+      "pageId": "1d50242a-aedf-8098-8f93-f5af21fe0304",
+      "label": "기존 공개 Notion 포트폴리오",
+      "scope": "user-direct-official-application-form-portfolio-url-field-only"
+    }
+  ],
+  "projects": [
+    {
+      "id": "vizport-studio",
+      "displayName": "VizPort Studio",
+      "status": "confirmed-excluded",
+      "aliases": [
+        "VizPort Studio",
+        "VizPort",
+        "vizport-studio",
+        "vizport-studio.okorion.chatgpt.site",
+        "github.com/okorion/vizport-studio"
+      ]
+    },
+    {
+      "id": "localmesh-studio",
+      "displayName": "LocalMesh Studio",
+      "status": "default-excluded",
+      "aliases": [
+        "LocalMesh Studio",
+        "localmesh-studio",
+        "localmesh-studio.okorion.chatgpt.site",
+        "github.com/okorion/localmesh-studio"
+      ]
+    },
+    {
+      "id": "gpu-ux-lab",
+      "displayName": "GPU UX Lab",
+      "status": "default-excluded",
+      "aliases": [
+        "GPU UX Lab",
+        "gpu-ux-lab",
+        "github.com/okorion/gpu-ux-lab"
+      ]
+    }
+  ]
+}
