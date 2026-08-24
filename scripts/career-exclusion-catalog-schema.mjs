@@ -15,7 +15,6 @@ const allowedProjectStatuses = new Set([
   "default-excluded",
 ]);
 const sha256Pattern = /^[a-f0-9]{64}$/;
-const projectIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const applicationInputExceptionScope =
   "user-direct-official-application-form-portfolio-url-field-only";
 
@@ -66,6 +65,19 @@ function assertSha256(value, label) {
   }
 }
 
+function isLowercaseKebabCase(value) {
+  return value.split("-").every(
+    (segment) =>
+      segment.length > 0 &&
+      [...segment].every((character) => {
+        const code = character.codePointAt(0);
+        const isLowercaseLetter = code >= 97 && code <= 122;
+        const isDigit = code >= 48 && code <= 57;
+        return isLowercaseLetter || isDigit;
+      }),
+  );
+}
+
 function validateProject(project, seenProjectIds) {
   assertPlainObject(project, "project");
   assertExactKeys(
@@ -74,7 +86,7 @@ function validateProject(project, seenProjectIds) {
     "project",
   );
   assertNonEmptyString(project.id, "project.id");
-  if (!projectIdPattern.test(project.id)) {
+  if (!isLowercaseKebabCase(project.id)) {
     fail(`${project.id}.id must be a lowercase kebab-case slug`);
   }
   assertNonEmptyString(project.displayName, `${project.id}.displayName`);

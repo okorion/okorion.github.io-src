@@ -1,5 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
+import { parseArgs } from "node:util";
 import {
   assertCareerExclusionSnapshotIntegrity,
   assertCareerExclusionSourceSync,
@@ -19,32 +20,20 @@ const metadataUrl = new URL(
 );
 
 function parseArguments(args) {
-  let mode = "check";
-  let sourcePath;
-  let waitingForSource = false;
-
-  for (const argument of args) {
-    if (waitingForSource) {
-      sourcePath = argument;
-      waitingForSource = false;
-      continue;
-    }
-    if (argument === "--source") {
-      waitingForSource = true;
-      continue;
-    }
-    if (argument === "--write") {
-      mode = "write";
-      continue;
-    }
-    if (argument !== "--check") {
-      throw new Error(`unknown catalog sync argument (${argument})`);
-    }
+  const { values } = parseArgs({
+    args,
+    options: {
+      check: { type: "boolean" },
+      source: { type: "string" },
+      write: { type: "boolean" },
+    },
+    strict: true,
+  });
+  if (values.check && values.write) {
+    throw new Error("--check and --write cannot be combined");
   }
-
-  if (waitingForSource) {
-    throw new Error("--source requires a JSON path");
-  }
+  const mode = values.write ? "write" : "check";
+  const sourcePath = values.source;
   if (mode === "write" && !sourcePath) {
     throw new Error("--write requires --source <installed catalog path>");
   }
@@ -78,7 +67,9 @@ function createMetadata(sourceHash) {
 }
 
 async function readRepositorySnapshot() {
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- module-relative URL is fixed by this repository.
   const snapshotBytes = await readFile(snapshotUrl);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- module-relative URL is fixed by this repository.
   const metadata = JSON.parse(await readFile(metadataUrl, "utf8"));
   return { metadata, snapshotBytes };
 }
@@ -86,7 +77,9 @@ async function readRepositorySnapshot() {
 async function writeRepositorySnapshot(sourceBytes) {
   parseCareerExclusionCatalog(sourceBytes, "installed source catalog");
   const metadata = createMetadata(sha256Hex(sourceBytes));
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- module-relative URL is fixed by this repository.
   await writeFile(snapshotUrl, sourceBytes);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- module-relative URL is fixed by this repository.
   await writeFile(
     metadataUrl,
     `${JSON.stringify(metadata, null, 2)}\n`,
