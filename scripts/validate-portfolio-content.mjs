@@ -1,4 +1,8 @@
 import { readFile } from "node:fs/promises";
+import {
+  assertNoBlockedCareerPortfolioContent,
+  loadCareerPortfolioTextSurfaces,
+} from "./portfolio-exclusion-policy.mjs";
 
 function assertIncludes(content, expected, label) {
   if (!content.includes(expected)) {
@@ -174,6 +178,11 @@ const portfolio = [
   writing,
 ].join("\n");
 
+assertNoBlockedCareerPortfolioContent(
+  await loadCareerPortfolioTextSurfaces(),
+  "career portfolio exclusion policy",
+);
+
 for (const [source, headingId, label] of [
   [evidence, "professional-evidence-title", "ProfessionalEvidenceSection.tsx"],
   [projects, "public-builds-title", "PublicBuildsSection.tsx"],
@@ -267,7 +276,7 @@ if (rendersHeroExperiment) {
 
 const heroSummary = heroSummaryBodies[0].replace(/\s+/g, " ").trim();
 const approvedHeroSummary =
-  "React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해 왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로 동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다. 개인 프로젝트로 local-first AI와 3D·데이터 시각화 도구를 만들고 공개합니다.";
+  "React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해 왔습니다. 편집 상태와 command·event, 저장 모델, Runtime이 한 흐름으로 동작하도록 연결하고 모바일·현장·운영 환경에서 직접 확인해 왔습니다.";
 if (heroSummary !== approvedHeroSummary) {
   throw new Error(
     "HeroSection.tsx: the approved description must remain a single hero summary paragraph",
@@ -300,40 +309,12 @@ for (const [label, surface, approvedCopy] of [
     hero,
     "이전 포트폴리오의 인터랙티브 3D 장면도 함께 볼 수 있습니다.",
   ],
-  ["HeroSection.tsx", hero, "프로젝트로 local-first AI와 3D·데이터"],
   ["navigationLinks.ts", hubLinks, "직접 구현한 내용과 문제 해결 기록"],
   ["HubSurface.tsx", hubSurface, "포트폴리오와 3D 장면을 둘러보세요."],
   [
     "HubSurface.tsx",
     hubSurface,
     "경력 프로필, 기술 글로 바로 이동할 수 있습니다.",
-  ],
-  ["portfolioContent.ts", content, "Local-first 3D · AI project"],
-  ["portfolioContent.ts", content, "오브젝트 선택·강조"],
-  ["portfolioContent.ts", content, "이동·회전·크기 기즈모"],
-  [
-    "portfolioContent.ts",
-    content,
-    "W/E/R·Esc·Delete/Backspace·Undo/Redo 단축키",
-  ],
-  ["portfolioContent.ts", content, "변경 축만 기록해 서로 다른 축의 동시 편집"],
-  [
-    "portfolioContent.ts",
-    content,
-    "단축키는 뷰포트·변환 도구에 포커스가 있을 때만 작동하고",
-  ],
-  ["portfolioContent.ts", content, "텍스트 입력·IME 중에는 가로채지 않습니다."],
-  ["portfolioContent.ts", content, "장면은 IndexedDB에 저장합니다."],
-  ["portfolioContent.ts", content, "협업 서버는 로컬 개발용"],
-  [
-    "portfolioContent.ts",
-    content,
-    "운영 인증·권한·서버 저장은 제공하지 않습니다.",
-  ],
-  [
-    "portfolioContent.ts",
-    content,
-    "LocalMesh Studio 로고와 네트워크·AI 아이콘이 있는 보라색 3D 큐브 브랜드 그래픽",
   ],
   [
     "README.md",
@@ -531,13 +512,20 @@ for (const evidenceLabel of [
   assertIncludes(evidence, evidenceLabel, "ProfessionalEvidenceSection.tsx");
 }
 
-for (const projectName of [
-  "LocalMesh Studio",
-  "VizPort Studio",
-  "Mermaid Sky Exporter",
-]) {
-  assertIncludes(content, projectName, "portfolioContent.ts");
+const publicProjectsBlock = content.match(
+  /export const publicProjects:[\s\S]*?= \[([\s\S]*?)\];\n\nexport const technicalWritingItems/,
+)?.[1];
+if (!publicProjectsBlock) {
+  throw new Error("portfolioContent.ts: publicProjects export is missing");
 }
+const publicProjectCount = publicProjectsBlock.match(/^\s+id: /gm)?.length ?? 0;
+if (publicProjectCount !== 1) {
+  throw new Error(
+    `portfolioContent.ts: expected one retained public project (${publicProjectCount})`,
+  );
+}
+assertIncludes(content, "Mermaid Sky Exporter", "portfolioContent.ts");
+assertIncludes(publicProjectsBlock, 'index: "01"', "portfolioContent.ts");
 
 const expectedCredentials = [
   "SSAFY 7기 · 1,600시간 · 2022",
@@ -619,8 +607,6 @@ if (writingItemCount !== 3) {
 }
 
 for (const publicUrl of [
-  "https://localmesh-studio.okorion.chatgpt.site",
-  "https://vizport-studio.okorion.chatgpt.site",
   "https://mermaid-sky-exporter.vercel.app",
   "https://github.com/okorion",
   "https://velog.io/@okorion",
