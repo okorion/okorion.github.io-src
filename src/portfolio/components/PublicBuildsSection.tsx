@@ -26,7 +26,7 @@ function ProjectCard({ project }: { project: PublicProject }) {
           ))}
         </ul>
         <p className="project-card__boundary">
-          <strong>현재 구현 범위</strong>
+          <strong>프로젝트 성격·현재 범위</strong>
           {project.boundary}
         </p>
         <nav

@@ -10,6 +10,12 @@
 
 기본 화면은 `src/app/siteView.ts`의 `DEFAULT_SITE_VIEW` 한 줄로 전환할 수 있으며, 이전 3D 구현은 `src/legacy/` 아래에서 유지합니다.
 
+## 공개 프로젝트 분류
+
+- `LocalMesh Studio`와 `VizPort Studio`는 AI 보조로 빠르게 만든 토이 프로젝트입니다. 공개 결과와 구현 범위를 살펴보는 용도이며, 경력 대표 사례나 면접 주력 프로젝트로 분류하지 않습니다.
+- `Mermaid Sky Exporter`는 실제 사용 흐름을 유지하는 개인 웹 도구입니다.
+- 각 프로젝트의 세부 README는 현재 구현 범위와 실행 방법을 설명하므로 별도 표현 변경 없이 유지합니다.
+
 ## 현재 포트폴리오
 
 ![콘텐츠 우선 포트폴리오](./docs/pr-evidence/portfolio-hybrid-landing/after.png)
