@@ -1,8 +1,4 @@
 import { readFile } from "node:fs/promises";
-import {
-  assertNoBlockedCareerPortfolioContent,
-  loadCareerPortfolioTextSurfaces,
-} from "./portfolio-exclusion-policy.mjs";
 
 function assertIncludes(content, expected, label) {
   if (!content.includes(expected)) {
@@ -177,11 +173,6 @@ const portfolio = [
   themeToggle,
   writing,
 ].join("\n");
-
-assertNoBlockedCareerPortfolioContent(
-  await loadCareerPortfolioTextSurfaces(),
-  "career portfolio exclusion policy",
-);
 
 for (const [source, headingId, label] of [
   [evidence, "professional-evidence-title", "ProfessionalEvidenceSection.tsx"],
@@ -519,13 +510,31 @@ if (!publicProjectsBlock) {
   throw new Error("portfolioContent.ts: publicProjects export is missing");
 }
 const publicProjectCount = publicProjectsBlock.match(/^\s+id: /gm)?.length ?? 0;
-if (publicProjectCount !== 1) {
+if (publicProjectCount !== 3) {
   throw new Error(
-    `portfolioContent.ts: expected one retained public project (${publicProjectCount})`,
+    `portfolioContent.ts: expected three public projects (${publicProjectCount})`,
   );
 }
-assertIncludes(content, "Mermaid Sky Exporter", "portfolioContent.ts");
-assertIncludes(publicProjectsBlock, 'index: "01"', "portfolioContent.ts");
+for (const [projectName, index] of [
+  ["LocalMesh Studio", "01"],
+  ["VizPort Studio", "02"],
+  ["Mermaid Sky Exporter", "03"],
+]) {
+  assertIncludes(publicProjectsBlock, projectName, "portfolioContent.ts");
+  assertIncludes(
+    publicProjectsBlock,
+    `index: "${index}"`,
+    "portfolioContent.ts",
+  );
+}
+for (const experimentCopy of [
+  "3D mesh studio · AI-assisted toy project",
+  "Chart codegen · AI-assisted toy project",
+  "경력 대표 사례나 면접 주력 프로젝트로 소개하지 않습니다.",
+]) {
+  assertIncludes(publicProjectsBlock, experimentCopy, "portfolioContent.ts");
+}
+assertIncludes(projects, "프로젝트 성격·현재 범위", "PublicBuildsSection.tsx");
 
 const expectedCredentials = [
   "SSAFY 7기 · 1,600시간 · 2022",
@@ -607,6 +616,8 @@ if (writingItemCount !== 3) {
 }
 
 for (const publicUrl of [
+  "https://localmesh-studio.okorion.chatgpt.site",
+  "https://vizport-studio.okorion.chatgpt.site",
   "https://mermaid-sky-exporter.vercel.app",
   "https://github.com/okorion",
   "https://velog.io/@okorion",

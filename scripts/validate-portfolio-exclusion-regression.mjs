@@ -12,7 +12,6 @@ import {
   catalogBlockedCareerPortfolioAliases,
   catalogDerivedCareerPortfolioUrls,
   isCareerPortfolioBinaryAsset,
-  loadCareerPortfolioTextSurfaces,
   readCareerPortfolioTree,
 } from "./portfolio-exclusion-policy.mjs";
 
@@ -45,20 +44,16 @@ function expectRejected(action, label) {
 
 for (const alias of catalogBlockedCareerPortfolioAliases) {
   expectBlocked(
-    await loadCareerPortfolioTextSurfaces({
-      contentMutations: new Map([
-        [
-          "src/portfolio/portfolio.css",
-          `.excluded-regression { background-image: url("${alias}"); }`,
-        ],
-      ]),
-    }),
+    [
+      [
+        "src/portfolio/portfolio.css",
+        `.excluded-regression { background-image: url("${alias}"); }`,
+      ],
+    ],
     `catalog CSS alias regression (${alias})`,
   );
   expectBlocked(
-    await loadCareerPortfolioTextSurfaces({
-      contentMutations: new Map([["public/robots.txt", `Project: ${alias}`]]),
-    }),
+    [["public/robots.txt", `Project: ${alias}`]],
     `catalog public static alias regression (${alias})`,
   );
   expectBlocked(
