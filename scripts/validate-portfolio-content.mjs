@@ -530,7 +530,7 @@ for (const [projectName, index] of [
 for (const experimentCopy of [
   "3D mesh studio · AI-assisted toy project",
   "Chart codegen · AI-assisted toy project",
-  "경력 대표 사례나 면접 주력 프로젝트로 소개하지 않습니다.",
+  "AI 보조로 빠르게 만든 토이 프로젝트입니다.",
 ]) {
   assertIncludes(publicProjectsBlock, experimentCopy, "portfolioContent.ts");
 }
