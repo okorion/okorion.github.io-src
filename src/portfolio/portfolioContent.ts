@@ -102,7 +102,7 @@ export const publicProjects: readonly PublicProject[] = [
     description:
       "브라우저에서 3D 오브젝트를 배치·변형하고, 로컬 AI가 만든 명령을 확인한 뒤 장면에 적용해 보는 실험용 Studio입니다. 장면은 브라우저에 저장되며 로컬 개발 환경에서는 Yjs 기반 동기화 흐름도 확인할 수 있습니다.",
     boundary:
-      "AI 보조로 빠르게 만든 토이 프로젝트입니다. 공개 결과와 구현 범위를 살펴보는 용도이며, 경력 대표 사례나 면접 주력 프로젝트로 소개하지 않습니다. 운영 인증·권한·서버 저장은 제공하지 않습니다.",
+      "AI 보조로 빠르게 만든 토이 프로젝트입니다. 로컬 저장과 개발용 동기화 흐름을 중심으로 공개하며, 운영 인증·권한·서버 저장은 제공하지 않습니다.",
     image:
       "https://raw.githubusercontent.com/okorion/localmesh-studio/main/public/og.png",
     imageAlt:
@@ -131,7 +131,7 @@ export const publicProjects: readonly PublicProject[] = [
     description:
       "샘플 데이터에서 차트 추천을 고르고 미리 본 뒤 React 코드를 복사해 보는 데이터 시각화 코드젠 실험입니다. CSV·TSV·JSON 파일은 브라우저에서 분석합니다.",
     boundary:
-      "AI 보조로 빠르게 만든 토이 프로젝트입니다. 공개 결과와 아이디어를 확인하는 용도이며, 경력 대표 사례나 면접 주력 프로젝트로 소개하지 않습니다. 규칙 기반 추천과 Canvas 미리보기가 중심이고 AI 보정은 선택 사항입니다.",
+      "AI 보조로 빠르게 만든 토이 프로젝트입니다. 규칙 기반 추천과 Canvas 미리보기를 중심으로 공개하며, AI 보정은 선택 사항입니다.",
     image:
       "https://raw.githubusercontent.com/okorion/vizport-studio/main/public/og.png",
     imageAlt: "VizPort Studio의 데이터 시각화 작업 화면",
