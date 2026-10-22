@@ -1,4 +1,5 @@
 import type { RefObject } from "react";
+import { legacyExperience } from "../../../portfolio/portfolioContent";
 import { HubLinkCard } from "./HubLinkCard";
 import { CloseIcon } from "./NavigationHubIcons";
 import { navigationLinks } from "./navigationLinks";
@@ -19,7 +20,7 @@ export function HubSurface({
       <div className="nav-hub__header">
         <div>
           <p className="eyebrow">Explore okorion</p>
-          <h1 className="nav-hub__title">포트폴리오와 3D 장면을 둘러보세요.</h1>
+          <h1 className="nav-hub__title">{legacyExperience.title}</h1>
         </div>
         <button
           ref={closeButtonRef}
@@ -31,9 +32,7 @@ export function HubSurface({
           <CloseIcon />
         </button>
       </div>
-      <p className="nav-hub__intro">
-        포트폴리오와 GitHub, 경력 프로필, 기술 글로 바로 이동할 수 있습니다.
-      </p>
+      <p className="nav-hub__intro">{legacyExperience.description}</p>
       <nav className="nav-hub__links" aria-label="외부 및 내부 링크">
         {navigationLinks.map((link) => (
           <HubLinkCard key={link.href} {...link} />

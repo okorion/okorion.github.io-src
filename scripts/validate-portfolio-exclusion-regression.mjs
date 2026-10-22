@@ -9,6 +9,7 @@ import {
 } from "./career-exclusion-catalog-schema.mjs";
 import {
   assertNoBlockedCareerPortfolioContent,
+  assertPublicProjectContent,
   catalogBlockedCareerPortfolioAliases,
   catalogDerivedCareerPortfolioUrls,
   isCareerPortfolioBinaryAsset,
@@ -164,3 +165,29 @@ console.log(
   `Catalog aliases rejected across CSS/public YAML/dist YAML/asset paths (${catalogBlockedCareerPortfolioAliases.length} aliases).`,
 );
 console.log("Catalog source drift and non-omit-all policy were rejected.");
+
+// The current product site may show these projects; career outputs retain the
+// separate omit-all catalog above. Privacy failures still block product pages.
+assertPublicProjectContent([
+  [
+    "src/projects.ts",
+    "VizPort Studio https://github.com/okorion/vizport-studio",
+  ],
+  [
+    "public/project.txt",
+    "LocalMesh Studio https://localmesh-studio.okorion.chatgpt.site",
+  ],
+]);
+for (const value of [
+  "GPU UX Lab",
+  "C:/Users/example/private.txt",
+  "https://app.notion.com/p/00000000000000000000000000000000",
+  "http://192.168.1.2:8000",
+  `ghp_${"x".repeat(30)}`,
+]) {
+  expectRejected(
+    () => assertPublicProjectContent([["public/example.svg", value]]),
+    "personal product privacy regression",
+  );
+}
+console.log("Personal product allowlist and privacy exclusions verified.");

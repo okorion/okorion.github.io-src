@@ -25,7 +25,7 @@ export class RouteErrorBoundary extends Component<
           <p>3D LAB · LOAD ERROR</p>
           <h1>3D Lab을 불러오지 못했습니다.</h1>
           <span>
-            네트워크가 안정된 뒤 다시 시도하거나 경력 포트폴리오로 돌아갈 수
+            네트워크가 안정된 뒤 다시 시도하거나 프로젝트 목록으로 돌아갈 수
             있습니다.
           </span>
           <div className="route-error__actions">
@@ -37,7 +37,7 @@ export class RouteErrorBoundary extends Component<
             >
               다시 시도
             </button>
-            <a href="/">경력 포트폴리오로 돌아가기</a>
+            <a href="/">프로젝트로 돌아가기</a>
           </div>
         </main>
       );

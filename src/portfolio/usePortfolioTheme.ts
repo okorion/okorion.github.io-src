@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export type PortfolioTheme = "dark" | "light";
 
 const STORAGE_KEY = "okorion.portfolio.theme.v1";
 const DARK_THEME_COLOR = "#080a0b";
-const LIGHT_THEME_COLOR = "#f4f6f2";
+const LIGHT_THEME_COLOR = "#ffffff";
 
 function isPortfolioTheme(value: string | null): value is PortfolioTheme {
   return value === "dark" || value === "light";
@@ -19,12 +19,6 @@ function readStoredTheme(): PortfolioTheme | null {
   }
 }
 
-function readSystemTheme(): PortfolioTheme {
-  return window.matchMedia("(prefers-color-scheme: light)").matches
-    ? "light"
-    : "dark";
-}
-
 function getThemeColor(theme: PortfolioTheme) {
   return theme === "light" ? LIGHT_THEME_COLOR : DARK_THEME_COLOR;
 }
@@ -37,7 +31,7 @@ function getInitialTheme(): PortfolioTheme {
     return bootstrappedTheme;
   }
 
-  return readStoredTheme() ?? readSystemTheme();
+  return readStoredTheme() ?? "light";
 }
 
 function syncBrowserTheme(theme: PortfolioTheme) {
@@ -54,33 +48,13 @@ function syncBrowserTheme(theme: PortfolioTheme) {
 
 export function usePortfolioTheme() {
   const [theme, setTheme] = useState<PortfolioTheme>(getInitialTheme);
-  const hasManualOverride = useRef(false);
 
   useEffect(() => {
     syncBrowserTheme(theme);
   }, [theme]);
 
-  useEffect(() => {
-    if (readStoredTheme()) {
-      return;
-    }
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
-    const handleSystemThemeChange = () => {
-      if (!hasManualOverride.current && !readStoredTheme()) {
-        setTheme(mediaQuery.matches ? "light" : "dark");
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
-    return () => {
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
-    };
-  }, []);
-
   const toggleTheme = useCallback(() => {
     const nextTheme = theme === "dark" ? "light" : "dark";
-    hasManualOverride.current = true;
 
     try {
       window.localStorage.setItem(STORAGE_KEY, nextTheme);

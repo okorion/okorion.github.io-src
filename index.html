@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
     <meta name="robots" content="index,follow" />
-    <title>오현규 | Product/Application Engineer</title>
+    <title>okorion · AI-native 개인 프로젝트</title>
     <link rel="canonical" href="https://okorion.github.io/" />
 
     <link
@@ -21,49 +21,49 @@
       sizes="180x180"
       href="/favicon/apple-touch-icon.png"
     />
-    <meta name="apple-mobile-web-app-title" content="오현규 Portfolio" />
+    <meta name="apple-mobile-web-app-title" content="okorion · 도구와 웹" />
     <link rel="manifest" href="/favicon/site.webmanifest" />
 
     <meta
       name="description"
-      content="React·TypeScript·Three.js로 Editor·Builder의 편집 흐름을 저장과 실행까지 연결하고 실제 환경에서 동작을 확인해 온 Product/Application Engineer 오현규의 포트폴리오입니다."
+      content="작업을 돕는 도구와 인터랙티브 웹을 AI와 함께 만듭니다. 제품 방향과 사용 흐름을 정하고, 구현된 결과를 보며 화면과 동작을 다듬습니다."
     />
     <meta name="author" content="오현규 (Hyounkyu Oh)" />
-    <meta property="og:site_name" content="오현규 Portfolio" />
-    <meta property="og:title" content="오현규 | Product/Application Engineer" />
+    <meta property="og:site_name" content="okorion · 도구와 웹" />
+    <meta property="og:title" content="okorion · AI-native 개인 프로젝트" />
     <meta
       property="og:description"
-      content="Editor·Builder의 편집 흐름을 저장과 실행까지 연결하고 실제 환경에서 동작을 확인합니다."
+      content="작업을 돕는 도구와 인터랙티브 웹을 AI와 함께 만듭니다. 제품 방향과 사용 흐름을 정하고, 구현된 결과를 보며 화면과 동작을 다듬습니다."
     />
     <meta
       property="og:image"
-      content="https://okorion.github.io/favicon/portfolio-og.png"
+      content="https://okorion.github.io/images/projects/site-og.jpg"
     />
     <meta
       property="og:image:alt"
-      content="오현규 포트폴리오의 3D 장면 미리보기"
+      content="Rust Lab, 정기 재무 보고서 검토 지원 도구, Aether Studio 화면"
     />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:type" content="profile" />
+    <meta property="og:type" content="website" />
     <meta property="og:url" content="https://okorion.github.io/" />
     <meta property="og:locale" content="ko_KR" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="오현규 | Product/Application Engineer"
+      content="okorion · AI-native 개인 프로젝트"
     />
     <meta
       name="twitter:description"
-      content="Editor·Builder의 편집 흐름을 저장과 실행까지 연결하고 실제 환경에서 동작을 확인합니다."
+      content="작업을 돕는 도구와 인터랙티브 웹을 AI와 함께 만듭니다. 제품 방향과 사용 흐름을 정하고, 구현된 결과를 보며 화면과 동작을 다듬습니다."
     />
     <meta
       name="twitter:image"
-      content="https://okorion.github.io/favicon/portfolio-og.png"
+      content="https://okorion.github.io/images/projects/site-og.jpg"
     />
 
-    <meta name="theme-color" content="#080a0b" />
+    <meta name="theme-color" content="#ffffff" />
     <script>
       (() => {
         const root = document.documentElement;
@@ -88,10 +88,8 @@
         const theme =
           storedTheme === "light" || storedTheme === "dark"
             ? storedTheme
-            : window.matchMedia("(prefers-color-scheme: light)").matches
-              ? "light"
-              : "dark";
-        const themeColor = theme === "light" ? "#f4f6f2" : "#080a0b";
+            : "light";
+        const themeColor = theme === "light" ? "#ffffff" : "#11151b";
 
         root.dataset.portfolioTheme = theme;
         root.style.colorScheme = theme;
@@ -104,55 +102,34 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "오현규",
-        "alternateName": ["Hyounkyu Oh", "okorion"],
+        "@type": "WebSite",
+        "name": "okorion · AI-native 개인 프로젝트",
         "url": "https://okorion.github.io/",
-        "jobTitle": "Product / Application Engineer",
-        "sameAs": [
-          "https://github.com/okorion",
-          "https://velog.io/@okorion",
-          "https://okorion.notion.site/Developer-Portfolio-1d50242aaedf80988f93f5af21fe0304"
-        ],
-        "knowsAbout": [
-          "React",
-          "TypeScript",
-          "Three.js",
-          "Web Editor",
-          "Web Builder",
-          "Runtime Integration"
-        ]
+        "inLanguage": "ko",
+        "author": {
+          "@type": "Person",
+          "name": "오현규",
+          "alternateName": "okorion",
+          "sameAs": ["https://github.com/okorion"]
+        }
       }
     </script>
   </head>
 
   <body>
     <noscript>
-      <main
-        style="max-width: 760px; margin: 0 auto; padding: 64px 24px; font-family: system-ui, sans-serif; color: #f4f2ed; background: #080a0b"
-      >
-        <p style="color: #b8f36b; font-size: 12px; letter-spacing: 0.12em">
-          HYOUNKYU OH · PRODUCT / APPLICATION ENGINEER
-        </p>
-        <h1 style="font-size: clamp(36px, 8vw, 64px); line-height: 1.08">
-          Editor·Builder의 편집 흐름을 저장과 실행까지 연결합니다.
-        </h1>
-        <p style="color: #a5aaa7; line-height: 1.8">
-          React·TypeScript·Three.js로 2D·3D Editor·Builder와 지도 제품을 개발해
-          왔습니다. 자세한 업무 사례와 프로젝트 화면을 보려면 JavaScript를
-          활성화해 주세요.
-        </p>
-        <p style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px">
-          <a style="color: #b8f36b" href="https://github.com/okorion">GitHub</a>
-          <a
-            style="color: #b8f36b"
-            href="https://okorion.notion.site/Developer-Portfolio-1d50242aaedf80988f93f5af21fe0304"
-            >Career Profile</a
-          >
-          <a style="color: #b8f36b" href="https://velog.io/@okorion"
-            >Technical Writing</a
-          >
-        </p>
+      <main style="max-width: 760px; margin: auto; padding: 48px 24px; font-family: system-ui, sans-serif; color: #17212c; background: #ffffff; line-height: 1.7">
+        <p>okorion · AI-native projects</p>
+        <h1>도구를 만들고, 사용 경험을 다듬습니다.</h1>
+        <p>제품의 목적과 사용 흐름을 정하고, AI로 구현한 결과를 확인하며 화면과 동작을 다듬습니다.</p>
+        <h2>대표 결과물</h2>
+        <ul>
+          <li><a href="https://rust-3d-engine-lab.vercel.app">Rust Lab</a> — 브라우저에서 3D 장면을 편집하는 도구</li>
+          <li>정기 재무 보고서 검토 지원 도구 — 원본 자료를 정리하고 사람이 확인할 항목을 보여 주는 도구</li>
+          <li><a href="https://aether-studio-nu.vercel.app/">Aether Studio</a> — 가상 스튜디오의 작업을 3D와 웹 화면으로 소개하는 사이트</li>
+        </ul>
+        <p>화면과 상세 제작 과정을 보려면 JavaScript를 켜 주세요.</p>
+        <a href="https://github.com/okorion">GitHub</a>
       </main>
     </noscript>
     <div id="root"></div>

@@ -1,3 +1,8 @@
+import {
+  legacyExperience,
+  siteContent,
+} from "../../../portfolio/portfolioContent";
+
 export interface HubLink {
   label: string;
   description: string;
@@ -8,8 +13,8 @@ export interface HubLink {
 
 export const navigationLinks: HubLink[] = [
   {
-    label: "Portfolio",
-    description: "경력 사례와 공개 프로젝트를 한눈에",
+    label: "개인 프로젝트",
+    description: "도구와 인터랙티브 웹 둘러보기",
     href: "/",
     icon: "/icons/home.svg",
     external: false,
@@ -17,19 +22,13 @@ export const navigationLinks: HubLink[] = [
   {
     label: "GitHub",
     description: "공개 소스와 프로젝트 기록",
-    href: "https://github.com/okorion",
+    href: siteContent.github,
     icon: "/icons/github.svg",
   },
   {
-    label: "Career Profile",
-    description: "경력과 프로젝트를 정리한 프로필",
-    href: "https://okorion.notion.site/Developer-Portfolio-1d50242aaedf80988f93f5af21fe0304",
-    icon: "/icons/notion.svg",
-  },
-  {
-    label: "Technical Writing",
-    description: "직접 구현한 내용과 문제 해결 기록",
-    href: "https://velog.io/@okorion",
+    label: "3D 제작 기록",
+    description: "입자 효과와 카메라 움직임의 당시 기록",
+    href: legacyExperience.article,
     icon: "/icons/velog.svg",
   },
 ];

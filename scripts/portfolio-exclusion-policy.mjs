@@ -2,6 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import {
   careerExclusionAliases,
+  careerExclusionCatalog,
   careerExclusionDerivedUrls,
 } from "./career-exclusion-catalog.mjs";
 
@@ -173,6 +174,38 @@ export function assertNoBlockedCareerPortfolioContent(surfaces, label) {
       ) {
         throw new Error(
           `${label}: forbidden content is present in ${surfaceLabel} (${blockedContent})`,
+        );
+      }
+    }
+  }
+}
+
+// Personal product pages have their own approved scope. The career-document
+// catalog and its default exclusion tests remain unchanged.
+const personalProjectIds = new Set(["vizport-studio", "localmesh-studio"]);
+const blockedPersonalAliases = careerExclusionCatalog.projects
+  .filter((project) => !personalProjectIds.has(project.id))
+  .flatMap((project) => project.aliases);
+const privatePatterns = [
+  /(?:app\.)?notion\.(?:so|com)\/(?:p\/)?[a-f0-9-]{32,}/i,
+  /[a-z]:[\\/]Users[\\/]/i,
+  /(?:localhost|127\.0\.0\.1):\d{2,5}/i,
+  /https?:\/\/(?:10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+)(?::\d+)?/,
+  /(?:ghp_|github_pat_|sk-proj-)[A-Za-z0-9_]{20,}/,
+];
+
+export function assertPublicProjectContent(surfaces) {
+  for (const [label, content] of surfaces) {
+    const combined = `${label}\n${content}`;
+    for (const alias of blockedPersonalAliases) {
+      if (combined.toLowerCase().includes(alias.toLowerCase())) {
+        throw new Error(`public product scope: forbidden content in ${label}`);
+      }
+    }
+    for (const pattern of privatePatterns) {
+      if (pattern.test(combined)) {
+        throw new Error(
+          `public product privacy: forbidden content in ${label}`,
         );
       }
     }

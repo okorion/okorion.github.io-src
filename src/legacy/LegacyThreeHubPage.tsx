@@ -29,7 +29,7 @@ export default function LegacyThreeHubPage() {
       <SceneExperience />
       <a className="legacy-hub__return" href="/">
         <span aria-hidden="true">←</span>
-        Portfolio
+        프로젝트로 돌아가기
       </a>
       <Panel />
     </main>

@@ -1,64 +1,75 @@
-import { type PublicProject, publicProjects } from "../portfolioContent";
+import { type PublicProject, projectHref } from "../portfolioContent";
 import { ExternalLink } from "./ExternalLink";
-import { SectionHeading } from "./SectionHeading";
+import { ProjectMedia } from "./ProjectMedia";
 
-function ProjectCard({ project }: { project: PublicProject }) {
-  return (
-    <article className="project-card">
-      <div className="project-card__visual">
-        <img
-          src={project.image}
-          alt={project.imageAlt}
-          width="1200"
-          height="630"
-          loading="lazy"
-          decoding="async"
-        />
-        <span className="project-card__number">{project.index}</span>
-      </div>
-      <div className="project-card__content">
-        <p className="project-card__category">{project.category}</p>
-        <h3>{project.title}</h3>
-        <p className="project-card__description">{project.description}</p>
-        <ul className="tag-list" aria-label={`${project.title} 기술`}>
-          {project.technologies.map((technology) => (
-            <li key={technology}>{technology}</li>
-          ))}
-        </ul>
-        <p className="project-card__boundary">
-          <strong>프로젝트 성격·현재 범위</strong>
-          {project.boundary}
-        </p>
-        <nav
-          className="project-card__links"
-          aria-label={`${project.title} 링크`}
-        >
-          {project.links.map((link) => (
-            <ExternalLink key={link.href} href={link.href}>
-              {link.label}
-            </ExternalLink>
-          ))}
-        </nav>
-      </div>
-    </article>
-  );
+interface PublicBuildsSectionProps {
+  items: readonly PublicProject[];
+  heading?: string;
 }
 
-export function PublicBuildsSection() {
+export function PublicBuildsSection({
+  items,
+  heading,
+}: PublicBuildsSectionProps) {
   return (
     <section
-      className="section public-builds"
-      id="public-builds"
-      aria-labelledby="public-builds-title"
+      className="projects-section"
+      id="projects"
+      aria-label={heading ?? "프로젝트 목록"}
     >
-      <SectionHeading
-        eyebrow="02 · PUBLIC BUILDS"
-        headingId="public-builds-title"
-      />
+      {heading && (
+        <div className="section-heading">
+          <h2>{heading}</h2>
+          <span>도구 · 업무 지원 · 시각 경험</span>
+        </div>
+      )}
       <div className="project-list">
-        {publicProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
+        {items.map((project, index) => {
+          const demo = project.links.find((link) => link.kind === "demo");
+          return (
+            <article className="project-row" key={project.id}>
+              <ProjectMedia
+                image={project.image}
+                eager={index === 0}
+                href={projectHref(project.id)}
+              />
+              <div className="project-row__copy">
+                <div className="project-meta">
+                  <span className="project-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>{project.category}</span>
+                </div>
+                <h3>
+                  <a href={projectHref(project.id)}>{project.title}</a>
+                </h3>
+                <p className="project-row__description">
+                  {project.description}
+                </p>
+                <nav
+                  className="project-actions"
+                  aria-label={`${project.title} 링크`}
+                >
+                  {demo && (
+                    <ExternalLink
+                      href={demo.href}
+                      ariaLabel={`${project.title} ${demo.label} · 새 탭`}
+                    >
+                      {demo.label}
+                    </ExternalLink>
+                  )}
+                  <a
+                    className={demo ? "secondary-link" : undefined}
+                    href={projectHref(project.id)}
+                  >
+                    {demo ? "제작 과정" : "사례 읽기"}
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </nav>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

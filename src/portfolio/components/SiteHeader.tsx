@@ -1,35 +1,36 @@
+import type { SiteView } from "../../app/siteView";
+import { siteContent } from "../portfolioContent";
+import { ExternalLink } from "./ExternalLink";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface SiteHeaderProps {
   theme: "dark" | "light";
   onToggleTheme: () => void;
+  view: SiteView;
 }
 
-export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
+export function SiteHeader({ theme, onToggleTheme, view }: SiteHeaderProps) {
   return (
     <header className="site-header">
-      <a className="site-brand" href="/" aria-label="오현규 포트폴리오 홈">
-        <span className="site-brand__mark" aria-hidden="true">
-          OH
-        </span>
-        <span className="site-brand__copy">
-          <strong>오현규</strong>
-          <span>Product / Application Engineer</span>
-        </span>
+      <a className="site-brand" href="/" aria-label="okorion 개인 프로젝트 홈">
+        {siteContent.name}
       </a>
-      <nav className="site-nav" aria-label="주요 섹션">
-        <a href="#professional-evidence">경력 사례</a>
-        <a href="#public-builds">공개 프로젝트</a>
-        <a href="#technical-writing">기술 글</a>
-        <a href="#experience">경력</a>
-      </nav>
-      <div className="site-header__actions">
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-        <a className="site-header__lab" href="/?view=3d">
-          <span className="site-header__lab-dot" aria-hidden="true" />
-          3D Lab
+      <nav className="site-nav" aria-label="주요 화면">
+        <a
+          href="/?view=projects"
+          aria-current={view === "projects" ? "page" : undefined}
+        >
+          전체 프로젝트
         </a>
-      </div>
+        <a
+          href="/?view=about"
+          aria-current={view === "about" ? "page" : undefined}
+        >
+          소개
+        </a>
+        <ExternalLink href={siteContent.github}>GitHub</ExternalLink>
+      </nav>
+      <ThemeToggle theme={theme} onToggle={onToggleTheme} />
     </header>
   );
 }
