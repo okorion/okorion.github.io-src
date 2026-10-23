@@ -21,6 +21,20 @@
   --focus: #a9c4ff;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html[data-portfolio-theme],
+  .portfolio,
+  .portfolio *,
+  .portfolio *::before,
+  .portfolio *::after {
+    transition:
+      background-color 320ms ease-in-out,
+      color 320ms ease-in-out,
+      border-color 320ms ease-in-out,
+      box-shadow 320ms ease-in-out;
+  }
+}
+
 .portfolio ::selection {
   background: #c7d8f5;
   color: #182c4a;

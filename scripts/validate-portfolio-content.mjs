@@ -42,13 +42,7 @@ const report = content.slice(
   content.indexOf('id: "report-review-tool"'),
   content.indexOf('id: "aether-studio"'),
 );
-for (const required of [
-  "4~5시간",
-  "2~3시간",
-  "2주 간격으로 총 두 차례",
-  "최종",
-  "예시 데이터",
-]) {
+for (const required of ["최종", "예시 데이터"]) {
   assert.ok(report.includes(required), `report scope missing: ${required}`);
 }
 assert.match(

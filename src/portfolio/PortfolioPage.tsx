@@ -5,12 +5,7 @@ import { ProjectDetail } from "./components/ProjectDetail";
 import { PublicBuildsSection } from "./components/PublicBuildsSection";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
-import {
-  featuredProjectIds,
-  projects,
-  reusableAssets,
-  siteContent,
-} from "./portfolioContent";
+import { featuredProjectIds, projects, siteContent } from "./portfolioContent";
 import { usePortfolioTheme } from "./usePortfolioTheme";
 import "./portfolio.css";
 
@@ -60,10 +55,6 @@ function AllProjectsPage() {
         <p>{siteContent.projectsDescription}</p>
       </header>
       <PublicBuildsSection items={projects} />
-      <section className="making-summary">
-        <h2>{reusableAssets.title}</h2>
-        <p>{reusableAssets.description}</p>
-      </section>
     </>
   );
 }
