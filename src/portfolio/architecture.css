@@ -354,6 +354,7 @@
   margin: 16px 0 0;
   font-size: 14px;
   line-height: 1.8;
+  word-break: keep-all;
 }
 .architecture-connections {
   list-style: none;
