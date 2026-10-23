@@ -1,6 +1,9 @@
+import { lazy, Suspense } from "react";
 import { getProject, projectHref, projects } from "../portfolioContent";
 import { ExternalLink } from "./ExternalLink";
 import { ProjectMedia } from "./ProjectMedia";
+
+const ProjectArchitecture = lazy(() => import("./ProjectArchitecture"));
 
 export function ProjectDetail({ projectId }: { projectId: string }) {
   const project = getProject(projectId);
@@ -57,6 +60,16 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
           ))}
         </ol>
       </section>
+      <Suspense
+        fallback={
+          <section className="detail-section" aria-busy="true">
+            <h2>프로젝트 구조</h2>
+            <p>구조도를 불러오는 중입니다.</p>
+          </section>
+        }
+      >
+        <ProjectArchitecture key={project.id} projectId={project.id} />
+      </Suspense>
       <div className="detail-body">
         {project.sections.map((section) => (
           <section className="detail-section" key={section.title}>

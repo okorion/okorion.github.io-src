@@ -1,0 +1,413 @@
+.project-architecture {
+  --architecture-edge: #7d93b0;
+  --mini-accent: #577ec0;
+  --mini-fill: #dce7f8;
+  --mini-side: #afc4e7;
+  padding: 40px 0;
+  border-top: 1px solid var(--line);
+}
+.portfolio[data-theme="dark"] .project-architecture {
+  --architecture-edge: #8ca3c4;
+  --mini-accent: #9dbce9;
+  --mini-fill: #354864;
+  --mini-side: #49658c;
+}
+.architecture-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+.architecture-heading .eyebrow {
+  margin: 0 0 5px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.architecture-heading h2 {
+  margin: 0;
+  font-size: 25px;
+  letter-spacing: -0.04em;
+}
+.architecture-heading > p {
+  margin: 0;
+  max-width: 470px;
+  color: var(--muted);
+  font-size: 15px;
+  word-break: keep-all;
+}
+.architecture-board {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface-soft);
+}
+.architecture-board-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 13px;
+}
+.architecture-board-heading span:first-child {
+  font-weight: 650;
+}
+.architecture-board-heading span:last-child {
+  color: var(--muted);
+}
+.architecture-canvas {
+  width: 100%;
+}
+.project-architecture .react-flow {
+  --xy-background-color: transparent;
+  --xy-background-pattern-dots-color-default: var(--line);
+  --xy-edge-stroke: var(--architecture-edge);
+  --xy-edge-stroke-width: 1.6;
+  --xy-edge-label-color: var(--muted);
+  --xy-edge-label-background-color: var(--surface-soft);
+  --xy-attribution-background-color: var(--surface);
+  --xy-controls-button-background-color: var(--surface);
+  --xy-controls-button-background-color-hover: var(--surface-soft);
+  --xy-controls-button-color: var(--ink);
+  --xy-controls-button-border-color: var(--line);
+}
+.project-architecture .react-flow__node {
+  width: 240px;
+}
+.project-architecture .react-flow__edges svg {
+  max-width: none;
+}
+.project-architecture .react-flow__handle {
+  width: 5px;
+  height: 5px;
+  min-width: 5px;
+  min-height: 5px;
+  border: 1px solid var(--architecture-edge);
+  background: var(--surface);
+  pointer-events: none;
+  opacity: 0;
+}
+.project-architecture .react-flow__edge-text {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 550;
+}
+.project-architecture .react-flow__attribution a {
+  color: var(--muted);
+}
+.project-architecture .react-flow__controls-button {
+  width: 32px;
+  height: 32px;
+}
+.architecture-card {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-align: left;
+  color: var(--ink);
+  background: var(--surface);
+  cursor: pointer;
+  box-shadow: 0 3px 8px #10203508;
+  font-family: inherit;
+}
+.architecture-card:hover {
+  border-color: var(--architecture-edge);
+}
+.architecture-card[aria-pressed="true"] {
+  border-color: var(--focus);
+  box-shadow:
+    0 0 0 1px var(--focus),
+    0 5px 15px #1020350b;
+}
+.architecture-card:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+.architecture-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.architecture-card-title > span {
+  color: var(--muted);
+  font-size: 14px;
+}
+.architecture-card-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  min-height: 18px;
+}
+.architecture-mini {
+  display: block;
+  width: 100%;
+  height: 124px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-soft);
+  overflow: hidden;
+}
+.architecture-mini-bar {
+  height: 21px;
+  padding: 0 8px;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.architecture-mini-bar > i {
+  width: 3px;
+  height: 3px;
+  background: var(--muted);
+  opacity: 0.5;
+  border-radius: 50%;
+}
+.architecture-mini-bar > span {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 0.01em;
+}
+.architecture-mini svg {
+  display: block;
+  width: 100%;
+  height: 100px;
+}
+.mini-grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.mini-axis {
+  stroke: var(--mini-accent);
+  stroke-width: 1.5;
+}
+.mini-cube-top {
+  fill: var(--mini-fill);
+  stroke: var(--mini-accent);
+  stroke-width: 1.2;
+}
+.mini-cube-left {
+  fill: var(--mini-side);
+  stroke: var(--mini-accent);
+  stroke-width: 1.2;
+}
+.mini-cube-right {
+  fill: var(--mini-fill);
+  stroke: var(--mini-accent);
+  stroke-width: 1.2;
+}
+.mini-panel {
+  fill: var(--surface);
+  stroke: var(--line);
+}
+.mini-lines {
+  display: grid;
+  gap: 9px;
+  padding: 16px 12px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.mini-lines > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mini-lines b {
+  color: var(--mini-accent);
+  min-width: 10px;
+  font-weight: 500;
+}
+.mini-lines i {
+  display: block;
+  width: 22%;
+  height: 3px;
+  margin-left: auto;
+  background: var(--line);
+  border-radius: 2px;
+}
+.architecture-mini--code .mini-lines {
+  font-family: ui-monospace, monospace;
+}
+.architecture-mini--review .mini-lines > span {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 5px;
+}
+.mini-table-foot {
+  display: flex;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+.mini-timeline {
+  position: relative;
+  display: block;
+  padding: 15px 13px;
+}
+.mini-timeline > span {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 8px;
+}
+.mini-timeline > i {
+  display: block;
+  height: 8px;
+  border: 1px solid var(--line);
+  margin-top: 8px;
+  border-radius: 2px;
+  background: var(--surface);
+}
+.mini-timeline > b {
+  display: block;
+  width: 60%;
+  height: 8px;
+  margin: 8px 0 0 18%;
+  background: var(--mini-fill);
+  border: 1px solid var(--mini-accent);
+  border-radius: 2px;
+}
+.mini-timeline > em {
+  position: absolute;
+  top: 28px;
+  bottom: 8px;
+  left: 60%;
+  border-left: 2px solid var(--mini-accent);
+}
+.architecture-description {
+  display: grid;
+  grid-template-columns: 125px 190px 1fr;
+  align-items: start;
+  gap: 14px;
+  padding: 24px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  min-height: 126px;
+}
+.architecture-description > span {
+  color: var(--muted);
+  font-size: 12px;
+  padding-top: 3px;
+}
+.architecture-description h3 {
+  margin: 0;
+  font-size: 16px;
+}
+.architecture-description p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  word-break: keep-all;
+}
+.architecture-footnote {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 14px;
+}
+.architecture-footnote p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  word-break: keep-all;
+}
+.architecture-footnote p:last-child {
+  flex-shrink: 0;
+}
+.architecture-text-flow {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.architecture-text-flow summary {
+  cursor: pointer;
+  width: fit-content;
+  padding: 8px 0;
+}
+.architecture-text-flow ul {
+  padding-left: 18px;
+}
+.architecture-mobile {
+  list-style: none;
+  margin: 0;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+.architecture-mobile > li {
+  min-width: 0;
+}
+.project-architecture .architecture-mobile-description {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.architecture-connections {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.architecture-connections li + li {
+  margin-top: 6px;
+}
+.architecture-connections strong {
+  font-weight: 550;
+}
+@media (max-width: 1000px) {
+  .architecture-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .architecture-footnote {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .architecture-footnote p:last-child {
+    flex-shrink: 1;
+  }
+}
+@media (max-width: 600px) {
+  .architecture-mobile {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 26px;
+  }
+  .architecture-board-heading {
+    padding: 14px 16px;
+    align-items: start;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .architecture-card {
+    padding: 18px;
+  }
+  .architecture-mini {
+    height: 139px;
+  }
+  .architecture-mini svg {
+    height: 116px;
+  }
+  .mini-lines {
+    font-size: 11px;
+    gap: 11px;
+  }
+  .architecture-card-subtitle {
+    font-size: 13px;
+  }
+}
