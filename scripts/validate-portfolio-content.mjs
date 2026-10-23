@@ -68,7 +68,7 @@ for (const match of content.matchAll(/src: "(\/images\/projects\/[^"]+)"/g)) {
   await access(`public${match[1]}`);
 }
 for (const required of [
-  "내가 정한 방향과 피드백",
+  "설계와 피드백",
   "AI가 맡은 일",
   "자격",
   "공동 발명자",
