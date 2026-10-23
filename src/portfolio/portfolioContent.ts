@@ -55,13 +55,13 @@ export const featuredProjectIds = [
 export const projects: readonly PublicProject[] = [
   {
     id: "rust-lab",
-    title: "Rust Lab",
+    title: "Rust 3D Engine Lab",
     category: "3D 편집 도구",
     description:
       "3D 오브젝트를 편집하고 렌더링 결과를 비교해 보는 웹 실험실입니다.",
     image: {
       src: "/images/projects/rust-lab.jpg",
-      alt: "Rust Lab의 3D 오브젝트와 속성 패널이 있는 편집 화면",
+      alt: "Rust 3D Engine Lab의 3D 오브젝트와 속성 패널이 있는 편집 화면",
       caption: "현재 공개 데모 화면",
     },
     flow: ["장면 열기", "오브젝트 선택·편집", "렌더링 결과 비교"],

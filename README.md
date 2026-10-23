@@ -4,7 +4,7 @@
 
 | 화면 | 주소 | 내용 |
 | --- | --- | --- |
-| 대표 결과물 | [홈](https://okorion.github.io/) | Rust Lab → 정기 재무 보고서 검토 지원 도구 → Aether Studio |
+| 대표 결과물 | [홈](https://okorion.github.io/) | Rust 3D Engine Lab → 정기 재무 보고서 검토 지원 도구 → Aether Studio |
 | 전체 프로젝트 | [프로젝트 목록](https://okorion.github.io/?view=projects) | Ember Studio, Mermaid Sky Exporter, VizPort Studio, LocalMesh Studio 등 |
 | 소개 | [소개·제작 방식](https://okorion.github.io/?view=about) | 사람이 정한 방향과 피드백, AI가 맡은 구현, 자격·특허 |
 | 3D 경험 | [3D 열기](https://okorion.github.io/?view=3d) | 선택해서 들어가는 인터랙티브 장면 |
