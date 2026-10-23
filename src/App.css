@@ -1,10 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   font-family:
-    Inter, Pretendard, "Noto Sans KR", "Segoe UI", system-ui, -apple-system,
-    sans-serif;
+    "Pretendard Variable", Pretendard, "Noto Sans KR", "Segoe UI", system-ui,
+    -apple-system, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
