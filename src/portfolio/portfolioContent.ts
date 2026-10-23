@@ -30,7 +30,6 @@ export interface PublicProject {
 export const siteContent = {
   name: "okorion",
   title: "okorion · AI-native 개인 프로젝트",
-  heading: "도구를 만들고, 사용 경험을 다듬습니다.",
   description:
     "작업을 돕는 도구와 인터랙티브 웹을 AI와 함께 만듭니다. 제품 방향과 사용 흐름을 정하고, 구현된 결과를 보며 화면과 동작을 다듬습니다.",
   eyebrow: "AI-NATIVE PERSONAL PROJECTS",
