@@ -34,3 +34,9 @@ jobs:
           external_repository: okorion/okorion.github.io
           publish_dir: ./dist
           publish_branch: main
+
+      - name: Refresh profile gallery after Pages is ready
+        timeout-minutes: 10
+        env:
+          PROFILE_REFRESH_TOKEN: ${{ secrets.GH_PAGES_DEPLOY_TOKEN }}
+        run: node scripts/notify-profile-gallery.mjs
