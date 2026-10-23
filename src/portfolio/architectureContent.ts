@@ -395,7 +395,7 @@ export const architectures: Record<string, ProjectArchitectureContent> = {
       },
     ],
     links: [
-      { from: "input", to: "document", label: "SceneCommand" },
+      { from: "input", to: "document", label: "공통 명령" },
       { from: "document", to: "scene", label: "장면 반영" },
       { from: "document", to: "storage", label: "문서 저장" },
     ],
