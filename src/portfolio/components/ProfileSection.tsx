@@ -6,7 +6,6 @@ export function ProfileSection() {
     <div className="about-page">
       <header className="page-intro">
         <p className="eyebrow">ABOUT</p>
-        <h1>{siteContent.aboutTitle}</h1>
         <p>{siteContent.aboutDescription}</p>
       </header>
       <section className="detail-section" aria-labelledby="making-title">
