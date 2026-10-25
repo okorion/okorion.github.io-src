@@ -35,8 +35,9 @@ export const siteContent = {
   eyebrow: "AI-NATIVE PERSONAL PROJECTS",
   github: "https://github.com/okorion",
   humanRole:
-    "개인 프로젝트에서는 제품 방향과 UI·UX를 정하고, 프롬프트를 구성하며 결과를 보고 수정 의견을 전달합니다.",
-  aiRole: "이 개인 프로젝트들의 코드 구현과 구조 설계는 AI가 수행합니다.",
+    "AI와 함께 개인 프로젝트를 만들며, 설계와 UI·UX의 대안을 비교해 직접 방향을 선택합니다.",
+  aiRole:
+    "목표와 제약을 정리하고, 구현된 화면과 동작을 확인하며 수정 방향을 정합니다.",
   aboutTitle: "소개 · 자격과 특허",
   aboutDescription:
     "AI와 함께 만드는 개인 프로젝트의 제작 방식과 자격, 공동 발명 특허를 소개합니다.",
