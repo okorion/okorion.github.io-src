@@ -326,19 +326,6 @@
 .architecture-footnote p:last-child {
   flex-shrink: 0;
 }
-.architecture-text-flow {
-  margin-top: 16px;
-  color: var(--muted);
-  font-size: 13px;
-}
-.architecture-text-flow summary {
-  cursor: pointer;
-  width: fit-content;
-  padding: 8px 0;
-}
-.architecture-text-flow ul {
-  padding-left: 18px;
-}
 .architecture-mobile {
   list-style: none;
   margin: 0;

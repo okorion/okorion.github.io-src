@@ -69,7 +69,7 @@ for (const match of content.matchAll(/src: "(\/images\/projects\/[^"]+)"/g)) {
 }
 for (const required of [
   "설계와 피드백",
-  "AI가 맡은 일",
+  "기술적 판단과 AI 활용",
   "자격",
   "공동 발명자",
 ]) {
