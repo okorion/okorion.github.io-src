@@ -32,6 +32,7 @@
 html {
   min-width: 320px;
   min-height: 100%;
+  scrollbar-gutter: stable;
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
 }
