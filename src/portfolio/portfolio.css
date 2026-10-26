@@ -116,7 +116,6 @@
 }
 .site-nav a[aria-current="page"] {
   color: var(--ink);
-  font-weight: 750;
   text-decoration: underline;
   text-underline-offset: 6px;
 }
