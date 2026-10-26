@@ -21,6 +21,7 @@ export interface PublicProject {
   category: string;
   description: string;
   image: ProjectImage;
+  brand: ProjectImage;
   extraImages?: readonly ProjectImage[];
   flow: readonly string[];
   sections: readonly ProjectSection[];
@@ -64,6 +65,11 @@ export const projects: readonly PublicProject[] = [
       alt: "Rust 3D Engine Lab의 3D 오브젝트와 속성 패널이 있는 편집 화면",
       caption: "현재 공개 데모 화면",
     },
+    brand: {
+      src: "/images/projects/brands/rust-lab.webp",
+      alt: "입체 도형과 와이어프레임을 표현한 Rust 3D Engine Lab 브랜드 일러스트",
+      caption: "브랜드 일러스트",
+    },
     flow: ["장면 열기", "오브젝트 선택·편집", "렌더링 결과 비교"],
     sections: [
       {
@@ -104,6 +110,11 @@ export const projects: readonly PublicProject[] = [
       src: "/images/projects/report-review-tool-result.jpg",
       alt: "예시 데이터로 표시한 정기 재무 보고서 검토 지원 도구의 결과 화면",
       caption: "실제 UI · 예시 데이터",
+    },
+    brand: {
+      src: "/images/projects/brands/report-review-tool.webp",
+      alt: "거래내역 문서와 검토를 표현한 정기 재무 보고서 검토 도구 브랜드 일러스트",
+      caption: "브랜드 일러스트",
     },
     extraImages: [
       {
@@ -152,6 +163,11 @@ export const projects: readonly PublicProject[] = [
       alt: "Aether Studio의 포인터와 스크롤로 탐색하는 3D 장면",
       caption: "현재 공개 데모 화면 · 가상 스튜디오 콘셉트",
     },
+    brand: {
+      src: "/images/projects/brands/aether-studio.webp",
+      alt: "금속 O 링과 청록색 해파리·잎 입자를 표현한 Aether Studio 브랜드 일러스트",
+      caption: "브랜드 일러스트",
+    },
     flow: ["장면 열기", "스크롤·포인터로 탐색", "작품 소개 살펴보기"],
     sections: [
       {
@@ -193,6 +209,11 @@ export const projects: readonly PublicProject[] = [
       alt: "Ember Studio에서 영상과 게임의 시작 예시를 고르는 화면",
       caption: "현재 공개 데모 화면",
     },
+    brand: {
+      src: "/images/projects/brands/ember-studio.webp",
+      alt: "영상 프레임과 입체 장면을 표현한 Ember Studio 브랜드 일러스트",
+      caption: "브랜드 일러스트",
+    },
     flow: ["영상·게임 예시 선택", "문구·장면·요소 편집", "미리보기·결과 확인"],
     sections: [
       {
@@ -233,6 +254,11 @@ export const projects: readonly PublicProject[] = [
       src: "https://raw.githubusercontent.com/okorion/mermaid-sky-exporter/main/public/homepage.png",
       alt: "Mermaid Sky Exporter의 편집기와 다이어그램 미리보기",
       caption: "공개 저장소의 소개 화면",
+    },
+    brand: {
+      src: "/images/projects/brands/mermaid-sky.webp",
+      alt: "연결된 다이어그램과 내보내기를 표현한 Mermaid Sky Exporter 브랜드 일러스트",
+      caption: "브랜드 일러스트",
     },
     flow: ["다이어그램 작성", "미리보기 확인", "이미지 내보내기·URL 공유"],
     sections: [
@@ -280,9 +306,14 @@ export const projects: readonly PublicProject[] = [
     description:
       "브라우저 로컬 LLM이 데이터 탐색과 시각화 UI를 어떻게 바꿀 수 있을지 살펴본 실험입니다. 차트 추천·미리보기·코드 내보내기에 선택적 AI 보정을 연결했습니다.",
     image: {
-      src: "https://raw.githubusercontent.com/okorion/vizport-studio/main/public/og.png",
-      alt: "VizPort Studio의 데이터 시각화를 설명하는 개념 이미지",
-      caption: "개념 이미지 · 실제 UI 아님",
+      src: "/images/projects/vizport-demo.webp",
+      alt: "데이터 입력과 차트 추천·미리보기가 표시된 VizPort Studio의 실제 실행 화면",
+      caption: "현재 공개 데모 화면 · 샘플 데이터",
+    },
+    brand: {
+      src: "/images/projects/brands/vizport.webp",
+      alt: "데이터에서 차트와 코드로 이어지는 VizPort Studio 브랜드 이미지",
+      caption: "브랜드 이미지",
     },
     flow: ["샘플·데이터 파일 선택", "차트 추천·미리보기", "코드·설정 내보내기"],
     sections: [
@@ -326,9 +357,14 @@ export const projects: readonly PublicProject[] = [
     description:
       "WebGPU로 실행하는 로컬 LLM을 3D 편집 UI에 연결한 실험입니다. 자연어로 제안받은 편집 명령을 미리 보고 승인한 뒤 장면에 적용합니다.",
     image: {
-      src: "https://raw.githubusercontent.com/okorion/localmesh-studio/main/public/og.png",
-      alt: "LocalMesh Studio의 보라색 3D 큐브와 연결 요소를 담은 브랜드 이미지",
-      caption: "공개 저장소의 브랜드 이미지 · 실제 UI 아님",
+      src: "/images/projects/localmesh-demo.webp",
+      alt: "3D 장면과 오브젝트 편집 패널이 표시된 LocalMesh Studio의 실제 실행 화면",
+      caption: "현재 공개 데모 화면",
+    },
+    brand: {
+      src: "/images/projects/brands/localmesh.webp",
+      alt: "보라색 3D 큐브와 연결 요소를 담은 LocalMesh Studio 브랜드 이미지",
+      caption: "브랜드 이미지",
     },
     flow: ["오브젝트 편집", "AI 제안 미리보기·확인", "브라우저에 장면 저장"],
     sections: [

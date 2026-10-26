@@ -5,12 +5,14 @@ interface ProjectMediaProps {
   image: ProjectImage;
   eager?: boolean;
   href?: string;
+  variant?: "demo" | "brand";
 }
 
 export function ProjectMedia({
   image,
   eager = false,
   href,
+  variant = "demo",
 }: ProjectMediaProps) {
   const [failed, setFailed] = useState(false);
   const picture = (
@@ -30,7 +32,7 @@ export function ProjectMedia({
           width="1280"
           height="720"
           loading={eager ? "eager" : "lazy"}
-          fetchPriority={eager ? "high" : "auto"}
+          fetchPriority={eager && variant === "demo" ? "high" : "auto"}
           decoding="async"
           onError={() => setFailed(true)}
         />
@@ -39,7 +41,9 @@ export function ProjectMedia({
   );
 
   return (
-    <figure className="project-media">
+    <figure
+      className={`project-media${variant === "brand" ? " project-media--brand" : ""}`}
+    >
       {href ? <a href={href}>{picture}</a> : picture}
       <figcaption>{image.caption}</figcaption>
     </figure>

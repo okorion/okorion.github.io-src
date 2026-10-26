@@ -381,7 +381,23 @@
   font-size: 12px;
 }
 .detail-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 32%);
+  align-items: center;
+  gap: 36px;
   padding: 27px 0 32px;
+}
+.detail-heading__copy {
+  min-width: 0;
+}
+.project-media--brand {
+  width: 100%;
+}
+.project-media--brand .project-media__frame {
+  background: #ffffff;
+}
+.project-media--brand figcaption {
+  text-align: right;
 }
 .detail-heading h1 {
   max-width: 850px;
@@ -615,7 +631,13 @@
     font-size: 14px;
   }
   .detail-heading {
+    grid-template-columns: 1fr;
+    gap: 22px;
     padding: 20px 0 26px;
+  }
+  .project-media--brand {
+    width: min(100%, 280px);
+    justify-self: end;
   }
   .detail-summary {
     font-size: 14px;

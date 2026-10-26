@@ -32,18 +32,21 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
         <span aria-hidden="true">←</span> 전체 프로젝트
       </a>
       <header className="detail-heading">
-        <p className="eyebrow">{project.category}</p>
-        <h1>{project.title}</h1>
-        <p className="detail-summary">{project.description}</p>
-        {primaryLinks.length > 0 && (
-          <nav className="project-actions" aria-label="프로젝트 열기">
-            {primaryLinks.map((link) => (
-              <ExternalLink key={link.href} href={link.href}>
-                {link.label}
-              </ExternalLink>
-            ))}
-          </nav>
-        )}
+        <div className="detail-heading__copy">
+          <p className="eyebrow">{project.category}</p>
+          <h1>{project.title}</h1>
+          <p className="detail-summary">{project.description}</p>
+          {primaryLinks.length > 0 && (
+            <nav className="project-actions" aria-label="프로젝트 열기">
+              {primaryLinks.map((link) => (
+                <ExternalLink key={link.href} href={link.href}>
+                  {link.label}
+                </ExternalLink>
+              ))}
+            </nav>
+          )}
+        </div>
+        <ProjectMedia image={project.brand} eager variant="brand" />
       </header>
       <ProjectMedia image={project.image} eager />
       <section
