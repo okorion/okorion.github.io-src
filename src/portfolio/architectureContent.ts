@@ -319,7 +319,7 @@ export const architectures: Record<string, ProjectArchitectureContent> = {
         labels: ["fields", "chart type", "encoding"],
         position: middle,
         description:
-          "필드 프로파일을 바탕으로 규칙이 차트 후보를 추천합니다. 사용자의 선택으로 VizSpec을 만들며, 선택적 AI는 후보 순서와 설명을 보조합니다.",
+          "필드 프로파일을 바탕으로 규칙이 차트 후보를 추천합니다. 사용자의 선택으로 VizSpec을 만듭니다. 선택적 AI는 WebLLM의 WebGPU 추론 또는 OpenAI 호환 API로 후보 순서와 설명을 보조합니다.",
       },
       {
         id: "chart",
@@ -356,12 +356,12 @@ export const architectures: Record<string, ProjectArchitectureContent> = {
       {
         id: "input",
         title: "편집과 AI 제안",
-        subtitle: "UI · 승인한 AI 명령",
+        subtitle: "WebLLM · WebGPU · 승인한 명령",
         preview: "review",
         labels: ["편집 명령", "AI 제안 확인"],
         position: left,
         description:
-          "직접 편집하거나 AI가 제안한 명령을 확인합니다. AI 제안은 사용자가 미리 보고 승인한 뒤 적용합니다.",
+          "직접 편집하거나 Web Worker에서 실행되는 WebLLM 모델의 제안을 확인합니다. WebGPU로 추론한 응답을 Zod 스키마로 검사하고, 사용자가 미리 보고 승인한 명령을 적용합니다.",
       },
       {
         id: "document",

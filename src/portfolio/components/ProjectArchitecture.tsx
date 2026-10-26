@@ -363,20 +363,6 @@ export default function ProjectArchitecture({
         <p>{content.note}</p>
         <p>카드 속 화면은 구조 이해를 위한 축약 그림입니다.</p>
       </div>
-      {!compact && (
-        <details className="architecture-text-flow">
-          <summary>연결 관계를 텍스트로 읽기</summary>
-          <ul>
-            {content.links.map((link) => (
-              <li key={`${link.from}-${link.to}`}>
-                {content.steps.find((step) => step.id === link.from)?.title} →{" "}
-                {content.steps.find((step) => step.id === link.to)?.title}{" "}
-                <span>({link.label})</span>
-              </li>
-            ))}
-          </ul>
-        </details>
-      )}
     </section>
   );
 }
