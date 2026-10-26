@@ -19,7 +19,7 @@ export function ProfileSection() {
         </div>
       </section>
       <section className="detail-section" aria-labelledby="credentials-title">
-        <h2 id="credentials-title">자격</h2>
+        <h2 id="credentials-title">자격증</h2>
         <ul className="credential-list">
           {credentials.map((item) => (
             <li key={item}>{item}</li>
