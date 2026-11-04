@@ -55,6 +55,138 @@ export const featuredProjectIds = [
 
 export const projects: readonly PublicProject[] = [
   {
+    id: "visual-web-studio",
+    title: "Visual Web Studio",
+    category: "웹 디자인·제작 에디터 · 개발 중",
+    description:
+      "벡터·텍스트와 컴포넌트로 화면을 만들고, Flex/Grid 레이아웃을 반응형 HTML/CSS 웹사이트로 내보내는 브라우저 에디터입니다.",
+    image: {
+      src: "/images/projects/visual-web-studio-editor.png",
+      alt: "기록선 SaaS 페이지가 열린 Visual Web Studio의 레이어 패널, 캔버스와 속성 패널",
+      caption: "실제 공개 데모 · SaaS 템플릿 · 2026.11.05 기준",
+    },
+    brand: {
+      src: "/images/projects/visual-web-studio-header-preview.png",
+      alt: "VWS에서 제작한 Header와 버튼 인스턴스, 벡터 경로의 HTML 미리보기",
+      caption: "제작 예제의 HTML 미리보기",
+    },
+    extraImages: [
+      {
+        src: "/images/projects/visual-web-studio-header-editor.png",
+        alt: "Header 문구와 버튼 컴포넌트 인스턴스를 편집하고 Breakpoint 속성을 조절하는 화면",
+        caption:
+          "같은 기준 빌드의 로컬 제작 흐름 · Header·컴포넌트·반응형 속성 편집",
+      },
+    ],
+    flow: [
+      "Frame·콘텐츠 제작",
+      "레이아웃·컴포넌트 조절",
+      "저장·미리보기·웹사이트 출력",
+    ],
+    sections: [
+      {
+        title: "해결하려는 문제",
+        paragraphs: [
+          "디자인 화면의 좌표만 저장하면 컨테이너 폭이 바뀌었을 때 배치 의도를 복원하기 어렵습니다. Figma의 선택·벡터·Auto Layout·컴포넌트 편집 방식을 참고하면서, 실제 HTML 구조와 반응형 CSS를 출력하는 웹 제작 도구를 목표로 정했습니다. 편집 문서에는 고정 크기, 내용에 맞춘 크기, 남은 공간 채우기와 컴포넌트의 수정값을 보존합니다.",
+        ],
+      },
+      {
+        title: "설계와 피드백",
+        paragraphs: [
+          "별도 Flexbox 계산기를 만들거나 Yoga의 계산을 HTML로 변환하는 안 대신, 브라우저 CSS와 공통 문서 해석을 사용하는 안을 채택했습니다. React·TypeScript 에디터의 SVG/DOM 화면과 HTML 출력이 같은 스타일 생성 규칙을 사용해 텍스트 줄바꿈과 Flex/Grid 배치를 연결합니다. 포인터 선택·이동에 필요한 실제 경계는 DOM에서 측정하고, 화면 좌표와 문서의 부모 기준 좌표를 구분합니다.",
+          "드래그 중에는 임시 문서로 결과를 보여 주고, 완료할 때 하나의 Command로 확정해 실행취소 이력에 넣습니다. 선택·패널·뷰포트 상태는 저장 문서와 분리합니다. 비동기 측정 중 문서나 페이지가 바뀌면 이전 후보를 폐기하고, 위치 보존을 확인하지 못한 부모 변경은 원본을 유지한 채 오류로 안내합니다.",
+          "문서와 이미지를 함께 보존하기 위해 IndexedDB 트랜잭션으로 저장하고, 실제 쓰기가 끝난 뒤 완료 상태를 표시합니다. 저장 요청 시점의 문서를 고정하고 이후 편집과 구분하며, 다른 탭이 먼저 저장했으면 현재 입력과 저장본을 유지하고 충돌을 알립니다. 쓰기 실패 시에도 편집 내용과 JSON 백업 경로를 남깁니다.",
+        ],
+      },
+      {
+        title: "기술적 판단과 AI 활용",
+        paragraphs: [
+          "저는 화면 편집부터 독립 웹사이트 출력까지 이어지는 목표와 원본 보존·실제 조작 검증 조건을 정했습니다. Codex는 CSS 레이아웃·저장 방식의 대안을 비교하고 세부 설계, 구현과 자동 검증을 수행했습니다. 편집 결과와 출력 결과를 같은 문서·화면 폭에서 비교하도록 요구했고, 그 기준에 맞춰 Header 제작, 컴포넌트 수정, 저장 후 다시 열기와 별도 HTTP 서버의 출력 확인을 연결했습니다.",
+        ],
+      },
+      {
+        title: "검증과 현재 범위",
+        paragraphs: [
+          "벡터·텍스트, Flex/Grid, 컴포넌트·Variant, Variables·Styles, 로컬 저장과 HTML/CSS·자산 ZIP 출력을 지원합니다. 소개 화면은 2026.11.05 기준 빌드이며, 자동 브라우저 검사에서 직접 만든 Header와 Grid의 미리보기·독립 출력 기하와 이미지를 비교했습니다. 웹사이트 출력은 VWS 개발 서버 없이 실행됩니다.",
+          "개발 중인 데모로 작업은 현재 브라우저에 저장됩니다. 기기 간 이동에는 JSON 백업을 사용합니다. 대규모 문서의 일부 입력 지연과 고급 텍스트·Prototype 기능은 개선 중이며, 실제 휴대폰·Safari·OS 한글 IME·스크린리더 검증은 남아 있습니다. 저장소는 비공개로 유지하고 데모를 공개합니다.",
+        ],
+      },
+    ],
+    links: [
+      {
+        kind: "demo",
+        label: "데모 열기",
+        href: "https://visual-web-studio-1btlvmpyv-okorions-projects.vercel.app",
+      },
+    ],
+  },
+  {
+    id: "parametric-cad-lab",
+    title: "Parametric CAD Lab",
+    category: "파라메트릭 CAD 에디터 · 개발 중",
+    description:
+      "스케치의 치수·구속조건으로 입체 형상을 만들고, 피처 이력을 다시 계산해 수정한 뒤 STEP·STL로 내보내는 브라우저 CAD 에디터입니다.",
+    image: {
+      src: "/images/projects/parametric-cad-lab-solid.png",
+      alt: "Parametric CAD Lab에서 구멍이 있는 판의 피처 이력과 구멍 치수를 편집하는 3D 화면",
+      caption: "실제 로컬 앱 · 구멍이 있는 판 · 0.6.7 검증본",
+    },
+    brand: {
+      src: "/images/projects/parametric-cad-lab-sketch.png",
+      alt: "판의 사각형 스케치 너비를 45mm로 변경한 치수·구속조건 편집 화면",
+      caption: "실제 로컬 앱 · 스케치 치수 편집",
+    },
+    extraImages: [
+      {
+        src: "/images/projects/parametric-cad-lab-sketch.png",
+        alt: "사각형 스케치와 너비 45mm, 높이 30mm를 보여 주는 속성 패널",
+        caption: "같은 기준 버전의 스케치 편집 · 3D 화면과 다른 편집 시점",
+      },
+    ],
+    flow: [
+      "스케치·구속·치수 작성",
+      "돌출·회전과 피처 수정",
+      "저장·복원·STEP/STL 출력",
+    ],
+    sections: [
+      {
+        title: "해결하려는 문제",
+        paragraphs: [
+          "3D 화면에 보이는 삼각형만 수정하면 치수와 피처의 관계를 유지하기 어렵습니다. 스케치와 피처 매개변수를 문서에 보존하고, 치수 변경 뒤 정밀 형상을 다시 계산하는 로컬 우선 CAD 도구를 목표로 정했습니다. 화면 표시용 메시와 CAD 원본을 구분하고, 계산이 실패해도 입력과 마지막 정상 형상을 유지하는 흐름을 요구했습니다.",
+        ],
+      },
+      {
+        title: "설계와 피드백",
+        paragraphs: [
+          "면·모서리와 그 연결을 표현하는 B-Rep 형상은 Replicad·OpenCascade가 계산하고, 스케치 구속은 PlaneGCS가 풉니다. Rust/wgpu WebGPU 렌더러는 계산된 형상의 메시를 화면에 표시하며, Three.js WebGL2를 대체 경로로 둡니다. STEP은 커널의 정밀 형상을, STL은 테셀레이션한 삼각형 메시를 출력하므로 파일별 검증 기준도 구분합니다.",
+          "스케치 계산이 UI 스레드를 오래 점유하는 문제에는 기존 기하 Worker의 요청 관리 방식을 재사용했습니다. 확정한 좌표·치수·구속조건은 문서와 Undo 이력에 한 번 저장하고, Worker가 반환한 해결 좌표와 충돌 진단은 파생 상태로 표시합니다. 요청 ID·Worker 세대·입력 서명이 맞는 응답만 반영해 늦게 끝난 계산이 최신 편집을 덮지 않도록 했습니다. 선택만 바뀔 때는 재계산이나 Undo 항목을 만들지 않습니다.",
+          "치수 변경으로 면·모서리가 나뉘거나 합쳐지면 이전 선택을 잘못 연결할 수 있습니다. 가까운 위치나 배열 순번으로 추측하는 방식 대신 OpenCascade의 연산 이력과 실제 형상 동일성을 대조합니다. 원본과 결과의 대응이 유일할 때만 참조를 이어가고, 모호하면 오류와 마지막 정상 형상을 유지합니다. 사용자는 문제가 된 피처를 억제하고 원본에서 대상을 다시 선택한 뒤 계산을 재개할 수 있습니다.",
+        ],
+      },
+      {
+        title: "기술적 판단과 AI 활용",
+        paragraphs: [
+          "저는 정밀 기하와 렌더링의 책임을 분리하고, 원본 보존·오래된 응답 차단·파일 교환 검증을 개발 조건으로 정했습니다. CAD 커널을 새로 작성하지 않고 검증된 라이브러리를 비교하도록 요청했습니다. 위임한 범위에서 Codex가 커널·솔버와 Worker 구성을 선택하고, 세부 코드와 회귀 검사를 작성했습니다. 사용자의 제품 요구와 보존 조건을 구현·검증의 기준으로 연결한 프로젝트입니다.",
+        ],
+      },
+      {
+        title: "검증과 현재 범위",
+        paragraphs: [
+          "React·TypeScript 편집기에서 스케치·구속·치수·수식, 돌출·회전·구멍과 지원하는 피처 연산, 실행취소·다시실행, 로컬 저장과 파일 출력을 연결했습니다. 소개는 2026.11.05의 0.6.7 로컬 검증본을 기준으로 합니다. 자동 브라우저 검사에서는 다중 선택, 늦은 계산 응답 이후 선택 보존, 축 참조 오류와 Undo 복구, 저장 후 다시 열기를 확인했습니다.",
+          "출력한 STEP은 별도 CadQuery/OCP 리더로 유효한 솔리드·부피·면적·경계를 확인하고, STL은 닫힌 셸·방향과 정한 근사 공차를 검사했습니다. 리더도 OpenCascade 계열이며 다른 상용 CAD 커널과의 왕복 검증은 남아 있습니다. 개발 중인 데모로 전체 상용 CAD 기능, 실제 모바일·Safari와 이번 버전의 장시간 메모리 검증은 완료되지 않았습니다. 작업은 브라우저에 저장되며 프로젝트 JSON으로 백업할 수 있습니다.",
+          "연결된 데모는 현재 0.6.6이며 Vercel 로그인과 접근 권한이 필요합니다. 비로그인 공개는 라이브러리 대응 소스 제공·교체 경로를 준비한 뒤 진행할 예정입니다. 앱 저장소는 비공개로 유지합니다.",
+        ],
+      },
+    ],
+    links: [
+      {
+        kind: "demo",
+        label: "데모 · 로그인 필요",
+        href: "https://parametric-cad-lab.vercel.app/",
+      },
+    ],
+  },
+  {
     id: "rust-lab",
     title: "Rust 3D Engine Lab",
     category: "3D 편집 스튜디오 · 렌더링 실험",

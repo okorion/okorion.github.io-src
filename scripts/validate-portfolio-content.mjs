@@ -29,6 +29,8 @@ assert.deepEqual(
 );
 const ids = [...content.matchAll(/\bid: "([^"]+)"/g)].map((match) => match[1]);
 assert.deepEqual(ids, [
+  "visual-web-studio",
+  "parametric-cad-lab",
   "rust-lab",
   "report-review-tool",
   "aether-studio",
