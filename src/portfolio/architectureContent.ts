@@ -41,6 +41,110 @@ const lower = { x: 680, y: 280 };
 
 // These are explanatory miniatures, not live app views or performance measurements.
 export const architectures: Record<string, ProjectArchitectureContent> = {
+  "visual-web-studio": {
+    summary:
+      "편집 문서의 배치 의도를 미리보기와 웹사이트 출력에 함께 적용합니다.",
+    note: "선택·뷰포트와 드래그 중 임시 상태는 저장 문서와 분리합니다. 저장 충돌이나 실패 시 현재 편집을 보존합니다.",
+    steps: [
+      {
+        id: "editor",
+        title: "화면과 컴포넌트 편집",
+        subtitle: "React · SVG/DOM · Command",
+        preview: "diagram",
+        labels: ["Frame", "Vector", "Component"],
+        position: left,
+        description:
+          "벡터·텍스트·컴포넌트와 Flex/Grid 속성을 편집합니다. 드래그 중에는 임시 결과를 보여 주고, 완료한 변경을 하나의 명령으로 확정해 실행취소 이력에 넣습니다.",
+      },
+      {
+        id: "document",
+        title: "편집 문서와 스타일 해석",
+        subtitle: "Document · 공통 CSS 규칙",
+        preview: "document",
+        labels: ["nodes", "layout", "styles"],
+        position: middle,
+        description:
+          "노드 계층, 크기·배치 의도와 컴포넌트 수정값을 문서에 보존합니다. 에디터와 HTML 출력이 같은 스타일 생성 규칙을 사용하며, 선택에 필요한 실제 경계는 DOM에서 측정합니다.",
+      },
+      {
+        id: "website",
+        title: "미리보기와 웹사이트 출력",
+        subtitle: "HTML · CSS · 자산 ZIP",
+        preview: "code",
+        labels: ["HTML", "CSS", "Assets"],
+        position: upper,
+        description:
+          "문서를 HTML 구조와 반응형 CSS로 바꿔 미리 보고 내보냅니다. 출력한 웹사이트는 VWS 개발 서버 없이 실행할 수 있으며, 같은 화면 폭에서 편집 결과와 비교합니다.",
+      },
+      {
+        id: "storage",
+        title: "로컬 저장과 복원",
+        subtitle: "IndexedDB · JSON 백업",
+        preview: "files",
+        labels: ["문서", "이미지", "백업"],
+        position: lower,
+        description:
+          "요청 시점의 문서와 이미지를 IndexedDB 트랜잭션으로 저장하고 쓰기 완료를 확인합니다. 다른 탭의 저장과 충돌하면 현재 편집과 저장본을 유지하며, JSON으로 백업할 수 있습니다.",
+      },
+    ],
+    links: [
+      { from: "editor", to: "document", label: "편집 명령" },
+      { from: "document", to: "website", label: "문서·스타일" },
+      { from: "document", to: "storage", label: "문서·자산" },
+    ],
+  },
+  "parametric-cad-lab": {
+    summary:
+      "스케치와 피처 문서에서 정밀 형상을 계산하고, 화면과 교환 파일로 전달합니다.",
+    note: "CAD 원본과 표시용 메시를 구분합니다. 계산이 실패하거나 참조가 모호하면 입력과 마지막 정상 형상을 보존합니다.",
+    steps: [
+      {
+        id: "document",
+        title: "스케치와 피처 편집",
+        subtitle: "React · TypeScript · 문서/명령",
+        preview: "document",
+        labels: ["Sketch", "Constraints", "Features"],
+        position: left,
+        description:
+          "치수·구속조건과 돌출·회전 등의 피처 매개변수를 편집 문서와 실행취소 이력에 보존합니다. 선택 상태를 계산 입력과 분리하고, 문서는 IndexedDB에 저장하거나 JSON으로 백업합니다.",
+      },
+      {
+        id: "workers",
+        title: "구속 해결과 정밀 형상 계산",
+        subtitle: "PlaneGCS · Replicad/OpenCascade",
+        preview: "diagram",
+        labels: ["Sketch Worker", "Geometry Worker"],
+        position: middle,
+        description:
+          "Sketch Worker의 PlaneGCS가 구속을 풀고, Geometry Worker의 Replicad·OpenCascade가 B-Rep 형상과 피처 이력을 계산합니다. 요청 ID·Worker 세대·입력 서명이 맞는 결과만 반영해 이전 계산이 최신 편집을 덮지 않도록 합니다.",
+      },
+      {
+        id: "viewport",
+        title: "3D 화면 표시",
+        subtitle: "Rust/wgpu · WebGPU",
+        preview: "scene",
+        labels: ["Mesh", "Viewport"],
+        position: upper,
+        description:
+          "정밀 형상을 화면 표시용 메시로 바꿔 Rust/wgpu/WASM의 WebGPU 뷰포트에 그립니다. Three.js WebGL2를 대체 경로로 두며, GPU 상태와 표시용 메시는 CAD 원본과 구분합니다.",
+      },
+      {
+        id: "exchange",
+        title: "CAD 파일 내보내기",
+        subtitle: "STEP · STL",
+        preview: "files",
+        labels: ["STEP · 정밀 형상", "STL · 삼각형 메시"],
+        position: lower,
+        description:
+          "STEP에는 커널의 정밀 B-Rep 형상을, STL에는 테셀레이션한 삼각형 메시를 기록합니다. STEP의 솔리드·부피·경계와 STL의 닫힌 셸·방향·근사 공차를 각각 확인합니다.",
+      },
+    ],
+    links: [
+      { from: "document", to: "workers", label: "치수·피처" },
+      { from: "workers", to: "viewport", label: "표시용 메시" },
+      { from: "workers", to: "exchange", label: "형상·메시" },
+    ],
+  },
   "rust-lab": {
     summary: "하나의 장면 문서로 두 렌더링 경로를 비교합니다.",
     note: "비교할 때는 같은 문서를 두 엔진에 순차 적용·캡처합니다.",

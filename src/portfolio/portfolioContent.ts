@@ -63,21 +63,13 @@ export const projects: readonly PublicProject[] = [
     image: {
       src: "/images/projects/visual-web-studio-editor.png",
       alt: "기록선 SaaS 페이지가 열린 Visual Web Studio의 레이어 패널, 캔버스와 속성 패널",
-      caption: "실제 공개 데모 · SaaS 템플릿 · 2026.11.05 기준",
+      caption: "현재 공개 데모 화면 · 2026.11.05 기준",
     },
     brand: {
-      src: "/images/projects/visual-web-studio-header-preview.png",
-      alt: "VWS에서 제작한 Header와 버튼 인스턴스, 벡터 경로의 HTML 미리보기",
-      caption: "제작 예제의 HTML 미리보기",
+      src: "/images/projects/brands/visual-web-studio.png",
+      alt: "벡터 제어점과 크기가 다른 웹 화면으로 디자인과 반응형 출력을 표현한 Visual Web Studio 추상화 이미지",
+      caption: "브랜드 일러스트",
     },
-    extraImages: [
-      {
-        src: "/images/projects/visual-web-studio-header-editor.png",
-        alt: "Header 문구와 버튼 컴포넌트 인스턴스를 편집하고 Breakpoint 속성을 조절하는 화면",
-        caption:
-          "같은 기준 빌드의 로컬 제작 흐름 · Header·컴포넌트·반응형 속성 편집",
-      },
-    ],
     flow: [
       "Frame·콘텐츠 제작",
       "레이아웃·컴포넌트 조절",
@@ -127,22 +119,15 @@ export const projects: readonly PublicProject[] = [
     description:
       "스케치의 치수·구속조건으로 입체 형상을 만들고, 피처 이력을 다시 계산해 수정한 뒤 STEP·STL로 내보내는 브라우저 CAD 에디터입니다.",
     image: {
-      src: "/images/projects/parametric-cad-lab-solid.png",
+      src: "/images/projects/parametric-cad-lab-public-067.png",
       alt: "Parametric CAD Lab에서 구멍이 있는 판의 피처 이력과 구멍 치수를 편집하는 3D 화면",
-      caption: "실제 로컬 앱 · 구멍이 있는 판 · 0.6.7 검증본",
+      caption: "현재 공개 데모 화면 · 0.6.7 검증본",
     },
     brand: {
-      src: "/images/projects/parametric-cad-lab-sketch.png",
-      alt: "판의 사각형 스케치 너비를 45mm로 변경한 치수·구속조건 편집 화면",
-      caption: "실제 로컬 앱 · 스케치 치수 편집",
+      src: "/images/projects/brands/parametric-cad-lab.png",
+      alt: "치수 스케치에서 구멍이 있는 입체 판으로 이어지는 Parametric CAD Lab 추상화 이미지",
+      caption: "브랜드 일러스트",
     },
-    extraImages: [
-      {
-        src: "/images/projects/parametric-cad-lab-sketch.png",
-        alt: "사각형 스케치와 너비 45mm, 높이 30mm를 보여 주는 속성 패널",
-        caption: "같은 기준 버전의 스케치 편집 · 3D 화면과 다른 편집 시점",
-      },
-    ],
     flow: [
       "스케치·구속·치수 작성",
       "돌출·회전과 피처 수정",
@@ -174,14 +159,14 @@ export const projects: readonly PublicProject[] = [
         paragraphs: [
           "React·TypeScript 편집기에서 스케치·구속·치수·수식, 돌출·회전·구멍과 지원하는 피처 연산, 실행취소·다시실행, 로컬 저장과 파일 출력을 연결했습니다. 소개는 2026.11.05의 0.6.7 로컬 검증본을 기준으로 합니다. 자동 브라우저 검사에서는 다중 선택, 늦은 계산 응답 이후 선택 보존, 축 참조 오류와 Undo 복구, 저장 후 다시 열기를 확인했습니다.",
           "출력한 STEP은 별도 CadQuery/OCP 리더로 유효한 솔리드·부피·면적·경계를 확인하고, STL은 닫힌 셸·방향과 정한 근사 공차를 검사했습니다. 리더도 OpenCascade 계열이며 다른 상용 CAD 커널과의 왕복 검증은 남아 있습니다. 개발 중인 데모로 전체 상용 CAD 기능, 실제 모바일·Safari와 이번 버전의 장시간 메모리 검증은 완료되지 않았습니다. 작업은 브라우저에 저장되며 프로젝트 JSON으로 백업할 수 있습니다.",
-          "연결된 데모는 현재 0.6.6이며 Vercel 로그인과 접근 권한이 필요합니다. 비로그인 공개는 라이브러리 대응 소스 제공·교체 경로를 준비한 뒤 진행할 예정입니다. 앱 저장소는 비공개로 유지합니다.",
+          "데모는 로그인 없이 사용할 수 있습니다. 소개 화면은 공개 운영으로 전달한 0.6.7 검증본이며, 데모에는 이후 개선 사항이 추가될 수 있습니다. 라이브러리 라이선스와 대응 소스는 데모의 안내에서 확인할 수 있고, 전체 앱 저장소는 비공개로 유지합니다.",
         ],
       },
     ],
     links: [
       {
         kind: "demo",
-        label: "데모 · 로그인 필요",
+        label: "데모 열기",
         href: "https://parametric-cad-lab.vercel.app/",
       },
     ],
