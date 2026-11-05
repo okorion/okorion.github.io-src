@@ -51,7 +51,10 @@ function Miniature({ kind, labels }: { kind: PreviewKind; labels: string[] }) {
         </svg>
       ) : kind === "diagram" ? (
         <svg viewBox="0 0 240 110" fill="none">
-          <path className="mini-axis" d="M61 55h46m30 0h24M137 55v30h24" />
+          <path
+            className="mini-axis"
+            d="M61 55h46M137 55h12M149 35v50M149 35h12M149 85h12"
+          />
           <rect
             className="mini-panel"
             x="13"
