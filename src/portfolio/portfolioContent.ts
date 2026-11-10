@@ -63,7 +63,7 @@ export const projects: readonly PublicProject[] = [
     image: {
       src: "/images/projects/visual-web-studio-editor.png",
       alt: "기록선 SaaS 페이지가 열린 Visual Web Studio의 레이어 패널, 캔버스와 속성 패널",
-      caption: "현재 공개 데모 화면 · 2026.11.05 기준",
+      caption: "운영 데모 화면 · 2026.11.11 캡처",
     },
     brand: {
       src: "/images/projects/brands/visual-web-studio.png",
@@ -99,7 +99,7 @@ export const projects: readonly PublicProject[] = [
       {
         title: "검증과 현재 범위",
         paragraphs: [
-          "벡터·텍스트, Flex/Grid, 컴포넌트·Variant, Variables·Styles, 로컬 저장과 HTML/CSS·자산 ZIP 출력을 지원합니다. 소개 화면은 2026.11.05 기준 빌드이며, 자동 브라우저 검사에서 직접 만든 Header와 Grid의 미리보기·독립 출력 기하와 이미지를 비교했습니다. 웹사이트 출력은 VWS 개발 서버 없이 실행됩니다.",
+          "벡터·텍스트, Flex/Grid, 컴포넌트·Variant, Variables·Styles, 로컬 저장과 HTML/CSS·자산 ZIP 출력을 지원합니다. 자동 브라우저 검사에서 직접 만든 Header와 Grid의 미리보기·독립 출력 기하와 이미지를 비교했습니다. 웹사이트 출력은 VWS 개발 서버 없이 실행됩니다.",
           "개발 중인 데모로 작업은 현재 브라우저에 저장됩니다. 기기 간 이동에는 JSON 백업을 사용합니다. 대규모 문서의 일부 입력 지연과 고급 텍스트·Prototype 기능은 개선 중이며, 실제 휴대폰·Safari·OS 한글 IME·스크린리더 검증은 남아 있습니다. 저장소는 비공개로 유지하고 데모를 공개합니다.",
         ],
       },
@@ -108,7 +108,7 @@ export const projects: readonly PublicProject[] = [
       {
         kind: "demo",
         label: "데모 열기",
-        href: "https://visual-web-studio-1btlvmpyv-okorions-projects.vercel.app",
+        href: "https://visual-web-studio-five.vercel.app/",
       },
     ],
   },
