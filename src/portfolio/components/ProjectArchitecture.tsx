@@ -196,7 +196,9 @@ function ArchitectureNode({ data }: NodeProps<StepNode>) {
 }
 
 const nodeTypes = { architecture: ArchitectureNode };
-const fitOptions = { padding: 0.08, maxZoom: 1 };
+// Preserve the React Flow 12 padding for the initial view and the fit button.
+const fitOptions = { padding: "3.7%", maxZoom: 1 } as const;
+const controlsFitOptions = { padding: "4.55%" } as const;
 
 export default function ProjectArchitecture({
   projectId,
@@ -345,6 +347,7 @@ export default function ProjectArchitecture({
                 <Background gap={22} size={1} />
                 <Controls
                   showInteractive={false}
+                  fitViewOptions={controlsFitOptions}
                   aria-label="구조도 보기 조절"
                 />
               </ReactFlow>
